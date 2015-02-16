@@ -1,8 +1,10 @@
 Thanks to the BaseX team
 See: https://github.com/BaseXdb and http://docs.basex.org/wiki/Category:Developer
 
-Installation with CED2AR
+Installation with CED2AR:
+
 1. Deploy BaseX.war on your Tomcat 7 server
+
 
 2. Now you should change the default BaseX passwords. Go endpoint BaseX/rest. Default credentials are admin/admin
 

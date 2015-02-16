@@ -1,0 +1,154 @@
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:element name="cims">
+            <xs:complexType>
+                  <xs:sequence>
+
+                        <!--List of Authorized Users--> 
+                        <xs:element name="users">
+                              <xs:complexType>
+                                    <xs:sequence>
+                                          <xs:element name="user" maxOccurs="unbounded" minOccurs="0">
+                                                <xs:complexType>
+                                                      <xs:sequence>
+                                                            <xs:element name="userId">
+                                                                  <!-- userId is email. We only allow lowercase email addresses.-->
+                                                                  <xs:simpleType>
+                                                                        <xs:restriction base="xs:string">
+                                                                              <xs:pattern value="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}"/>
+                                                                        </xs:restriction>
+                                                                  </xs:simpleType>
+                                                            </xs:element>
+                                                            <xs:element type="xs:string" name="firstName"/>
+                                                            <xs:element type="xs:string" name="lastName"/>
+                                                            <xs:element type="xs:string" name="activeUser"/>
+                                                      </xs:sequence>
+                                                </xs:complexType>
+                                          </xs:element>
+                                    </xs:sequence>
+                              </xs:complexType>
+                              <!--Ensure that userId is unique-->
+                              <xs:unique name="uniqueUserId">
+                                    <xs:selector xpath="./user"/>
+                                    <xs:field xpath="userId"/>
+                              </xs:unique>
+                        </xs:element>
+                        <!--End of List of Authorized Users-->
+                        
+                        <!--List of Avaialble Roles-->
+                        <xs:element name="roles">
+                              <xs:complexType>
+                                    <xs:sequence>
+                                          <xs:element name="role" maxOccurs="unbounded" minOccurs="0">
+                                                <xs:complexType>
+                                                      <xs:sequence>
+                                                            <xs:element name="roleId">
+                                                                  <!-- roleId. We only allow UPPER_CASE Letters, numbers and undescore-->
+                                                                  <xs:simpleType>
+                                                                        <xs:restriction base="xs:string">
+                                                                              <xs:pattern value="[A-Z0-9_]+"/>
+                                                                        </xs:restriction>
+                                                                  </xs:simpleType>
+                                                            </xs:element>
+                                                            <xs:element type="xs:string" name="roleName"/>
+                                                            <xs:element type="xs:string" name="roleDesc"/>
+                                                      </xs:sequence>
+                                                </xs:complexType>
+                                          </xs:element>
+                                    </xs:sequence>
+                              </xs:complexType>
+                              <!--Ensure that roleId is unique-->
+                              <xs:unique name="uniqueRoleId">
+                                    <xs:selector xpath="./role"/>
+                                    <xs:field xpath="roleId"/>
+                              </xs:unique>
+                        </xs:element>
+                        <!--End List of Avaialble Roles-->
+
+                        <!--List of Avaialble Permissions-->
+                        <xs:element name="permissions">
+                              <xs:complexType>
+                                    <xs:sequence>
+                                          <xs:element name="permission" maxOccurs="unbounded" minOccurs="0">
+                                                <xs:complexType>
+                                                      <xs:sequence>
+                                                            <xs:element name="permissionId">
+                                                                  <!-- permissionId. We only allow UPPER_CASE Letters, numbers and undescore-->
+                                                                  <xs:simpleType>
+                                                                        <xs:restriction base="xs:string">
+                                                                              <xs:pattern value="[A-Z0-9_]+"/>
+                                                                        </xs:restriction>
+                                                                  </xs:simpleType>
+                                                            </xs:element>
+                                                            <xs:element type="xs:string" name="permissionName"/>
+                                                            <xs:element type="xs:string" name="permissionDesc"/>
+                                                      </xs:sequence>
+                                                </xs:complexType>
+                                          </xs:element>
+                                    </xs:sequence>
+                              </xs:complexType>
+                              <!--Ensure that roleId is unique-->
+                              <xs:unique name="uniquePermissionId">
+                                    <xs:selector xpath="./permission"/>
+                                    <xs:field xpath="permissionId"/>
+                              </xs:unique>
+                              
+                        </xs:element>
+                        <!--End List of Avaialble Permissions-->
+
+                        <xs:element name="userRoles">
+                              <xs:complexType>
+                                    <xs:sequence>
+                                          <xs:element name="userRole" maxOccurs="unbounded" minOccurs="0">
+                                                <xs:complexType>
+                                                      <xs:sequence>
+                                                            <xs:element type="xs:string" name="userId"/>
+                                                            <xs:element name="roles">
+                                                                  <xs:complexType>
+                                                                        <xs:sequence>
+                                                                              <xs:element type="xs:string" name="roleId" maxOccurs="unbounded" minOccurs="0"/>
+                                                                        </xs:sequence>
+                                                                  </xs:complexType>
+                                                            </xs:element>
+                                                      </xs:sequence>
+                                                </xs:complexType>
+                                          </xs:element>
+                                    </xs:sequence>
+                              </xs:complexType>
+                        </xs:element>
+                        <xs:element name="rolePermissions">
+                              <xs:complexType>
+                                    <xs:sequence>
+                                          <xs:element name="rolePermission" maxOccurs="unbounded" minOccurs="0">
+                                                <xs:complexType>
+                                                      <xs:sequence>
+                                                            <xs:element type="xs:string" name="roleId"/>
+                                                            <xs:element name="permissionCodebook">
+                                                                  <xs:complexType>
+                                                                        <xs:sequence>
+                                                                              <xs:element name="permission">
+                                                                                    <xs:complexType>
+                                                                                          <xs:sequence>
+                                                                                                <xs:element type="xs:string" name="permissionId"/>
+                                                                                                <xs:element name="codebooks">
+                                                                                                      <xs:complexType>
+                                                                                                            <xs:sequence>
+                                                                                                                  <xs:element type="xs:string" name="codebookHandle" maxOccurs="unbounded" minOccurs="0"/>
+                                                                                                            </xs:sequence>
+                                                                                                      </xs:complexType>
+                                                                                                </xs:element>
+                                                                                          </xs:sequence>
+                                                                                    </xs:complexType>
+                                                                              </xs:element>
+                                                                        </xs:sequence>
+                                                                  </xs:complexType>
+                                                            </xs:element>
+                                                      </xs:sequence>
+                                                </xs:complexType>
+                                          </xs:element>
+                                    </xs:sequence>
+                              </xs:complexType>
+                        </xs:element>
+                  </xs:sequence>
+            </xs:complexType>
+      </xs:element>
+</xs:schema>

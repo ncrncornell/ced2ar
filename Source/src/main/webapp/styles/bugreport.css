@@ -1,0 +1,31 @@
+/*Bug Report
+=============================================================================*/
+select[name=bugType], #yourEmail, #yourName{
+	width: 20em;
+}
+
+#bugDescription, #reproductionSteps{
+	max-Width: 100%
+}
+
+#bugReport input[type=submit]{
+	margin: auto;
+}
+
+#bugReport textArea{
+	margin: 0.5em auto 2em;
+}
+
+form[name=bugrep]{
+	display: inline;
+}
+
+form[name=bugrep] button, #contactUs{
+	display: inline;
+}
+
+.asterisk{
+	font-size: 1.15em;
+	font-style: normal;
+	color: #b31b1b;
+}

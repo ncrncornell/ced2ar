@@ -1,0 +1,8 @@
+User-agent: *
+Crawl-delay: 5
+Disallow: /rest
+Disallow: /erest
+Disallow: /edit
+Disallow: /read
+Disallow: /config
+Disallow: /register

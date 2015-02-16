@@ -1,0 +1,35 @@
+#sidebar{z-index:2;min-height:32em;max-width:18em;display:inline-block;padding:0 .75em;}
+#filter{font-size:0.9em;text-align:right;max-width:24em;}
+#filterCodebook, #filterCompare{max-width:24em;margin-bottom:2em;clear:both;}
+#filterCodebook{float:right;}
+#filterCodebook h4{margin-bottom:0;}
+#filterCodebook .helpIcon{float:right;}
+#ff table{float:right;}
+#filter .infoAD{display:inline-block;}
+#filter .infoA{margin:0 0 1em;border:1px solid transparent;}
+#filter .filterVersion label{display:inline-block;padding:.125em .25em;border:1px solid transparent;margin:0em;color:#777;cursor:pointer;width:100%;word-wrap:break-word;}
+#filter label:hover, #filter .checked, #filter .filterVersion .checked{color:#333;border-top-right-radius:3px;border-bottom-right-radius:3px;}
+#filter label:hover{background-color:#0093d0;}
+#filter input[type=submit]{display:block;margin:0.5em 0em 0.75em;}
+#filter input[type=checkbox]{float:none;margin-left:0.25em;margin-top:0.5em;cursor:pointer;position:inherit;}
+#filter .fMessage{font-size:0.9em;font-style:italic;}
+#filterD{margin:1em 0em 0.5em;min-height:1.5em;}
+.filterToggle{font-size:1.1em;display:block;padding:.25em;color:#777;position:relative;right:1.4em;min-width:9.8em;}
+.filterToggle label{border:1px solid transparent;cursor:pointer;padding:0em .5em 0em .75em;border-radius:3px;text-overflow:ellipsis;white-space:nowrap;}
+@media (max-width:1350px){.filterToggle label{font-size:.9em;}
+}
+.fti{padding:0em .25em 0em .75em;font-size:1.25em;cursor:pointer;}
+.ftiH{width:2.25em;}
+.fti:hover{color:#333;}
+#filterHide{display:table;float:left;max-width:2em;width:10%;min-width:1.5em;height:12em;background-image:url("../images/arrow-l.png");background-position:center;background-repeat:no-repeat;cursor:pointer;border-top-right-radius:4px;border-bottom-right-radius:4px;margin-top:12em;opacity:0.50;z-index:1;}
+.fts td{max-width:11em;border-left:1px solid #ccc;}
+#filterHide:hover{background-color:#ccc;opacity:1;}
+.filterHighlight{background-color:#ccc;position:absolute;left:0em;}
+#filterCodebookVerbose{min-height:1.5em;margin-bottom:1em;}
+#clearFilter{color:#ccc;border:transparent solid #ccc;border-radius:4px;padding:0.125em 0.35em;margin-right:0.25em;font-size:1.25em;}
+#clearFilter:hover{color:#eee;border:1px solid #ccc;background-color:#0093d0;border:1px solid #0093d0;text-decoration:none;}
+.cc{padding:0em 0.5em;vertical-align:middle;}
+.cc input{border:0px !important;margin:auto;display:block;}
+form[name=compare] p{margin:0.75em 0em;}
+#filterCompare input[type=submit], #filterCompare .btn{display:inline-block;margin:0.5em auto;font-size:0.9em;padding:0.25em 0.5em;}
+#adv input[type=text]{display:block;max-width:20em;margin-bottom:1.5em;height:2em;font-size:1em;padding:0em 0.5em;}

@@ -1,0 +1,73 @@
+/*CSS to apply when printing or copying to PDF version
+=============================================================================*/
+h1,h2 {
+	padding-left: 5px;
+}
+
+body{
+	font-size: 10pt;
+}
+
+a{
+	text-decoration: none !important;
+	color: black !important;
+	pointer-events: none;
+	cursor: default;
+}
+
+a:link:after{
+	content: "" !important;
+}
+
+#header, #navbar, #footer, #crumbs, .truncExp, .printRemove, #sidebar,
+	#sidebarR, .navbar, .printButton {
+	display: none !important;
+}
+
+body{
+	height: 0% !important;
+}
+
+#wrapper, body {
+	background: none !important;
+	background-color: white !important;
+	background-image: none !important;
+}
+
+#wrapper{
+	min-width: 0em !important;
+	min-height: 0em !important;
+}
+
+#main{
+	padding: 0em !important;
+	margin: 0em 1em !important;
+	overflow: auto;
+}
+
+.toggleContent{
+	display: block !important;
+}
+
+.truncTxt{
+	display: inline !important;
+}
+
+.printLB{
+	page-break-after: always;
+}
+
+.toggleHeader{
+	background-image: none !important;
+	cursor: default !important;
+	padding: .25em 0em .25em 0em !important;
+}
+
+.staticHeader{
+	padding-left: 0em !important;
+	line-height: 200% !important;
+}
+
+.codebookColumn{
+	width: auto !important;
+}

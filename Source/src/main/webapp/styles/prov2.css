@@ -1,0 +1,75 @@
+/*Prov 2 CSS
+=============================================================================*/
+
+@media only screen and (max-width: 650px) {
+	#main{
+		padding:5px!important;
+	}
+}
+
+#graph2{
+	min-width:32em;	
+	min-height:400px;
+    width:auto;
+    margin:1em auto 0em;
+    border:1px solid #ddd;
+    border-radius:4px;
+    background-color:rgba(255,255,255,0.75);
+}
+
+.provForm #graph2{
+	margin:1em auto 1em!important;
+}
+
+h2{
+	margin:.25em 0em;
+	line-height:1;
+}
+
+#provShuffle{
+	margin-left:0;
+}
+	
+#graph2Info{
+	background-color:rgba(255,255,255,0.85);
+	border:1px solid #ddd;
+    border-radius:4px;
+   	z-index:2;
+   	float:left;
+   	position:absolute;
+   	display:inline-block;
+   	top:9.8em;
+   	left:5em;
+}
+
+#nodeFilterList{
+	border-radius: 4px;
+	margin: .5em .5em .5em 0;
+	min-width: 15em;
+	border: 1px solid #ccc;
+	height: 2.5em;
+	font-size: .85em;
+	vertical-align: middle;
+	color: #555;
+}
+
+#provHeaderControls{
+	min-width:32em;	
+}
+
+.provButtonF{
+	float: right;
+	color: #ccc;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	padding: 0.2em 0.5em;
+	font-size: 1.25em;
+	margin:.2em .125em;
+}
+
+.provButtonF:hover{
+	color: #f3f3f3;
+	background-color: #0093d0;
+	border: 1px solid #0093d0;
+	text-decoration: none;
+}

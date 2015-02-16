@@ -1,0 +1,135 @@
+/*Prov CSS
+=============================================================================*/
+#wrapper{
+	min-width: 102em !important;
+}
+ 
+#sidebar{
+	z-index: 2;
+	max-width: 10em;
+}
+
+#graph {
+	display: inline;
+	margin: auto;
+}
+
+#graphL {
+	clear: left;
+	float: left;
+	margin-top: 2em;
+	background-color: #eee;
+	border-radius: 5px;
+	padding: 1em;
+	text-align: center;
+	width: 140px;
+	height: 225px;
+}
+
+#graph svg {
+	display: block;
+	margin: auto;
+	padding: 2em;
+}
+
+#graphL svg .viewport {
+	margin: auto;
+}
+
+#graphL svg {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	padding: 15px;
+}
+
+.marker-arrowheads, .link-tool, .marker-vertices, .connection-wrap {
+	display: none
+}
+
+#graph g .element, #graphL g .element {
+	pointer-events: auto;
+	cursor: default;
+}
+
+#graph .dynamicDesc {
+	pointer-events: visible !important;
+}
+
+#graph .dynamicDesc:hover {
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+#graph .label text {
+	text-shadow: none;
+	font-weight: normal;
+	font-size: 12pt;
+	cursor: default;
+}
+
+#graph .provLD4 {
+	cursor: pointer !important;
+}
+
+#graph .connection, #graph .provLink {
+	fill: transparent !important;
+}
+
+#graph rect {
+	cursor: inherit;
+}
+
+#main {
+	s padding: 0 !important;
+}
+
+.provL2 {
+	stroke-dasharray: 2;
+}
+
+.provL3 {
+	stroke-dasharray: 10;
+}
+
+#provHeader {
+	float: left;
+}
+
+.pL {
+	float: left;
+	clear: both;
+}
+
+#provEdit textarea {
+	height: 10em;
+	width: 80em;
+}
+
+#provEdit input[type=submit] {
+	display: block;
+}
+
+#provControls {
+	position: absolute;
+	top: 6em;
+}
+
+#provSimple {
+	display: none;
+}
+
+.provButton {
+	min-width: 140px;
+	text-align: center;
+	border: 1px solid #3886cc;
+	padding: .25em .5em;
+	border-radius: 5px;
+}
+
+.provButton:hover {
+	border: 1px solid #2a6496;
+	background-color: #2a6496;
+	color: #eee;
+	padding: .25em .5em;
+}

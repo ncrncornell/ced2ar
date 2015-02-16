@@ -1,0 +1,57 @@
+{
+    "nodes": {
+        "ipumsusa2012": ["IPUMS","0","codebooks/ipumsusa2012"],   
+        "1": ["NHGIS","0",""],  
+        "2": ["American Fact Finder","0",""],
+        "acs2009": ["PUMS","0","codebooks/acs2009"], 
+        "4": ["Aggregate Tabulations","0",""],
+        "5": ["RDC File","0",""],
+        "6": ["Internal File","0",""],
+        "7": ["ACS Questionnaire","0",""],
+
+        "8": ["MPC Integration Code","1",""],
+        "9": ["PUF Creation Code","1",""],
+        "10": ["Restricted Process","1",""],
+        "11": ["Restricted Process","1",""],
+        "12": ["Unknown Process","1",""],
+        "13": ["Unknown Process","1",""],
+		"14": ["Restricted Process","1",""],
+		
+        "15": ["Minnesota Population Center","2",""],
+        "16": ["The Census Bureau","2",""]
+    },
+    "edges": {      
+        "0" : ["acs2009", "ipumsusa2012","4","Using the MPC Integration Code from the Minnesota Population Center"], 
+        "1" : ["4", "1","4","Using an unknown process"],
+        "2" : ["4", "2","4","Using an unknown process"],
+        "3" : ["6", "acs2009","4","Using the PUF Creation Code from The Census Bureau"],
+        "4" : ["6", "4","4","Using a restricted process from The Census Bureau"],
+        "5" : ["6", "5","4","Using a restricted process from The Census Bureau"],
+        "6" : ["7", "6","4","Using a restricted process from The Census Bureau"],
+        
+        "7": ["8","ipumsusa2012","0",""],
+        "8": ["12","1","0",""],
+		"9": ["13","2","0",""],		
+		"10": ["9","acs2009","0",""],
+        "11": ["10","4","0",""],
+        "12": ["11","5","0",""],
+    	"13": ["14","6","0",""],
+
+        "14": ["15","8","2",""],
+        "15": ["15","12","2",""],
+        "16": ["15","13","2",""],
+    	"17": [ "16", "9","2",""],
+        "18": [ "16", "10","2",""],
+   		"19": [ "16", "11","2",""],
+   		"20": [ "16", "14","2",""],
+   		"21": [ "16", "7","3",""],
+   		
+   		"22": [ "acs2009", "8","1",""],
+    	"23": [ "4", "12","1",""],
+        "24": [ "4", "13","1",""],       
+        "25": [ "6", "9","1",""],
+    	"26": [ "6", "10","1",""],
+        "27": [ "6", "11","1",""],
+        "28": [ "7", "14","1",""]       
+    }	
+}

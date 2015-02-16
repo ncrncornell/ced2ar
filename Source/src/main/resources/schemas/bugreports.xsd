@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="bugReports">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="bugReport" type="bugReportType"
+					minOccurs="0" maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="bugReportType">
+		<xs:sequence>
+			<xs:element name="type" type="classificationType"
+				minOccurs="1" maxOccurs="1" />
+			<xs:element name="description" type="xs:normalizedString"
+				minOccurs="1" maxOccurs="1" />
+			<xs:element name="reproductionSteps" type="xs:normalizedString"
+				minOccurs="1" maxOccurs="1" />
+			<xs:element name="name" type="xs:normalizedString"
+				minOccurs="1" maxOccurs="1" />
+			<xs:element name="email" type="xs:normalizedString"
+				minOccurs="1" maxOccurs="1" />
+			<xs:element name="ip" type="xs:normalizedString"
+				minOccurs="1" maxOccurs="1" />
+			<xs:element name="userAgent" type="xs:normalizedString"
+				minOccurs="1" maxOccurs="1" />
+			<xs:element name="timeStamp" type="xs:normalizedString"
+				minOccurs="1" maxOccurs="1" />
+			<xs:element name="lastURL" type="xs:normalizedString"
+				minOccurs="1" maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="classificationType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Coding" />
+			<xs:enumeration value="Design" />
+			<xs:enumeration value="Suggestion" />
+			<xs:enumeration value="Documentation" />
+			<xs:enumeration value="Hardware" />
+			<xs:enumeration value="Other" />
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

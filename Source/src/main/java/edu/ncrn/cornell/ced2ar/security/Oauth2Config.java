@@ -121,7 +121,7 @@ public class Oauth2Config{
 			this.authCode = env.getProperty("authCode");
 			this.preEstabledURL = env.getProperty("preEstabledURL");
 			this.defaultFilterURL = env.getProperty("defaultFilterURL");
-			this.infoReq = env.getProperty("infoReq");
+			this.infoReq = env.getProperty("infoReq");	
     	}
     }  
 }

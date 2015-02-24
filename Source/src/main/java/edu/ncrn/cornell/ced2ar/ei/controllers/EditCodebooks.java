@@ -1,5 +1,7 @@
 package edu.ncrn.cornell.ced2ar.ei.controllers;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -59,7 +61,6 @@ public class EditCodebooks {
 	private Config config;
 	
 //Utilties
-	
 	private Hashtable<String,String[]> getVarFields(String var, String index, String index2){
 		Hashtable<String,String[]> validFields = new Hashtable<String,String[]>();
 		validFields.put("topAcs", new String[] {"5","/codeBook/var[@name='"+var+"']/@access","Top Level Access", "1"});
@@ -148,8 +149,11 @@ public class EditCodebooks {
 	@Cacheable( value="codebook", key="handle")
 	protected String getTitlePage(String handle){		
 		String baseURI = loader.getPath() + "/rest/";
-		String apiURI = baseURI + "codebooks/"+ handle + "/titlepage";		
-		return Fetch.getXML(apiURI)[0];
+		String apiURI = baseURI + "codebooks/"+ handle + "/titlepage";	
+		String xml = Fetch.getXML(apiURI)[0];
+		xml = xml.replaceAll("(\\S)(<ExtLink)", "$1 <ExtLink");
+		xml = xml.replaceAll("(</ExtLink>)(\\S)", "</ExtLink> $2");
+		return xml;
 	}
 	
 	/**
@@ -168,7 +172,7 @@ public class EditCodebooks {
 			
 		//define safe tags, clean input
 		if(!remove){
-			wl = wl.addTags("emph","p","li","ul","a","xhtml:li","xhtml:ul");
+			wl = wl.addTags("em","p","li","ul","a","xhtml:li","xhtml:ul");
 			wl = wl.addAttributes("a","href","title","target");
 		}
 		
@@ -177,7 +181,6 @@ public class EditCodebooks {
 		if(!remove){
 			safe = safe.replaceAll("&quot;", "\"").replaceAll("&amp;", "&");
 		}
-		
 		return safe;
 	}
 	
@@ -187,11 +190,26 @@ public class EditCodebooks {
 	 * @return
 	 */
 	private static String htmlDDIClean(String value){
+		value = value.replaceAll("target=\".+\"", "");
+		value = value.replaceAll("title=\".+\"", "");
 		value = value.replaceAll("<a href=","<ExtLink URI=").replaceAll("</a>","</ExtLink>");
 		value = value.replaceAll("<ul>", "<xhtml:ul>").replaceAll("</ul>", "</xhtml:ul>");
 		value = value.replaceAll("<li>", "<xhtml:li>").replaceAll("</li>", "</xhtml:li>");
+		value = value.replaceAll("<em>", "<emph>").replaceAll("</em>", "</emph>");
 		value = value.replaceAll("&nbsp;", " ");
 		return value;
+	}
+	
+	/**
+	 *Removes special characters from input that may have been pasted 
+	 */
+	private static String specialCharClean(String s){	
+		try{
+			s = new String(Charset.forName("UTF-8").encode(s).array(), "UTF-8");
+		}catch(UnsupportedEncodingException e){}
+		s = s.replaceAll("&rdquo;", "\"").replaceAll("&ldquo;", "\"");
+		s = s.replaceAll("“","\"").replaceAll("”", "\"");
+		return s.trim();
 	}
 	
 	/**
@@ -199,11 +217,10 @@ public class EditCodebooks {
 	 * @param value
 	 * @return
 	 */
-	private static String htmlRegClean(String value){
+	private static String htmlRegClean(String value){	
+		value = value.replaceAll("<xhtml:","<").replaceAll("</xhtml:","</");
 		value = value.replaceAll("<ExtLink URI=","<a href=").replaceAll("</ExtLink>","</a>");
-		value = value.replaceAll("<xhtml:ul>","<ul>").replaceAll("</xhtml:ul>","</ul>");
-		value = value.replaceAll("<xhtml:li>","<li>").replaceAll("</xhtml:li>","</li>");
-		
+		value = value.replaceAll("<emph>", "<em>").replaceAll("</emph>", "</em>");
 		return value;
 	}
 	
@@ -388,13 +405,12 @@ public class EditCodebooks {
 					currentValue = "";
 				}else{
 					currentValue = xp.getNode(path[1]);
-					//currentValue = xp.getValue(path[1]);
 				}
-			
+				
 				if(append.equals("true")){ 
 					currentValue = "";
 				}else{
-					currentValue = HTMLcheck(currentValue,false);
+					currentValue = HTMLcheck(currentValue,false);					
 				}
 
 				model.addAttribute("editorType", path[3]);
@@ -413,7 +429,6 @@ public class EditCodebooks {
 		}
 		return "/WEB-INF/ajaxViews/codebookEdit.jsp";
 	}
-	
 	/**
 	 * Sends the request to edit field in title page
 	 * @param handle the codebook being edited
@@ -435,7 +450,6 @@ public class EditCodebooks {
 	@RequestParam(value = "append", defaultValue = "false") String append, 
 	Model model, HttpSession session, HttpServletResponse response) throws Exception{
 		
-		
 		Hashtable<String,String[]> validFields = null;
 		String[] fieldValues = null;
 		try{
@@ -454,12 +468,11 @@ public class EditCodebooks {
 		switch(fieldValues[3]){
 			//HTML
 			case "0":
-				
+				value = specialCharClean(value);
 				if(!linkCheck(field,value))
 					throw new Exception("bad HTML");
 				String oldval = value;
 				value = HTMLcheck(value,false);
-				
 				if(oldval.replaceAll("[\\s]", "").length() != value.replaceAll("[\\s]", "").length()){
 					throw new Exception("bad HTML");
 				}
@@ -513,6 +526,114 @@ public class EditCodebooks {
 		}
 		return "redirect:/edit/codebooks/"+baseHandle+"/v/"+version+"/";
 	}
+	
+	/**
+	 * Display dialog to delete titlepage field
+	 * @param baseHandle
+	 * @param version
+	 * @param field
+	 * @param index
+	 * @param append
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/edit/codebooks/{c}/v/{v}/delete", method = RequestMethod.GET)
+	public String deleteCodebookFieldD(@PathVariable(value = "c") String baseHandle,
+	@PathVariable(value = "v") String version,		
+	@RequestParam(value = "f", defaultValue = "") String field, 
+	@RequestParam(value = "i", defaultValue = "1") String index,
+	@RequestParam(value = "a", defaultValue = "false") String append, Model model) {
+		String handle =baseHandle+version;
+		if(field.equals(""))
+			return "redirect:/c/edit/codebooks/"+baseHandle+"/v/"+version+"/";		
+		
+		Hashtable<String,String[]> validFields = null;
+					
+		try{
+			validFields = getTitleFields(index);
+			if(validFields.containsKey(field)){
+				String[] path = validFields.get(field);
+				model.addAttribute("field", field);
+				model.addAttribute("index",index);	
+				model.addAttribute("handle", handle);	
+				model.addAttribute("title", path[2]);	
+				model.addAttribute("append", append);
+				model.addAttribute("hasMath",true);
+			}else{
+				return "redirect:/edit/codebooks/"+baseHandle+"/v/"+version+"/";	
+			}		
+		}finally{
+			validFields.clear();
+		}
+		return "/WEB-INF/ajaxViews/codebookFieldDelete.jsp";
+	}
+	
+	/**
+	 * Display dialog to delete titlepage field
+	 * @param baseHandle
+	 * @param version
+	 * @param field
+	 * @param index
+	 * @param append
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/edit/codebooks/{c}/v/{v}/delete", method = RequestMethod.POST)
+	public String deleteCodebookField(@PathVariable(value = "c") String baseHandle,
+	@PathVariable(value = "v") String version,		
+	@RequestParam(value = "f", defaultValue = "") String field, 
+	@RequestParam(value = "i", defaultValue = "1") String index,
+	@RequestParam(value = "a", defaultValue = "false") String append, 
+	Model model, HttpSession session, HttpServletResponse response) {
+		String handle = baseHandle+version;
+		if(field.equals(""))
+			return "redirect:/c/edit/codebooks/"+baseHandle+"/v/"+version+"/";		
+		
+		Hashtable<String,String[]> validFields = null;
+					
+		try{
+			validFields = getTitleFields(index);
+			int i = Integer.parseInt(index);
+			if(validFields.containsKey(field)){
+				String host = loader.getHostName();
+				String user = "anonymous";
+				
+				if(session.getAttribute("userEmail") != null){
+					user = (String) session.getAttribute("userEmail");
+				}
+				
+				int code = Fetch.deleteTitleField(host, baseHandle, version, field, i, user);
+				
+				if(code > 0 && code < 400){
+					session.setAttribute("info_splash2","Field Removed");
+					if(field.equals("titl")){
+						String baseURI = loader.getPath() + "/rest/";
+						session.removeAttribute("fL");
+						session.removeAttribute("filter");
+						session.removeAttribute("filterShow");
+						session.removeAttribute("filterHeader");
+						session.removeAttribute("verboseFilter");
+						session.removeAttribute("codebooks");
+						loader.refreshCodebooks(baseURI);	
+						TreeMap<String, String[]> codebooks = loader.getCodebooks(baseURI);
+						model.addAttribute("codebooks", codebooks);
+					}
+				}else if(code == 400){
+					session.setAttribute("error2", "There was a problem connecting to the database.");
+					response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+				}else{
+					session.setAttribute("error2", "Your request could not be completed.\nYour edit may have created an invalid document.");
+					response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				}
+			}else{
+				return "redirect:/codebooks/"+handle+"/";	
+			}		
+		}finally{
+			validFields.clear();
+		}
+		return "redirect:/edit/codebooks/"+baseHandle+"/v/"+version+"/";
+	}
+	
 	
 	/**
 	 * Page for releasing data from codebook
@@ -791,10 +912,15 @@ public class EditCodebooks {
 					currentValue = xp.getAttrValue(p1, p2);
 					model.addAttribute("type", "attr");
 				}else{
-					if(append.equals("true")) 
+					if(append.equals("true")){
 						currentValue = "";
-					else 
-						currentValue = xp.getNode(path[1]);
+					}else{
+						try{
+							currentValue = xp.getNode(path[1]);
+						}catch(NullPointerException e){
+							append = "true";
+						}
+					}
 					model.addAttribute("type", "elem");
 				}
 				
@@ -848,6 +974,8 @@ public class EditCodebooks {
 	@RequestParam(value = "append", defaultValue = "false") String append,
 	Model model, HttpSession session, HttpServletRequest request, HttpServletResponse response) throws Exception
 	{
+		value = specialCharClean(value);
+		
 		String baseURI = loader.getHostName();
 		String ip = request.getRemoteAddr();
 		
@@ -1038,7 +1166,6 @@ public class EditCodebooks {
     	}else{
     		//Clone codebook
     		return "";
-    	}
-		
+    	}		
 	}
 }

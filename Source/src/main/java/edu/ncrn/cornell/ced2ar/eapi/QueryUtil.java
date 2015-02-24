@@ -20,12 +20,10 @@ import edu.ncrn.cornell.ced2ar.api.data.BaseX;
  */
 
 public class QueryUtil {
-	//TODO: with new index schemas, all index functions need to be rewritten\
-	//TODO: scheduler should validate this
+
+	 private static final Logger logger = Logger.getLogger(QueryUtil.class);
 	
-	private static final Logger logger = Logger.getLogger(QueryUtil.class);
-	
-//New Indexing functions
+	//New Indexing functions
 	
 	/**
 	 * Inserts a new codebook if codebook isn't present
@@ -255,6 +253,8 @@ public class QueryUtil {
 					+"	attribute handle {'"+handle+"'},"
 					+ 	varInsert
 					+" }  into $commit";
+				logger.debug("Inserting var commit");
+				logger.debug(xquery);
 				BaseX.write(xquery);
 			}  
 		}	
@@ -269,7 +269,7 @@ public class QueryUtil {
 	public static String getCommits(String handle, String type){
 		String xquery = "for $c in collection('git/git')/git/commits/commit"
 		+" where $c/codeBook[@handle='"+handle+"']"
-		+" order by $c/@timestamp descending";
+		+" order by number($c/@timestamp) descending";
 		
 		switch(type){
 			case "hash":
@@ -293,7 +293,7 @@ public class QueryUtil {
 	public static String getVarCommits(String handle, String var, String type){	
 		String xquery = "for $c in collection('git/git')/git/commits/commit"
 		+" where $c/codeBook[@handle='"+handle+"']/var[@name='"+var+"']"
-		+" order by $c/@timestamp descending";	
+		+" order by number($c/@timestamp) descending";	
 		switch(type){
 		case "hash":
 			xquery+=" return string-join((data($c/@hash),' '))";
@@ -358,41 +358,6 @@ public class QueryUtil {
 		return pending;
 	}
 	
-//Account registration (old)
-	/**
-	 * Determines if user is already registered with ced2ar
-	 * @param email
-	 * @return
-	 */
-	public static boolean hasAccount(String email){
-		String xquery = "count(for $u in collection('users/users')/users/user"
-		+" where $u[@email='"+email+"'] return $u)";
-		String count = BaseX.getXML(xquery, false);
-		try{
-			int i = Integer.parseInt(count.trim());
-			if(i > 0){
-				return true;
-			}
-		}catch(NumberFormatException e){}
-		return false;
-	}
-	
-	/**
-	 * Registers account with ced2ar
-	 * @param email String email address, must be unique
-	 * @param fName String first name
-	 * @param lName String last name
-	 * @param org String organization, affiliation, or employer
-	 */
-	public static void createAccount(String email, String fName, String lName, String org){
-		String xquery = "insert node element user {"
-		+" attribute email {'"+email+"'},"
-		+" element fName {'"+fName+"'},"
-		+" element lName {'"+lName+"'},"
-		+" element org {'"+org+"'}"
-		+"} into collection('users/users')/users";
-		BaseX.write(xquery);
-	}
 //Group methods
 	/**
 	 * Picks a vargrp ID that isn't in use
@@ -411,7 +376,6 @@ public class QueryUtil {
 		return groupID;
 	}
 	
-
 //Other database methods		
 	
 	/**

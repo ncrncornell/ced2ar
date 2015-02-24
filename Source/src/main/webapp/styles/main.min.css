@@ -55,7 +55,7 @@ strong, b{font-weight:bold;}
 .lb2{margin-bottom:1em;}
 .lb3{margin-bottom:0.25em;}
 .lbi{margin-left:0.5em;}
-.truncExp{display:inline-block;color:#3886cc;font-style:italic;}
+.truncExp{display:inline-block;color:#3886cc;font-style:italic;margin-left:.333em;}
 .truncExp:hover{text-decoration:underline;cursor:pointer;}
 .truncTxt{display:none;}
 .noSelect{-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;}
@@ -149,7 +149,9 @@ h6{font-size:1.1em;}
 to(#e6e6e6));background-image:-webkit-linear-gradient(top, #ffffff, #e6e6e6);background-image:-o-linear-gradient(top, #ffffff, #e6e6e6);background-image:linear-gradient(to bottom, #ffffff, #e6e6e6);background-repeat:repeat-x;border:1px solid #cccccc;*border:0;border-color:#e6e6e6 #e6e6e6 #bfbfbf;border-color:rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);border-bottom-color:#b3b3b3;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff',
 endColorstr='#ffe6e6e6', GradientType=0);filter:progid:DXImageTransform.Microsoft.gradient(enabled=false);*zoom:1;-webkit-box-shadow:inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px
 rgba(0, 0, 0, 0.05);-moz-box-shadow:inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px
-rgba(0, 0, 0, 0.05);box-shadow:inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px
+rgba(0, 0,.tab{
+	margin-left:4em;	
+} 0, 0.05);box-shadow:inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px
 rgba(0, 0, 0, 0.05);}
 .btn.disabled, .btn[disabled]{cursor:default;background-image:none;opacity:0.65;filter:alpha(opacity = 65);-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none;}
 .btn-group{margin:0.25em .25em;}
@@ -166,3 +168,7 @@ rgba(0, 0, 0, 0.05);}
 .closeWindow{float:right;display:inline-block;background-color:transparent;padding:0em 0.3em;margin-left:0.25em;border:1px solid #ccc;font-weight:bold;font-size:1.25em;color:#777;}
 .closeWindow:hover{color:white;text-decoration:none;background-color:#d00000;border:1px solid transparent;cursor:pointer;}
 .closeBar{width:inherit;position:fixed;;padding:1em 2em 0em;}
+.iLinkR i{padding-left:.333em;}
+.iLinkL i{padding-right:.333em;}
+.tab{margin-left:4em;}
+.valueInline p:last-of-type{display:inline;}

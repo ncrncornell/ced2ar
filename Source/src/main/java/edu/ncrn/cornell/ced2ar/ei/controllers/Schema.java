@@ -1,7 +1,5 @@
 package edu.ncrn.cornell.ced2ar.ei.controllers;
 
-import java.util.Hashtable;
-
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 

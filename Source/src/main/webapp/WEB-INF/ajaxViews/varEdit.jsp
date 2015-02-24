@@ -13,9 +13,9 @@
 		<c:set var="lciw" value="col-xs-offset-1 col-sm-offset-2 col-md-offset-3 col-xs-10 col-sm-8 col-md-6" />
 	</c:otherwise>
 </c:choose>
-<div id="loadCoverInner" class="editControlB ${lciw}">
+<div id="loadCoverInner" class="editControlB no Select ${lciw}">
 	<form id="editForm" action="${handle}/edit" method="POST">
-		<a id="editDiscard" href="../codebooks/${handle}" class="closeWindow" title="Discard Changes">×</a>
+		<a id="editDiscard" href="#" class="closeWindow" title="Discard Changes">×</a>
 		<h2>${title}</h2>	
 		<a href="#" title="Save changes" id="editSave"
 			class="editControl3 editIcon" onclick="return false;"> <i
@@ -47,14 +47,17 @@
 							    content_css : "${baseURI}/styles/tinymce.css",
 							    oninit : "setPlainText",
 							    plugins: "paste save link code",
-							    toolbar: "save | undo redo | link | bullist | code",
+							    target_list: [{title: 'None', value: ''}],
+							    paste_as_text: true,
+							    toolbar: "save | undo redo | link | bullist | italic | code",
+							    valid_elements :"a[href|target=_blank],strong/b,em,div,br,p,li,ul",
 							    save_onsavecallback: function(){
 							    	$("textarea [name=newText]").html(this.getContent());
 									$("#editSave").click();
 							    }
 							});
 						</script>
-						<c:set var="newTxtHeight" value="${((fn:length(curVal)/80)*1.1)+2}" />
+						<c:set var="newTxtHeight" value="${((fn:length(curVal)/120))}" />
 						<c:if test="${newTxtHeight lt 6}">
 							<c:set var="newTxtHeight" value="6" />
 						</c:if>

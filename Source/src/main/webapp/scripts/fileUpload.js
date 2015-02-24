@@ -65,28 +65,36 @@ function indexListener(){
 }
 
 function pdfListen(){
-	$("#newPDFs").click(function(){
-		var l = this;
-		var linkHtml = $(this).html();
-		$(this).html("<i class=\"fa fa-spinner fa-spin\"></i>");
-		$(this).css("color","#333");
-		$(this).css("font-size","1.5em");
-		$.ajax({
-			cache: false,
-	        url : baseURI+"/edit/codebooks/generatepdf",
-	        success : function(data) {
-	    		$(l).html(linkHtml);
-	    		$(l).css("color","#3886cc");
-	    		$(l).css("font-size","1em");
-	        },
-	        error:function(data) {
-	    		$(l).html(linkHtml);
-	    		$(l).css("color","#3886cc");
-	    		$(l).css("font-size","1em");
-	        },
-			
-	    });
-		
+	var pdfGenRunning = false;
+	$("#newPDFs").click(function(){	
+		if(!pdfGenRunning){
+			pdfGenRunning = true;		
+			var l = this;
+			var linkHtml = $(this).html();
+			$(this).html("<i class=\"fa fa-spinner fa-spin\"></i>");
+			$(this).css("color","#333");
+			$(this).css("font-size","1.5em");
+			$(this).css("cursor","not-allowed");
+			$.ajax({
+				cache: false,
+		        url : baseURI+"/edit/codebooks/generatepdf",
+		        success : function(data) {
+		    		$(l).html(linkHtml);
+		    		$(l).css("color","#3886cc");
+		    		$(l).css("font-size","1em");
+		    		$(l).css("cursor","pointer");
+		    		pdfGenRunning = false;
+		        },
+		        error:function(data) {
+		    		$(l).html(linkHtml);
+		    		$(l).css("color","#3886cc");
+		    		$(l).css("font-size","1em");
+		    		$(l).css("cursor","pointer");
+		    		pdfGenRunning = false;
+		        },
+				
+		    });
+		}
 		return false;
 	});
 }

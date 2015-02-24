@@ -8,6 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+/**
+ *@author Cornell University, Copyright 2012-2015
+ *@author Venky Kambhampaty
+ *
+ *@author Cornell Institute for Social and Economic Research
+ *@author Cornell Labor Dynamics Institute
+ *@author NCRN Project Team 
+ */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:test-beans.xml")
 public class RolePermissionServiceImpl {

@@ -1,4 +1,3 @@
-
 package edu.ncrn.cornell.ced2ar.security.idmgmt.service.impl;
 
 import java.util.List;
@@ -33,7 +32,6 @@ public class UserServiceImpl implements UserService{
 	RolePermissionService rolePermissionService;
 	@Autowired
 	UserRoleService userRoleService;
-	
 	
 	@Override
 	public User getUser(String userId){

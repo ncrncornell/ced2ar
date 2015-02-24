@@ -19,8 +19,7 @@ public class Config {
 	public static final String AUTHENTICATION_TYPE_OAUTH2 	= "OAUTH2";
 	public static final String AUTHENTICATION_TYPE_OPENID 	= "OPENID";
 	public static final String AUTHENTICATION_TYPE_DEFAULT 	= "DEFAULT";
-	
-	
+
 	private String baseXDB; 	
 	private String baseXReaderHash;
 	private String baseXWriterHash;
@@ -48,12 +47,14 @@ public class Config {
 	private boolean pwdIsRandom;
 	private String pwdHash;
 	private boolean basexGenerateRandomPasswords;
+	private String openAccess;
 	
 	//Git added so other classes have access
 	private boolean isGitEnabled;
 	private String remoteRepoURL;
-	
 	private String authenticationType;
+	
+	
 
 //Getters and setters
 	
@@ -314,6 +315,14 @@ public class Config {
 	
 	public void setGitEnabled(boolean isGitEnabled) {
 		this.isGitEnabled = isGitEnabled;
+	}
+	
+	public String getOpenAccess() {
+		return this.openAccess;
+	}
+	
+	public void setOpenAccess(String s) {
+		this.openAccess = s;
 	}
 
 	

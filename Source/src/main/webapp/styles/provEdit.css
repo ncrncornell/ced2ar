@@ -2,7 +2,7 @@ fieldset{
 	border:1px solid #ccc;
 	border-radius:4px;
 	display:block;
-	padding:1em 2em;
+	padding:.75em 1em;
 	margin:1em auto 2em;
 }
 
@@ -67,6 +67,18 @@ legend{
 
 #provFileAdd input[name=fileLocSelect]{
 	margin:0 .125em;
+}
+
+fieldset select{
+	border-radius: 4px;
+	margin: .5em .5em .5em 0em;
+	min-width: 15em;
+	border: 1px solid #ccc;
+	font-size: .85em;
+	height: 2.5em;
+	font-size: .85em;
+	vertical-align: middle;
+	color: #555;
 }
 
 /*BSE

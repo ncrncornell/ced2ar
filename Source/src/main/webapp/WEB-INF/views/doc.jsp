@@ -16,6 +16,10 @@
 		<div class="infoFloat">
 			<h4>External Resources</h4>
 			<p>
+				<a href="https://github.com/ncrncornell"
+					target="_blank">NCRN GitHub</a><br />
+			</p>
+			<p>
 				<a href="http://www.ddialliance.org/Specification/DDI-Codebook/2.5/"
 					target="_blank">DDI 2.5 Schema</a><br />
 			</p>

@@ -5,9 +5,8 @@ import org.springframework.security.oauth2.client.token.AccessTokenRequest;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 
 /**
- * 
- *  Always set access token to null. This way we can request authentication from google every time
- *  and never use Access Token to get user info.
+ * Always set access token to null. This way we can request authentication from google every time
+ * and never use Access Token to get user info.
  * @see org.springframework.security.oauth2.client.DefaultOAuth2ClientContext#getAccessToken()  
  * 
  *  This is needed because

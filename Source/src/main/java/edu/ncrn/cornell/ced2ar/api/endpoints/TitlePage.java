@@ -27,7 +27,7 @@ public class TitlePage extends CodebookConstructor {
 		super.codebookId = (String) getRequestAttributes().get("codebookId");
 		super.xquery = "for $codebook in collection('CED2AR/"+codebookId+"')/codeBook "
 				+ " let $count := count($codebook/dataDscr/var)"
-				+" return <codeBook handle='"+codebookId+"' variables='{$count}'>{$codebook/docDscr} {$codebook/stdyDscr} {$codebook/fileDscr}</codeBook>";
+				+" return <codeBook xmlns:xhtml='http://www.w3.org/1999/xhtml' handle='"+codebookId+"' variables='{$count}'>{$codebook/docDscr} {$codebook/stdyDscr} {$codebook/fileDscr}</codeBook>";
 		return super.represent(variant);
 	}
 }

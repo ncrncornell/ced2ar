@@ -15,7 +15,7 @@
 	<c:choose>
 		<c:when test="${not empty versions}">
 			<c:forEach var="version" items="${versions}">	
-				<p><a href="${gitURL}/commits/${version}" target="_blank">${version}</a></p>
+				<p><a href="${gitURL}/commits/${version[0]}" target="_blank">${version[1]}</a></p>
 			</c:forEach>
 		</c:when>
 		<c:otherwise>

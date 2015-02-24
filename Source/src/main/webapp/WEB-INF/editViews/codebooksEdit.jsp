@@ -14,9 +14,13 @@
 				<li><a href="#t2" data-toggle="tab" title="Modify an existing codebook"><i class="fa fa-pencil-square-o largeIcon"></i> Update</a></li>
 				<li><a href="#t3" data-toggle="tab" title="Delete an existing codebook"><i class="fa fa-trash-o largeIcon"></i> Delete</a></li>
 				<li><a href="#t4" data-toggle="tab" title="Change settings"><i class="fa fa-wrench largeIcon"></i> Settings</a></li>
+				<c:if test="${git}">
+					<li><a href="#t5" data-toggle="tab" title="Git"><i class="fa fa-git largeIcon"></i> Versions</a></li>
+				</c:if>
 			</ul>
 			<div class="tab-content">		  
 				<div class="tab-pane active" id="t1">
+					<h4>Add New Codebook</h4>
 					<sf:form id="addForm" method="post" action="${baseURI}/edit/add/codebook" enctype="multipart/form-data">		
 						<div class="uploadFileForm">
 		  					<button class="btn fileUploadBtn"><i class="fa fa-file"></i> Select New File</button>   
@@ -69,6 +73,7 @@
 					</sf:form>
 		  		</div>
 		  		<div class="tab-pane" id="t2">
+			  		<h4>Update Existing Codebook</h4>
 			  		<sf:form id="updateForm" method="post" action="${baseURI}/edit/update/codebook" enctype="multipart/form-data">			
 		  				<div class="uploadFileForm">
 		  					<button class="btn fileUploadBtn"><i class="fa fa-file"></i> Select New File</button>   
@@ -87,6 +92,7 @@
 					</sf:form>
 		  		</div>
 		  		<div class="tab-pane" id="t3">
+			  		<h4>Delete Codebook</h4>
 			  		<sf:form id="deleteForm" method="post" action="${baseURI}/edit/delete/codebook" enctype="multipart/form-data">			
 			          	<select name="handle" class="requiredInput">
 							<option value="">--Select Codebook to Delete--</option>
@@ -107,8 +113,14 @@
 		  				Generates new PDF copies of codebooks. 
 		  				This might take longer for several codebooks or large codebooks
 		  			</p>
-		  			<a href="#t4" id="newPDFs">Generate now</a>
+		  			<a href="#t4" id="newPDFs" class="footerButton"><i class="fa fa-file-pdf-o"></i>Generate now</a>
 		  		</div>
+		  		<c:if test="${git}">
+		  			<div class="tab-pane" id="t5">
+			  			<h4>Version Control</h4>
+						<p>Coming soon</p>
+			  		</div>
+		  		</c:if>
 			</div>
 		</div>
 	</div>	

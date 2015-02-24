@@ -7,6 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import edu.ncrn.cornell.ced2ar.api.data.Config;
 import edu.ncrn.cornell.ced2ar.auth.OAUserDetail;
 import edu.ncrn.cornell.ced2ar.auth.Service;
 
@@ -46,17 +47,23 @@ public class AuthProvider  implements AuthenticationProvider {
 		logger.debug("OAuth2Token = " + token);
 		OAUserDetail user = (OAUserDetail) token.getPrincipal();
 		
-		try {
+		try{
 			user = (OAUserDetail) userDetailService.loadUserByUsername(user.getUsername());
 			logger.debug("User with token  " + token + " is successfully authorized and a registered user of CED2AR. Assigning roles to the user ...");
 			token = new AuthToken(user);
 			token.setAuthenticated(true);
 			logger.debug("User with token " + token + " logged in ");
-
-		} catch(UsernameNotFoundException usernameNotFoundException) {
-			logger.debug("User trying google/login is not registered");
-			token = null;
-			throw usernameNotFoundException;
+		}catch(UsernameNotFoundException usernameNotFoundException){
+			//All users are added ROLE_USER group
+			Config config = Config.getInstance();
+			if(config.getOpenAccess().equals("true")){
+				//token = new AuthToken(user);
+				token.setAuthenticated(true);
+			}else{
+				logger.debug("User trying google/login is not registered");
+				token = null;
+				throw usernameNotFoundException;
+			}
 		}
 		return token;
 	}

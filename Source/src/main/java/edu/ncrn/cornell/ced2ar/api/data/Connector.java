@@ -266,6 +266,7 @@ public class Connector{
 	 * Authorizes using writer hash
 	 */
 	public void writerAuthorize(){
+		logger.debug("Writer auth using: Basic "+Config.getInstance().getBaseXWriterHash());
 		this.setHeader("Authorization", "Basic "+Config.getInstance().getBaseXWriterHash());
 	}
 

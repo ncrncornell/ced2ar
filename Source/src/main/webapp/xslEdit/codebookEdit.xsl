@@ -54,7 +54,7 @@
 				<xsl:otherwise>
 					<p class="value4">
 						Document Date:
-						<em>No value entered</em>
+						<em>No value entered</em>&#160;
 						<a title="Edit field" class="editIcon2">
 							<xsl:attribute name="href">edit?f=version</xsl:attribute>
 							<i class="fa fa-pencil"></i>
@@ -84,7 +84,7 @@
 				<xsl:when test="not(/codeBook/docDscr/citation/prodStmt/producer)">
 					<p class="value4">
 						Codebook prepared by:
-						<em>No value entered</em>
+						<em>No value entered</em>&#160;
 						<a title="Add field" class="editIcon2">
 							<xsl:attribute name="href">edit?f=docProducer&amp;a=true</xsl:attribute>
 							<i class="fa fa-plus"></i>
@@ -98,7 +98,7 @@
 				<xsl:otherwise>
 					<p class="value4">
 						Codebook prepared by:
-						<em>No value entered</em>
+						<em>No value entered</em>&#160;
 						<a title="Edit field" class="editIcon2">
 							<xsl:attribute name="href">edit?f=docProducer</xsl:attribute>
 							<i class="fa fa-pencil"></i>
@@ -136,7 +136,7 @@
 				<xsl:when test="not(codeBook/stdyDscr/citation/prodStmt/producer)">
 					<p class="value4">
 						Data prepared by:
-						<em>No value entered</em>
+						<em>No value entered</em>&#160;
 						<a title="Add Producer" class="editIcon2">
 							<xsl:attribute name="href">edit?f=stdyProducer&amp;i=<xsl:value-of
 								select="position()" />&amp;a=true</xsl:attribute>
@@ -151,7 +151,7 @@
 				<xsl:otherwise>
 					<p class="value4">
 						Data prepared by:
-						<em>No value entered</em>
+						<em>No value entered</em>&#160;
 						<a title="Edit field" class="editIcon2">
 							<xsl:attribute name="href">edit?f=stdyProducer&amp;i=1</xsl:attribute>
 							<i class="fa fa-pencil"></i>
@@ -242,7 +242,7 @@
 						</a>
 					</p>
 					<p class="value2">
-						<em>No value entered</em>
+						<em>No value entered</em>&#160;
 						<a title="Edit field" class="editIcon2">
 							<xsl:attribute name="href">edit?f=distrbtr&amp;i=<xsl:value-of
 								select="position()" /></xsl:attribute>
@@ -252,12 +252,6 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</div>
-		<xsl:variable name='DbiblCit'>
-			<xsl:value-of select="/codeBook/docDscr/citation/biblCit" />
-		</xsl:variable>
-		<xsl:variable name='SbiblCit'>
-			<xsl:value-of select="/codeBook/stdyDscr/citation/biblCit" />
-		</xsl:variable>
 		<p class="staticHeader">
 			Citation
 			<a title="Schema Documentation" class="schemaDocLink baseURIa">
@@ -266,30 +260,29 @@
 			</a>
 		</p>
 		<xsl:choose>
-			<xsl:when test="$DbiblCit != ''">
-				<p class="value2">
+			<xsl:when test="/codeBook/docDscr/citation/biblCit != ''">
+				<div class="value2">
 					<em>Please cite this codebook as:</em>
-					<br />
-					<xsl:value-of select="/$DbiblCit" />
 					<a title="Edit field" class="editIcon2">
 						<xsl:attribute name="href">edit?f=docCit</xsl:attribute>
 						<i class="fa fa-pencil"></i>
 					</a>
-					<xsl:if test="$DbiblCit/ExtLink != ''">
-						<xsl:value-of select="$DbiblCit/ExtLink" />
+					<br />
+					<xsl:copy-of select="/codeBook/docDscr/citation/biblCit/node()" />
+					<xsl:if test="/codeBook/docDscr/citation/biblCit/ExtLink != ''">
+						<xsl:value-of select="/codeBook/docDscr/citation/biblCit/ExtLink" />
 						<a title="Edit field" class="editIcon2">
 							<xsl:attribute name="href">edit?f=docCitURL</xsl:attribute>
 							<i class="fa fa-pencil"></i>
 						</a>
 					</xsl:if>
-					<xsl:copy-of select="/$DbiblCit/ExtLink/node()" />
-				</p>
+					<xsl:copy-of select="/codeBook/docDscr/citation/biblCit/ExtLink/node()" />
+				</div>
 			</xsl:when>
 			<xsl:when test="not(/codeBook/docDscr/citation/biblCit)">
 				<p class="value2">
 					<em>Please cite this codebook as:</em>
 					<br />
-
 					<a title="Add field" class="editIcon2 editIconText">
 						<xsl:attribute name="href">edit?f=docCit&amp;a=true</xsl:attribute>
 						<i class="fa fa-plus"></i>
@@ -301,7 +294,7 @@
 				<p class="value2">
 					<em>Please cite this codebook as:</em>
 					<br />
-					<em>No value entered</em>
+					<em>No value entered</em>&#160;
 					<a title="Edit field" class="editIcon2">
 						<xsl:attribute name="href">edit?f=docCit</xsl:attribute>
 						<i class="fa fa-pencil"></i>
@@ -310,23 +303,23 @@
 			</xsl:otherwise>
 		</xsl:choose>
 		<xsl:choose>
-			<xsl:when test="$SbiblCit != ''">
-				<p class="value2">
+			<xsl:when test="/codeBook/stdyDscr/citation/biblCit != ''">
+				<div class="value2">
 					<em>Please cite this dataset as:</em>
-					<br />
-					<xsl:value-of select="$SbiblCit" />
 					<a title="Edit field" class="editIcon2">
 						<xsl:attribute name="href">edit?f=stdyCit</xsl:attribute>
 						<i class="fa fa-pencil"></i>
 					</a>
-					<xsl:if test="$SbiblCit/ExtLink != ''">
-						<xsl:value-of select="$SbiblCit/ExtLink" />
+					<br />
+					<xsl:copy-of select="/codeBook/stdyDscr/citation/biblCit/node()" />
+					<xsl:if test="/codeBook/stdyDscr/citation/biblCit/ExtLink != ''">
+						<xsl:copy-of select="/codeBook/stdyDscr/citation/biblCit/ExtLink" />
 						<a title="Edit field" class="editIcon2">
 							<xsl:attribute name="href">edit?f=stdyCitURL</xsl:attribute>
 							<i class="fa fa-pencil"></i>
 						</a>
 					</xsl:if>
-				</p>
+				</div>
 			</xsl:when>
 			<xsl:when test="not(/codeBook/stdyDscr/citation/biblCit)">
 				<p class="value2">
@@ -343,7 +336,7 @@
 				<p class="value2">
 					<em>Please cite this dataset as:</em>
 					<br />
-					<em>No value entered</em>
+					<em>No value entered</em>&#160;
 					<a title="Edit field" class="editIcon2">
 						<xsl:attribute name="href">edit?f=stdyCit</xsl:attribute>
 						<i class="fa fa-pencil"></i>
@@ -410,24 +403,23 @@
 			</a>
 		</p>
 		<div class="value2">
-			<xsl:for-each select="/codeBook/fileDscr">
+			<xsl:for-each select="codeBook/fileDscr">
 				<p>
-					<xsl:value-of select="@ID" />
-					&#160;
+					<xsl:value-of select="fileTxt/fileName" />&#160;
 					<xsl:choose>
-						<xsl:when test="not(contains(@URI,'http')) and @URI != ''">
+						<xsl:when test="(not(contains(@URI,'http')) and not(contains(@URI,'ftp:'))) and @URI != ''">
 							<xsl:value-of select="fileTxt/fileName" />
-							(Incomplete URL provided)
+							(Incomplete URL provided - <xsl:value-of select="@URI" />)
 						</xsl:when>
 						<xsl:when test="string-length(@URI) gt 0 ">
-							<a>
+							<a itemprop="distribution" class="iLinkR">
+								<xsl:attribute name="target">_blank</xsl:attribute>
 								<xsl:attribute name="href"><xsl:value-of
 									select="@URI" /></xsl:attribute>
-								<xsl:value-of select="fileTxt/fileName" />
+								<xsl:value-of select="@URI" /><i class="fa fa-external-link"></i>
 							</a>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:value-of select="fileTxt/fileName" />
 							(No hyperlink available)
 						</xsl:otherwise>
 					</xsl:choose>
@@ -466,19 +458,24 @@
 				<xsl:choose>
 						<xsl:when test="current()/useStmt/restrctn/node() != ''">
 							<p>
-								<em><xsl:value-of select="current()/@ID" /></em><a title="Edit field" class="editIcon2">
+								<em><xsl:value-of select="current()/@ID" /></em>
+							</p>
+							<span class="valueInline">
+								<xsl:copy-of select="current()/useStmt/restrctn/node()" />			
+							</span>		
+							<a title="Edit field" class="editIcon2">
 								<xsl:attribute name="href">edit?f=accessRstr&amp;i=<xsl:value-of select="position()+1 "/></xsl:attribute>
 								<i class="fa fa-pencil"></i>
-								</a>	
-							</p>
-							<xsl:copy-of select="current()/useStmt/restrctn/node()" />							
+							</a>			
 						</xsl:when>
 					<xsl:otherwise>
-						<em><xsl:value-of select="current()/@ID" /></em><em>No description given</em>
+					<p>
+						<em><xsl:value-of select="current()/@ID" /></em><br /><em>No description given</em>
 						<a title="Edit field" class="editIcon2">
-						<xsl:attribute name="href">edit?f=accessRstr&amp;i=<xsl:value-of select="position()+1 "/>&amp;a=true</xsl:attribute>
+						<xsl:attribute name="href">edit?f=accessRstr&amp;i=<xsl:value-of select="position() "/>&amp;a=true</xsl:attribute>
 						<i class="fa fa-pencil"></i>
-						</a>	
+						</a>
+					</p>	
 					</xsl:otherwise>
 				</xsl:choose>
 				</div>
@@ -865,7 +862,7 @@
 		<div class="value2">
 			<xsl:choose>
 				<xsl:when test="$collMode  != ''">
-					<p class="staticHeader">
+					<p class="staticHeader lb3">
 						Methodology
 						<a title="Edit field" class="editIcon2">
 							<xsl:attribute name="href">edit?f=method</xsl:attribute>
@@ -876,9 +873,9 @@
 							<i class="fa fa-info-circle"></i>
 						</a>
 					</p>
-					<p class="value2">
+					<div class="tab lb">
 						<xsl:copy-of select="/codeBook/stdyDscr/method/dataColl/collMode/node()" />
-					</p>
+					</div>
 				</xsl:when>
 				<xsl:when test="not(/codeBook/stdyDscr/method/dataColl/collMode)">
 					<p class="staticHeader">
@@ -897,7 +894,7 @@
 					</div>
 				</xsl:when>
 				<xsl:otherwise>
-					<p class="staticHeader">
+					<p class="staticHeader lb3">
 						Methodology
 						<a title="Edit field" class="editIcon2">
 							<xsl:attribute name="href">edit?f=method</xsl:attribute>
@@ -908,13 +905,13 @@
 							<i class="fa fa-info-circle"></i>
 						</a>
 					</p>
-					<p class="value2">
+					<p class="tab lb2">
 						<em>No value entered</em>
 					</p>
 				</xsl:otherwise>
 			</xsl:choose>
 			<xsl:choose>
-				<xsl:when test="$dataSrc  != ''">
+				<xsl:when test="$dataSrc != ''">
 					<p class="staticHeader">
 						Sources
 						<a title="Schema Documentation" class="schemaDocLink baseURIa">
@@ -925,20 +922,27 @@
 					<ol class="value2">
 						<xsl:for-each select="/codeBook/stdyDscr/method/dataColl/sources/dataSrc">
 							<li>
-								<xsl:copy-of select="current()" />
+								<span class="valueInline">
+									<xsl:copy-of select="current()/node()" />
+								</span>
 								<a title="Edit field" class="editIcon2">
 									<xsl:attribute name="href">edit?f=sources&amp;i=<xsl:value-of
 										select="position()" /></xsl:attribute>
 									<i class="fa fa-pencil"></i>
 								</a>
+								<a title="Delete field" class="editIcon2">
+									<xsl:attribute name="href">delete?f=sources&amp;i=<xsl:value-of
+										select="position()" /></xsl:attribute>
+									<i class="fa fa-trash"></i>
+								</a>
 							</li>
-						</xsl:for-each>
-						<a title="Add New Source" class="editIcon2 editIconText">
-							<xsl:attribute name="href">edit?f=sources&amp;a=true</xsl:attribute>
-							<i class="fa fa-plus"></i>
-							<em>Add new source</em>
-						</a>
+						</xsl:for-each>						
 					</ol>
+					<a title="Add New Source" class="editIcon2 editIconText">
+						<xsl:attribute name="href">edit?f=sources&amp;a=true</xsl:attribute>
+						<i class="fa fa-plus"></i>
+						<em>Add new source</em>
+					</a>
 				</xsl:when>
 				<xsl:when test="not(/codeBook/stdyDscr/method/dataColl/sources/dataSrc)">
 					<p class="staticHeader">
@@ -985,20 +989,28 @@
 					<ol>
 						<xsl:for-each select="/codeBook/stdyDscr/othrStdyMat/relMat">
 							<li>
-								<xsl:copy-of select="current()" />
+								<span class="valueInline">
+									<xsl:copy-of select="current()/node()" />
+								</span>
 								<a title="Edit field" class="editIcon2">
 									<xsl:attribute name="href">edit?f=relMat&amp;i=<xsl:value-of
 										select="position()" /></xsl:attribute>
 									<i class="fa fa-pencil"></i>
 								</a>
+								<a title="Delete field" class="editIcon2">
+									<xsl:attribute name="href">delete?f=relMat&amp;i=<xsl:value-of
+										select="position()" /></xsl:attribute>
+									<i class="fa fa-trash"></i>
+								</a>
 							</li>
-						</xsl:for-each>
-						<a title="Add Related Material" class="editIcon2 editIconText">
-							<xsl:attribute name="href">edit?f=relMat&amp;a=true</xsl:attribute>
-							<i class="fa fa-plus"></i>
-							<em>Add related material</em>
-						</a>
+						</xsl:for-each>						
 					</ol>
+					<a title="Add Related Material" class="editIcon2 editIconText">
+						<xsl:attribute name="href">edit?f=relMat&amp;a=true</xsl:attribute>
+						<i class="fa fa-plus"></i>
+						<em>Add related material</em>
+					</a>
+					
 				</div>
 			</xsl:when>
 			<xsl:when test="not(/codeBook/stdyDscr/othrStdyMat/relMat)">
@@ -1027,7 +1039,7 @@
 				</p>
 				<div class="value2">
 					<p>
-						<em>No value entered</em>
+						<em>No value entered</em>&#160;
 						<a title="Edit field" class="editIcon2">
 							<xsl:attribute name="href">edit?f=relMat&amp;i=1</xsl:attribute>
 							<i class="fa fa-pencil"></i>
@@ -1049,20 +1061,27 @@
 					<ol>
 						<xsl:for-each select="/codeBook/stdyDscr/othrStdyMat/relPubl">
 							<li>
-								<xsl:copy-of select="current()" />
+								<span class="valueInline">
+									<xsl:copy-of select="current()/node()" />
+								</span>
 								<a title="Edit field" class="editIcon2">
 									<xsl:attribute name="href">edit?f=relPubl&amp;i=<xsl:value-of
 										select="position()" /></xsl:attribute>
 									<i class="fa fa-pencil"></i>
 								</a>
+								<a title="Delete field" class="editIcon2">
+									<xsl:attribute name="href">delete?f=relPubl&amp;i=<xsl:value-of
+										select="position()" /></xsl:attribute>
+									<i class="fa fa-trash"></i>
+								</a>
 							</li>
-						</xsl:for-each>
-						<a title="Add Related Publication" class="editIcon2 editIconText">
-							<xsl:attribute name="href">edit?f=relPubl&amp;a=true</xsl:attribute>
-							<i class="fa fa-plus"></i>
-							<em>Add related publications</em>
-						</a>
+						</xsl:for-each>						
 					</ol>
+					<a title="Add Related Publication" class="editIcon2 editIconText">
+						<xsl:attribute name="href">edit?f=relPubl&amp;a=true</xsl:attribute>
+						<i class="fa fa-plus"></i>
+						<em>Add related publication</em>
+					</a>
 				</div>
 			</xsl:when>
 			<xsl:when test="not(/codeBook/stdyDscr/othrStdyMat/relPubl)">
@@ -1074,10 +1093,10 @@
 					</a>
 				</p>
 				<div class="value2">
-					<a title="Add Related Publications" class="editIcon2 editIconText">
+					<a title="Add Related Publication" class="editIcon2 editIconText">
 						<xsl:attribute name="href">edit?f=relPubl&amp;a=true</xsl:attribute>
 						<i class="fa fa-plus"></i>
-						<em>Add related publications</em>
+						<em>Add related publication</em>
 					</a>
 				</div>
 			</xsl:when>
@@ -1090,7 +1109,7 @@
 					</a>
 				</p>
 				<div class="value2">
-					<em>No value entered</em>
+					<em>No value entered</em>&#160;
 					<a title="Edit field" class="editIcon2">
 						<xsl:attribute name="href">edit?f=relPubl&amp;i=1</xsl:attribute>
 						<i class="fa fa-pencil"></i>
@@ -1111,19 +1130,27 @@
 					<ol>
 						<xsl:for-each select="/codeBook/stdyDscr/othrStdyMat/relStdy">
 							<li>
-								<xsl:copy-of select="current()" />
+								<span class="valueInline">
+									<xsl:copy-of select="current()/node()" />
+								</span>
 								<a title="Edit field" class="editIcon2">
 									<xsl:attribute name="href">edit?f=relStdy&amp;i=<xsl:value-of
 										select="position()" /></xsl:attribute>
 									<i class="fa fa-pencil"></i>
 								</a>
+								<a title="Delete field" class="editIcon2">
+									<xsl:attribute name="href">delete?f=relStdy&amp;i=<xsl:value-of
+										select="position()" /></xsl:attribute>
+									<i class="fa fa-trash"></i>
+								</a>
 							</li>
-						</xsl:for-each>
-						<a title="New Related Study" class="editIcon2">
-							<xsl:attribute name="href">edit?f=relStdy&amp;a=true</xsl:attribute>
-							<i class="fa fa-plus"></i>
-						</a>
+						</xsl:for-each>						
 					</ol>
+					<a title="Add Related Studies" class="editIcon2 editIconText">
+						<xsl:attribute name="href">edit?f=relStdy&amp;a=true</xsl:attribute>
+						<i class="fa fa-plus"></i>
+						<em>Add related studies</em>
+					</a>
 				</div>
 			</xsl:when>
 			<xsl:when test="not(/codeBook/stdyDscr/othrStdyMat/relStdy)">
@@ -1135,10 +1162,10 @@
 					</a>
 				</p>
 				<div class="value2">
-					<a title="Add Related Studies" class="editIcon2 editIconText">
+					<a title="Add Related Study" class="editIcon2 editIconText">
 						<xsl:attribute name="href">edit?f=relStdy&amp;a=true</xsl:attribute>
 						<i class="fa fa-plus"></i>
-						<em>Add related studies</em>
+						<em>Add related study</em>
 					</a>
 				</div>
 			</xsl:when>
@@ -1151,7 +1178,7 @@
 					</a>
 				</p>
 				<div class="value2">
-					<em>No value entered</em>
+					<em>No value entered</em>&#160;
 					<a title="Edit field" class="editIcon2">
 						<xsl:attribute name="href">edit?f=relStdy&amp;i=1</xsl:attribute>
 						<i class="fa fa-pencil"></i>
@@ -1161,9 +1188,11 @@
 		</xsl:choose>
 		<xsl:choose>
 			<xsl:when test="/codeBook/docDscr/docSrc/biblCit  != ''">
-				<p>
+				<div>
 					This documentation derived from:
-					<xsl:copy-of select="/codeBook/docDscr/docSrc/biblCit" />
+					<span class="valueInline">
+						<xsl:copy-of select="/codeBook/docDscr/docSrc/biblCit/node()" />
+					</span>
 					<a title="Edit field" class="editIcon2">
 						<xsl:attribute name="href">edit?f=docSrcBib&amp;i=<xsl:value-of
 							select="position()" /></xsl:attribute>
@@ -1173,7 +1202,7 @@
 						<xsl:attribute name="href">/schema/doc/biblCit</xsl:attribute>
 						<i class="fa fa-info-circle"></i>
 					</a>
-				</p>
+				</div>
 			</xsl:when>
 			<xsl:when test="not(/codeBook/docDscr/docSrc/biblCit)">
 				<p>
@@ -1192,7 +1221,7 @@
 			<xsl:otherwise>
 				<p>
 					This documentation derived from:
-					<em>No value entered</em>
+					<em>No value entered</em>&#160;
 					<a title="Edit field" class="editIcon2">
 						<xsl:attribute name="href">edit?f=docSrcBib&amp;i=<xsl:value-of
 							select="position()" /></xsl:attribute>

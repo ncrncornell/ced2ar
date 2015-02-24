@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Hashtable;
 import java.util.TreeMap;
 
 import javax.servlet.ServletContext;
@@ -71,12 +72,17 @@ public class Codebook {
 	 */
 	//TODO: Remember to clear cache when updating
 	@Cacheable( value="codebook", key="handle")
-	protected String getTitlePage(String handle){		
+	public String getTitlePage(String handle){		
 		String baseURI = loader.getPath() + "/rest/";
 		String apiURI = baseURI + "codebooks/"+ handle + "/titlepage";		
-		logger.debug("fetching title page for " + apiURI);
-		return Fetch.getXML(apiURI)[0];
-	}
+		logger.debug("fetching title page for " + apiURI);		
+		String xml = Fetch.getXML(apiURI)[0];
+		
+		//Temp fix for white space chopping issues with BaseX
+		xml = xml.replaceAll("(\\S)(<ExtLink)", "$1 <ExtLink");
+		xml = xml.replaceAll("(</ExtLink>)(\\S)", "</ExtLink> $2");
+		return xml;
+	} 
 	
 //Endpoints
 	/**
@@ -168,13 +174,11 @@ public class Codebook {
 					 
 					 //Add print attr if needed
 					 if(print.equals("y")){
-						DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+						DateFormat dateFormat = new SimpleDateFormat("MMMM d, yyyy 'at' h:mm a");
 						Date dateStamp = new Date();
 						String timeStamp = dateFormat.format(dateStamp);
 						model.addAttribute("timeStamp", timeStamp);
 						model.addAttribute("print", true);
-						
-						
 					 }	
 					 return "/WEB-INF/views/codebook.jsp";
 				 }
@@ -224,11 +228,21 @@ public class Codebook {
 		model.addAttribute("title", title);
 		model.addAttribute("subTitl","Commits - "+ handle.toUpperCase());
 		 
-		String data = Fetch.get(baseURI+"codebooks/"+handle+"/versions?type=hash");
+		String data = Fetch.get(baseURI+"codebooks/"+handle+"/versions");
+		ArrayList<String[]> versions= new ArrayList<String[]>(); 
 		if(data != null && !data.equals("")){
+			String[] commits = data.split(" ");
+			for(String commit : commits){
+				String[] commitData = commit.split("\\.");
+				Long epoch = Long.valueOf(commitData[1].trim()).longValue() * 1000;
+				SimpleDateFormat format = new SimpleDateFormat("MMMM d, yyyy 'at' h:mm a");
+				String timeStamp = format.format(epoch);
+				versions.add(new String[]{commitData[0], timeStamp});
+			}
 			model.addAttribute("gitURL",config.getRemoteRepoURL());
-			model.addAttribute("versions", data.split(" "));	
+			model.addAttribute("versions", versions);	
 		}
+	
 		return "/WEB-INF/views/versions.jsp";
 	}
 
@@ -433,16 +447,23 @@ public class Codebook {
 		model.addAttribute("type","var");
 		model.addAttribute("var", var);
 		model.addAttribute("subTitl","Commits - "+ var + " ("+handle.toUpperCase()+")");
-		String data = Fetch.get(baseURI+"codebooks/"+handle+"/variables/"+var+"/versions?type=hash");
+		String data = Fetch.get(baseURI+"codebooks/"+handle+"/variables/"+var+"/versions");
+		ArrayList<String[]> versions= new ArrayList<String[]>(); 
 		if(data != null && !data.equals("")){
+			String[] commits = data.split(" ");
+			for(String commit : commits){
+				String[] commitData = commit.split("\\.");
+				Long epoch = Long.valueOf(commitData[1].trim()).longValue() * 1000;
+				SimpleDateFormat format = new SimpleDateFormat("MMMM d, yyyy 'at' h:mm a");
+				String timeStamp = format.format(epoch);
+				versions.add(new String[]{commitData[0], timeStamp});
+			}
 			model.addAttribute("gitURL",config.getRemoteRepoURL());
-			model.addAttribute("versions", data.split(" "));	
+			model.addAttribute("versions", versions);	
 		}
 		return "/WEB-INF/views/versions.jsp";
 	}
-	
-	
-	
+
 //AJAX Endpoints
 
 	/**

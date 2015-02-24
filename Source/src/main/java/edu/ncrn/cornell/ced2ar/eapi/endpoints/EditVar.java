@@ -44,7 +44,6 @@ public class EditVar extends ServerResource{
 	 */
 	@Post
 	public Representation editVar(Representation entity) {
-		
 		try{
 			if( MediaType.MULTIPART_FORM_DATA.equals(entity.getMediaType(), false)){
 				String message = "Invalid argument type. Must be multipart form.";
@@ -178,7 +177,6 @@ public class EditVar extends ServerResource{
 		String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date());
 		timestamp+= " (auto-generated)";
 		
-		
 		if(doesAppend || delete.equals("true") || validFields.get(field)[0].equals("5") 
 		|| value.contains("<") || value.contains(">")){
 			//XMLHandle xh = new XMLHandle(BaseX.get(handle),Config.getSchemaURI());
@@ -195,7 +193,6 @@ public class EditVar extends ServerResource{
 			}else{
 				xh.addReplace("/codeBook/dataDscr"+path, value, doesAppend, true, false, true);
 			}
-			
 			BaseX.put(handle, xh.docToString().replaceAll("&lt;", "<").replaceAll("&gt;", ">"));
 		}else{
 			//Can save item by making xquery replace statement

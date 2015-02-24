@@ -35,9 +35,7 @@
 				<p class="value4">
 					<c:choose>
 						<c:when test="${count gt 0}">
-							<a class="printRemove" href="${baseURI}/landing?c=${handle}">
-								View Variables
-							</a>
+							<a class="printRemove" href="${baseURI}/landing?c=${handle}">View Variables</a>
 							<em>(${count} variables)</em>
 						</c:when>
 						<c:otherwise>

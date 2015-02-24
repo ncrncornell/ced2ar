@@ -7,6 +7,12 @@ import org.junit.Test;
 import edu.ncrn.cornell.ced2ar.api.SearchConstructor;
 
 /**
+ *@author Cornell University, Copyright 2012-2015
+ *@author Kyle Brumsted
+ *
+ *@author Cornell Institute for Social and Economic Research
+ *@author Cornell Labor Dynamics Institute
+ *@author NCRN Project Team 
  */
 public class SearchConstructorTest {
 	

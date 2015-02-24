@@ -57,18 +57,19 @@
 			</p>
 			<p class="value2">
 				<xsl:for-each select="codeBook/files/fileDscr">
-					<xsl:value-of select="@ID" />
+					<xsl:value-of select="fileTxt/fileName" />
 					&#160;
 					<xsl:choose>
 						<xsl:when test="not(contains(@URI,'http')) and @URI != ''">
 							<xsl:value-of select="fileTxt/fileName" />
-							(Incomplete URL provided)
+							(Incomplete URL provided - <xsl:value-of select="@URI" />)
 						</xsl:when>
 						<xsl:when test="string-length(@URI) gt 0 ">
-							<a>
+							<a class="iLinkR">
+								<xsl:attribute name="target">_blank</xsl:attribute>
 								<xsl:attribute name="href"><xsl:value-of
 									select="@URI" /></xsl:attribute>
-								<xsl:value-of select="fileTxt/fileName" />
+								<xsl:value-of select="@URI" /><i class="fa fa-external-link"></i>
 							</a>
 						</xsl:when>
 						<xsl:otherwise>

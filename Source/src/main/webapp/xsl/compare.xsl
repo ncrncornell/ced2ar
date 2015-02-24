@@ -34,17 +34,18 @@
 		<td class="descColumn">
 			<xsl:choose>
 				<xsl:when test="string-length(codeBook/var/txt) > 250">
-					<xsl:value-of select="substring(codeBook/var/txt,0,250)" />
-					<span class="truncTxt">
-						<xsl:value-of
-							select="substring(codeBook/var/txt,200,string-length(codeBook/var/txt))" />
+					<span class="truncPre printRemove">
+						<xsl:copy-of select="substring(codeBook/var/txt,0,250)" />
+					</span>				
+					<span class="truncFull hidden" itemprop="description">
+						<xsl:copy-of select="codeBook/var/txt" />
 					</span>
-					<span class="truncExp"> ...more</span>
+					<span class="truncExp"> ... more</span>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:value-of select="codeBook/var/txt" />
 				</xsl:otherwise>
-			</xsl:choose>
+			</xsl:choose>			
 		</td>
 	</xsl:template>
 </xsl:stylesheet>

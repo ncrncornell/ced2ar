@@ -4,9 +4,9 @@
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags"%>
 <div class="hidden-xs col-sm-1 col-md-2"></div>
 <div id="loadCoverInner"
-	class="editControlB col-xs-12 col-sm-10 col-md-8">
+	class="editControlB noSelect col-xs-12 col-sm-10 col-md-8">
 	<form id="editForm" action="${handle}/edit" method="POST">
-		<a id="editDiscard" href="../codebooks/${handle}" class="closeWindow" title="Discard Changes">×</a>
+		<a id="editDiscard" href="#" class="closeWindow" title="Discard Changes">×</a>
 		<h2>${title}</h2>
 		<a href="" title="Save changes" id="editSave"
 			class="editControl3 editIcon" onclick="return false;"><i
@@ -17,20 +17,23 @@
 				<script src="${baseURI}/scripts/tinymce/tinymce.min.js"></script>
 				<script type="text/javascript">
 					$("#editSave").css("display","none");
-					tinymce.init({		
+					tinymce.init({						
 					    selector: "textarea",
 					    menubar : false,
 					    content_css : "${baseURI}/styles/tinymce.css",
 					    oninit : "setPlainText",
+					    paste_as_text: true,
 					    plugins: "paste save link code",
-					    toolbar: "save | undo redo | link | bullist | code",
+					    target_list: [{title: 'None', value: ''}],
+					    toolbar: "save | undo redo | link | bullist | italic | code",
+					    valid_elements :"a[href|target=_blank],strong/b,em,div,br,p,li,ul",
 					    save_onsavecallback: function(){
 					    	$("textarea [name=newText]").html(this.getContent());
 							$("#editSave").click();
 					    }
 					});
 				</script>
-				<c:set var="newTxtHeight" value="${((fn:length(curVal)/80)*1.1)+2}" />
+				<c:set var="newTxtHeight" value="${((fn:length(curVal)/120))}" />
 				<c:if test="${newTxtHeight lt 6}">
 					<c:set var="newTxtHeight" value="6" />
 				</c:if>
@@ -40,7 +43,7 @@
 				<input type="text" name="newValue" class="newTxtPlain" value="${curVal}" />
 			</c:otherwise>
 		</c:choose>		
-		<c:if test="${editType.equals('0')}">
+		<c:if test="${editorType.equals('0')}">
 			<p class="editDoc">
 				This field supports ASCII math
 				See <a href='${baseURI}/docs/faq#q3' target='_blank'>FAQ</a> for details. <br />	

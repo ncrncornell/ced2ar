@@ -205,9 +205,9 @@ public class VersionControl {
 			while (matcher.find()) {
 			   String[] data = matcher.group(1).split(",");
 			   try{
-				   if(data[1].equals("var")){
+				   if(data[2].equals("var")){
 					   String handle = data[0];
-					   String name = data[2];
+					   String name = data[3];
 					   if(commitVars.containsKey(handle)){
 						   List<String> vars = commitVars.get(handle);
 						   if(!vars.contains(name)){
@@ -218,6 +218,7 @@ public class VersionControl {
 						   List<String> vars = new ArrayList<String>();
 						   vars.add(name);
 						   commitVars.put(handle, vars);
+						   logger.debug(handle + " "+name);
 					   } 
 				   }
 			   }catch(ArrayIndexOutOfBoundsException e){
@@ -227,7 +228,8 @@ public class VersionControl {
 			QueryUtil.insertCommit(hash, timestamp, handles);
 			QueryUtil.insertVarCommit(hash, commitVars);
 			
-		}catch (IOException|NullPointerException e) {
+		}catch (IOException|NullPointerException e){
+			logger.error("Error reading current commits " + e.getMessage());
 			e.printStackTrace();
 		}finally{
 			if(git != null) git.close();

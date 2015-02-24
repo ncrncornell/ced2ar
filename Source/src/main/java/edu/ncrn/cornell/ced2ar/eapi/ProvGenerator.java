@@ -54,30 +54,28 @@ import edu.ncrn.cornell.ced2ar.api.data.Fetch;
 public class ProvGenerator {
 
 	private static final Logger logger = Logger.getLogger(ProvGenerator.class);
-	public static final String NODE_TYPE_ENTITY 	= "Entity";
-	public static final String NODE_TYPE_AGENT 		= "Agent";
-	public static final String NODE_TYPE_ACTIVITY 	= "Activity";
+	public static final String NODE_TYPE_ENTITY = "Entity";
+	public static final String NODE_TYPE_AGENT = "Agent";
+	public static final String NODE_TYPE_ACTIVITY = "Activity";
 	
+	public static final String NODE_PROV_ROOT = "prov:document";
+	public static final String NODE_PROV_ENTITY = "prov:entity";
+	public static final String NODE_PROV_AGENT = "prov:agent";
+	public static final String NODE_PROV_ACTIVITY = "prov:activity";
+		
+	public static final String NODE_PROV_LABEL = "prov:label";
+	public static final String NODE_PROV_LOCATION = "prov:location";
+	public static final String NODE_PROV_TYPE = "prov:type";
+	public static final String NODE_PROV_VALUE = "prov:value";
 	
-	public static final String NODE_PROV_ROOT		= "prov:document";
-	public static final String NODE_PROV_ENTITY		= "prov:entity";
-	public static final String NODE_PROV_AGENT		= "prov:agent";
-	public static final String NODE_PROV_ACTIVITY	= "prov:activity";
+	public static final String NODE_PROV_TITLE = "dc:title";
+	public static final String NODE_PROV_DATE = "dc:date";
 	
+	public static final String NODE_PROV_GIVEN_NAME = "foaf:givenName";
+	public static final String NODE_PROV_WORK_INFO_HOME_PAGE = "foaf:workInfoHomepage";
+	public static final String PROV_INSERT_NODE = "othrStdyMat";	
 	
-	public static final String NODE_PROV_LABEL		= "prov:label";
-	public static final String NODE_PROV_LOCATION	= "prov:location";
-	public static final String NODE_PROV_TYPE		= "prov:type";
-	public static final String NODE_PROV_VALUE		= "prov:value";
-	
-	public static final String NODE_PROV_TITLE		= "dc:title";
-	public static final String NODE_PROV_DATE		= "dc:date";
-	
-	public static final String NODE_PROV_GIVEN_NAME					= "foaf:givenName";
-	public static final String NODE_PROV_WORK_INFO_HOME_PAGE		= "foaf:workInfoHomepage";
-	public static final String PROV_INSERT_NODE						= "stdyDscr";
-	
-	public static final String PROV_ATTR_ID	 = "prov:id";
+	public static final String PROV_ATTR_ID = "prov:id";
 
 	/**
 	 * @param codebookWithProv  XML String that represents codebook with embedded prov.
@@ -93,7 +91,7 @@ public class ProvGenerator {
 	        ByteArrayInputStream input = new ByteArrayInputStream(utf8CodebookWithProv.getBytes());
 			Document codebook = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(input);
 			
-	        Node provNodes 			= codebook.getElementsByTagName(NODE_PROV_ROOT).item(0);
+	        Node provNodes 	 = codebook.getElementsByTagName(NODE_PROV_ROOT).item(0);
 	        if(provNodes==null) return ""; // There is  no embedded prov in the codebook
 	        
 			StringBuilder jsonString = new StringBuilder("{\n ");
@@ -147,7 +145,7 @@ public class ProvGenerator {
 		try {
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        Document codebook = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse("C:/java/info/rdf2json/ssbwithprov.xml");
-	        Node provNodes 			= codebook.getElementsByTagName(NODE_PROV_ROOT).item(0);
+	        Node provNodes 	 = codebook.getElementsByTagName(NODE_PROV_ROOT).item(0);
 	        Document provDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
 	        
 	        if(provNodes == null) {
@@ -172,8 +170,6 @@ public class ProvGenerator {
 			return null;
 		}
 	}
-
-
 	
 	/**
 	 * 
@@ -212,9 +208,9 @@ public class ProvGenerator {
 		
 		DocumentBuilderFactory dbf 	= DocumentBuilderFactory.newInstance();
         dbf.setValidating(false);
-        DocumentBuilder db 			= dbf.newDocumentBuilder();
-        Document provDocument 		= db.newDocument();
-        String jsonString 			= getProvString(provUrl);
+        DocumentBuilder db 	 = dbf.newDocumentBuilder();
+        Document provDocument  = db.newDocument();
+        String jsonString 	 = getProvString(provUrl);
 		JSONObject jsonObject 	= new JSONObject(jsonString);
 		HashMap<String, String> nodeTypes = getAllNodeTypes(jsonObject);
 
@@ -375,10 +371,10 @@ public class ProvGenerator {
 
 	
 	private void insertProvDocument(Document codebookDocument,String provUrl) throws Exception {
-        String jsonString 			= getProvString(provUrl);
-		JSONObject jsonObject 		= new JSONObject(jsonString);
+        String jsonString 	 = getProvString(provUrl);
+		JSONObject jsonObject  = new JSONObject(jsonString);
 		Element releaseStudyElement = codebookDocument.createElement("relStdy");
-		Element provRootNode 		= codebookDocument.createElement(this.NODE_PROV_ROOT);
+		Element provRootNode  = codebookDocument.createElement(this.NODE_PROV_ROOT);
 		
 		releaseStudyElement.appendChild(provRootNode);
 		HashMap<String, String> nodeTypes = getAllNodeTypes(jsonObject);	 
@@ -497,7 +493,7 @@ public class ProvGenerator {
 				default:
 			}
 		}
-		NodeList nodeList = codebookDocument.getElementsByTagName("stdyDscr");
+		NodeList nodeList = codebookDocument.getElementsByTagName(PROV_INSERT_NODE);
 		nodeList.item(0).appendChild(releaseStudyElement);
 	}
 
@@ -679,11 +675,14 @@ public class ProvGenerator {
 	
 	private String getProvElementId(JSONObject node) throws JSONException{
 		String id = "";
-		if (node.has("uri"))
+		/*
+		if (node.has("uri")) //comeback
 			id = node.getString("uri");
 		else if (node.has("id"))
 			id = node.getString("id");
-
+*/
+		if (node.has("id"))
+			id = node.getString("id");
 		return id;
 	}
 	
@@ -737,13 +736,12 @@ public class ProvGenerator {
 	 */
 	private boolean validateProv(String provDoc) {
 		try {
-			SchemaFactory factory =SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+			SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 			Schema schema = factory.newSchema(new URL("http://www.w3.org/ns/prov.xsd"));
 			Validator validator = schema.newValidator();
 	        validator.validate(new StreamSource(new StringReader(provDoc)));
 	        return true;
-		}
-		catch(Exception ex) {
+		} catch(Exception ex) {
 			logger.error("Error in validation ",ex);
 			return false;
 		}
@@ -769,7 +767,7 @@ public class ProvGenerator {
 			Document doc = provGenerator.getProvDocument("http://localhost:8080");
 			String provDoc = provGenerator.getDocumentAsString(doc);
 			System.out.println(provDoc);
-		//	System.out.println(provGenerator.validateProv(provDoc));
+			System.out.println(provGenerator.validateProv(provDoc));
 			*/
 			
             
@@ -778,31 +776,3 @@ public class ProvGenerator {
 		}
 	}
 }
-
-
-
-
-/*
- */
-
-/*
-//Document provDocument = getProvDocument(host);
-//insertProvDocument(codebook,host);
-
-//String provString =getDocumentAsString(provDocument);
-NodeList nodeList = codebook.getElementsByTagName("stdyDscr");
-Element releaseStudyElement = codebook.createElement("relStdy");
-
-
-
-releaseStudyElement.setTextContent(provString);
-nodeList.item(0).appendChild(releaseStudyElement);
-
-		String loc = "C:/java/info/rdf2json/prov.json";
-		File jsonFile = new File(loc);
-		StringWriter writer = new StringWriter();
-		IOUtils.copy(new FileInputStream(jsonFile), writer, "UTF-8");
-		
-
-*/
-

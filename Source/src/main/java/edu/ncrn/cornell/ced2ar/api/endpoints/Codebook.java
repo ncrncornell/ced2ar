@@ -49,8 +49,7 @@ public class Codebook extends ServerResource {
 			String message = " \"" + codebookId + "\" is an invalid codebookId";
 			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, message);
 		}
-		
-		
+			
 		String type = "";
 		
 		try{
@@ -160,7 +159,7 @@ public class Codebook extends ServerResource {
 		+"  xmlns:saxon=\"http://xml.apache.org/xslt\""  
 		+"  xmlns:xhtml=\"http://www.w3.org/1999/xhtml\""  
 		+"  xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\""  
-		+"  xsi:schemaLocation=\"ddi:codebook:2_5 http://www.ncrn.cornell.edu/docs/ddi/2.5.NCRN/schemas/codebook.xsd\""
+		+"  xsi:schemaLocation=\"ddi:codebook:2_5 http://www.ncrn.cornell.edu/docs/ddi/2.5.NCRN.P/schemas/codebook.xsd\""
 		+"  xmlns:prov=\"http://www.w3.org/ns/prov#\""
 		+ " xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\""
 		+ " xmlns:ex=\"http://example.com/ns/ex#\" xmlns:tr=\"http://example.com/ns/tr#\""

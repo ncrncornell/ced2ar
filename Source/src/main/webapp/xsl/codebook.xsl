@@ -76,31 +76,25 @@
 				</xsl:for-each>
 			</xsl:if>
 		</div>
-		<xsl:variable name='DbiblCit'>
-			<xsl:value-of select="codeBook/docDscr/citation/biblCit" />
-		</xsl:variable>
-		<xsl:variable name='SbiblCit'>
-			<xsl:value-of select="codeBook/stdyDscr/citation/biblCit" />
-		</xsl:variable>
-		<xsl:if test="$DbiblCit != '' or $SbiblCit !=''">
+		<xsl:if test="codeBook/docDscr/citation/biblCit != '' or codeBook/stdyDscr/citation/biblCit !=''">
 			<p class="staticHeader">Citation</p>
 		</xsl:if>
-		<xsl:if test="$DbiblCit != ''">
-			<p class="value2">
+		<xsl:if test="codeBook/docDscr/citation/biblCit != ''">
+			<div class="value2">
 				<em>Please cite this codebook as:</em>
 				<br />
-				<xsl:value-of select="/$DbiblCit" />
-				<xsl:copy-of select="/$DbiblCit/ExtLink/node()" />
-			</p>
+				<xsl:copy-of select="codeBook/docDscr/citation/biblCit/node()" />
+				<xsl:copy-of select="codeBook/docDscr/citation/biblCit/node()/ExtLink/node()" />
+			</div>
 		</xsl:if>
-		<xsl:if test="$SbiblCit != ''">
-			<p class="value2">
+		<xsl:if test="codeBook/stdyDscr/citation/biblCit/node() != ''">
+			<div class="value2">
 				<em>Please cite this dataset as:</em>
 				<br />
 				<span itemprop="citation">
-					<xsl:value-of select="$SbiblCit" />
+					<xsl:copy-of select="codeBook/stdyDscr/citation/biblCit/node()" />
 				</span>
-			</p>
+			</div>
 		</xsl:if>
 		<xsl:if test="codeBook/stdyDscr/stdyInfo/abstract != ''">
 			<p class="staticHeader">Abstract</p>
@@ -109,21 +103,24 @@
 					<xsl:copy-of select="codeBook/stdyDscr/stdyInfo/abstract/node()" />
 				</span>
 			</xsl:variable>
-			<span class="hidden printRemove" itemprop="about"><xsl:value-of select="$abstract" /></span>
-			<p class="value2 ">
+			<div class="value2">
 				<xsl:choose>
 					<xsl:when test="string-length($abstract) > 400">
-						<xsl:value-of select="substring($abstract,0,400)" />
-						<span class="truncTxt">
-							<xsl:value-of select="substring($abstract,400,string-length($abstract))" />
+						<span class="truncPre printRemove">
+							<xsl:copy-of select="substring($abstract,0,400)" />
+						</span>				
+						<span class="truncFull hidden" itemprop="description">
+							<xsl:copy-of select="codeBook/stdyDscr/stdyInfo/abstract/node()" />
 						</span>
 						<span class="truncExp"> ... more</span>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:value-of select="$abstract" />
+						<span itemprop="description">
+							<xsl:copy-of select="codeBook/stdyDscr/stdyInfo/abstract/node()" />
+						</span>
 					</xsl:otherwise>
 				</xsl:choose>
-			</p>
+			</div>
 		</xsl:if>
 		<div class="printLB"></div>
 		<p class="toggleHeader">Datasets</p>
@@ -131,22 +128,21 @@
 			<div class="toggleText">
 				<xsl:for-each select="codeBook/fileDscr">
 					<p>
-						<xsl:value-of select="@ID" />
-						&#160;
+						<xsl:value-of select="fileTxt/fileName" />&#160;
 						<xsl:choose>
-							<xsl:when test="not(contains(@URI,'http')) and @URI != ''">
+							<xsl:when test="(not(contains(@URI,'http')) and not(contains(@URI,'ftp:'))) and @URI != ''">
 								<xsl:value-of select="fileTxt/fileName" />
-								(Incomplete URL provided)
+								(Incomplete URL provided - <xsl:value-of select="@URI" />)
 							</xsl:when>
 							<xsl:when test="string-length(@URI) gt 0 ">
-								<a itemprop="distribution">
+								<a itemprop="distribution" class="iLinkR">
+									<xsl:attribute name="target">_blank</xsl:attribute>
 									<xsl:attribute name="href"><xsl:value-of
 										select="@URI" /></xsl:attribute>
-									<xsl:value-of select="fileTxt/fileName" />
+									<xsl:value-of select="@URI" /><i class="fa fa-external-link"></i>
 								</a>
 							</xsl:when>
 							<xsl:otherwise>
-								<xsl:value-of select="fileTxt/fileName" />
 								(No hyperlink available)
 							</xsl:otherwise>
 						</xsl:choose>
@@ -164,7 +160,7 @@
 		<p class="toggleHeader lb2 tcs">Terms of Use</p>
 		<div class="toggleContent">
 			<xsl:if test="not(codeBook/stdyDscr/dataAccs[1]/*[normalize-space()])">
-				<p>No documentation avalible for terms of use</p>
+				<p class="lb2">No documentation avalible for terms of use</p>
 			</xsl:if>
 			<xsl:if test="codeBook/stdyDscr/dataAccs/@ID">
 				<p id="accessLevels" class="toggleHeader hs2">Access Levels</p>
@@ -287,12 +283,12 @@
 				<xsl:if test="$collMode  != '' or $dataSrc != ''">
 					<p class="toggleHeader">Methodology</p>
 					<div class="toggleContent">
-						<xsl:if test="codeBook/stdyDscr/method/dataColl/collMode  != ''">
+						<xsl:if test="codeBook/stdyDscr/method/dataColl/collMode != ''">
 							<div class="toggleText2 lb2">
 								<xsl:copy-of select="codeBook/stdyDscr/method/dataColl/collMode/node()" />
 							</div>
 						</xsl:if>
-						<xsl:if test="codeBook/stdyDscr/method/dataColl/sources/dataSrc  != ''">
+						<xsl:if test="codeBook/stdyDscr/method/dataColl/sources/dataSrc != ''">
 							<div class="toggleText2">
 								<p>Sources</p>
 								<ol>

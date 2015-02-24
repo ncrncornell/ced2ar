@@ -122,7 +122,9 @@ public class Feedback {
 	 **/
 	@RequestMapping(value = "/bugreport", method = RequestMethod.GET)
 	public String bugReport(Model model, @RequestParam(value="lastpage", defaultValue = "") String lastPage){
-		
+		if(!config.isBugReportEnable()){
+			return "redirect:/search";
+		}
 		//String[][] crumbs = {{"Bug Report",""}};
 		//model.addAttribute("crumbs",crumbs);
 		model.addAttribute("subTitl","Bug Report");	
@@ -147,10 +149,12 @@ public class Feedback {
 	 //TODO: send HTTP POST request to write in BaseX
 	 @RequestMapping(value = "/bugreport", method = RequestMethod.POST)
 	 public String submitReport(HttpServletRequest request, HttpSession session, @RequestParam(value="bugDescription", defaultValue = "") String bd,
-	     @RequestParam(value="reproductionSteps", defaultValue = "") String rs, @RequestParam(value="yourName", defaultValue = "") String yn,
-	     @RequestParam(value="yourEmail", defaultValue = "") String ye, @RequestParam(value="reportHP", defaultValue = "") String hp,
-	     @RequestParam(value="bugType", defaultValue = "") String bt,  Model model){
-		 
+	 @RequestParam(value="reproductionSteps", defaultValue = "") String rs, @RequestParam(value="yourName", defaultValue = "") String yn,
+	 @RequestParam(value="yourEmail", defaultValue = "") String ye, @RequestParam(value="reportHP", defaultValue = "") String hp,
+	 @RequestParam(value="bugType", defaultValue = "") String bt,  Model model){
+		if(!config.isBugReportEnable()){
+			return "redirect:/search";
+		}
 		if(checkSpam(request, hp)){
 			return "redirect:http://google.com";
 		}

@@ -367,6 +367,36 @@ public class Fetch {
 	}
 	
 	/**
+	 * Deletes field from titlepage
+	 * @param host
+	 * @param baseHandle
+	 * @param version
+	 * @param field
+	 * @param index
+	 * @param user
+	 * @return
+	 */
+	public static int deleteTitleField(String host, String baseHandle, String version, 
+	String field, int index, String user){
+		Connector c = null;
+		try{
+			c = new Connector(host,0,"/codebooks/"+baseHandle+"/"+version+"/edit");
+			c.buildRequest(RequestType.POST);
+			c.setPostFormContent("field", field);
+			c.setPostFormContent("delete", "true");
+			c.setPostFormContent("user", user);
+			if(index != 0){
+				c.setPostFormContent("index", Integer.toString(index));
+			}
+			c.execute();
+			int code = c.getResponseCode();
+			return code;
+		}finally{
+			c.close();
+		}
+	}
+	
+	/**
 	 * Edits a variable - uses apache HTTP client
 	 * @param handle the codebook containing the variable
 	 * @param var the variable to edit

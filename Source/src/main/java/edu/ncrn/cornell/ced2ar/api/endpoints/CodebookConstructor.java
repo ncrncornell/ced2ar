@@ -42,7 +42,8 @@ public class CodebookConstructor extends ServerResource {
 		}
 		Representation codebook = null;
 		if (MediaType.TEXT_XML.equals(variant.getMediaType()) || MediaType.APPLICATION_XML.equals(variant.getMediaType())) {
-			codebook = new StringRepresentation("<?xml version='1.0' encoding='UTF-8'?>" + BaseX.getXML(xquery), MediaType.APPLICATION_XML);
+			String result = BaseX.getXML(xquery);
+			codebook = new StringRepresentation("<?xml version='1.0' encoding='UTF-8'?>" + result, MediaType.APPLICATION_XML);
 			this.setStatus(Status.SUCCESS_OK);
 			return codebook;
 		} else if (MediaType.APPLICATION_JSON.equals(variant.getMediaType())) {

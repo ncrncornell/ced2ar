@@ -41,15 +41,16 @@
 		<!-- Passwords -->
 		<property name="pwdIsRandom" value="${pwdIsRandom}" />
 		<property name="pwdHash" value="${pwdHash}" />
-
 		<property name="basexGenerateRandomPasswords" value="${basexGenerateRandomPasswords}" />
 
 		<!-- Git info needs to be accessed out VersionControl bean -->
 		<property name="gitEnabled" value="${gitEnabled}" />
 		<property name="remoteRepoURL" value="${remoteRepoURL}" />
 		
+		<!-- Authentication -->
 		<property name="authenticationType" value="${authenticationType}" />
-		
+		<property name="openAccess" value="${openAccess}" />
+
 	</bean>
 
 	<!-- Config location -->
@@ -81,26 +82,45 @@
 		<property name="pdfEnabled" value="${pdfEnabled}" />
 	</bean>
 
-	<!--  Identity Management Beans -->
-<!--   
-	<bean id="userDao" class="edu.ncrn.cornell.ced2ar.security.idmgmt.dao.impl.BaseXUserDaoImpl" lazy-init="false"/>
-	<bean id="roleDao" class="edu.ncrn.cornell.ced2ar.security.idmgmt.dao.impl.BaseXRoleDaoImpl" lazy-init="false"/>
-	<bean id="userRoleDao" class="edu.ncrn.cornell.ced2ar.security.idmgmt.dao.impl.BaseXUserRoleDaoImpl" lazy-init="false"/>
-	<bean id="permissionDao" class="edu.ncrn.cornell.ced2ar.security.idmgmt.dao.impl.BaseXPermissionDaoImpl" lazy-init="false"/>
-	<bean id="rolePermissionDao" class="edu.ncrn.cornell.ced2ar.security.idmgmt.dao.impl.BaseXRolePermissionDaoImpl" lazy-init="false"/>
- -->
-	
-  	 
-	<bean id="userDao" class="edu.ncrn.cornell.ced2ar.security.idmgmt.dao.impl.PropertiesUserDaoImpl" lazy-init="false"/>
-	<bean id="roleDao" class="edu.ncrn.cornell.ced2ar.security.idmgmt.dao.impl.PropertiesRoleDaoImpl" lazy-init="false"/>
-	<bean id="userRoleDao" class="edu.ncrn.cornell.ced2ar.security.idmgmt.dao.impl.PropertiesUserRoleDaoImpl" lazy-init="false"/>
-	<bean id="permissionDao" class="edu.ncrn.cornell.ced2ar.security.idmgmt.dao.impl.PropertiesPermissionDaoImpl" lazy-init="false"/>
-	<bean id="rolePermissionDao" class="edu.ncrn.cornell.ced2ar.security.idmgmt.dao.impl.PropertiesRolePermissionDaoImpl" lazy-init="false"/>
-	 
-	 		
-	<bean id="userService" class="edu.ncrn.cornell.ced2ar.security.idmgmt.service.impl.UserServiceImpl" lazy-init="false"/>
-	<bean id="roleService" class="edu.ncrn.cornell.ced2ar.security.idmgmt.service.impl.RoleServiceImpl" lazy-init="false"/>
-	<bean id="permissionService" class="edu.ncrn.cornell.ced2ar.security.idmgmt.service.impl.PermissionServiceImpl" lazy-init="false"/>
-	<bean id="rolePermissionService" class="edu.ncrn.cornell.ced2ar.security.idmgmt.service.impl.RolePermissionServiceImpl" lazy-init="false"/>
-	<bean id="userRoleService" class="edu.ncrn.cornell.ced2ar.security.idmgmt.service.impl.UserRoleServiceImpl" lazy-init="false"/>
+	<!-- Identity Management Beans -->
+	<!-- <bean id="userDao" class="edu.ncrn.cornell.ced2ar.security.idmgmt.dao.impl.BaseXUserDaoImpl" 
+		lazy-init="false"/> <bean id="roleDao" class="edu.ncrn.cornell.ced2ar.security.idmgmt.dao.impl.BaseXRoleDaoImpl" 
+		lazy-init="false"/> <bean id="userRoleDao" class="edu.ncrn.cornell.ced2ar.security.idmgmt.dao.impl.BaseXUserRoleDaoImpl" 
+		lazy-init="false"/> <bean id="permissionDao" class="edu.ncrn.cornell.ced2ar.security.idmgmt.dao.impl.BaseXPermissionDaoImpl" 
+		lazy-init="false"/> <bean id="rolePermissionDao" class="edu.ncrn.cornell.ced2ar.security.idmgmt.dao.impl.BaseXRolePermissionDaoImpl" 
+		lazy-init="false"/> -->
+
+
+	<bean id="userDao"
+		class="edu.ncrn.cornell.ced2ar.security.idmgmt.dao.impl.PropertiesUserDaoImpl"
+		lazy-init="false" />
+	<bean id="roleDao"
+		class="edu.ncrn.cornell.ced2ar.security.idmgmt.dao.impl.PropertiesRoleDaoImpl"
+		lazy-init="false" />
+	<bean id="userRoleDao"
+		class="edu.ncrn.cornell.ced2ar.security.idmgmt.dao.impl.PropertiesUserRoleDaoImpl"
+		lazy-init="false" />
+	<bean id="permissionDao"
+		class="edu.ncrn.cornell.ced2ar.security.idmgmt.dao.impl.PropertiesPermissionDaoImpl"
+		lazy-init="false" />
+	<bean id="rolePermissionDao"
+		class="edu.ncrn.cornell.ced2ar.security.idmgmt.dao.impl.PropertiesRolePermissionDaoImpl"
+		lazy-init="false" />
+
+
+	<bean id="userService"
+		class="edu.ncrn.cornell.ced2ar.security.idmgmt.service.impl.UserServiceImpl"
+		lazy-init="false" />
+	<bean id="roleService"
+		class="edu.ncrn.cornell.ced2ar.security.idmgmt.service.impl.RoleServiceImpl"
+		lazy-init="false" />
+	<bean id="permissionService"
+		class="edu.ncrn.cornell.ced2ar.security.idmgmt.service.impl.PermissionServiceImpl"
+		lazy-init="false" />
+	<bean id="rolePermissionService"
+		class="edu.ncrn.cornell.ced2ar.security.idmgmt.service.impl.RolePermissionServiceImpl"
+		lazy-init="false" />
+	<bean id="userRoleService"
+		class="edu.ncrn.cornell.ced2ar.security.idmgmt.service.impl.UserRoleServiceImpl"
+		lazy-init="false" />
 </beans>

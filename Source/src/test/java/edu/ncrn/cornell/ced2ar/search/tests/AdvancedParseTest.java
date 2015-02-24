@@ -8,6 +8,13 @@ import edu.ncrn.cornell.ced2ar.web.classes.*;
 
 /**
  *Tests the parsing of special characters into advanced searches
+ * 
+ *@author Cornell University, Copyright 2012-2015
+ *@author Kyle Brumsted
+ *
+ *@author Cornell Institute for Social and Economic Research
+ *@author Cornell Labor Dynamics Institute
+ *@author NCRN Project Team 
  */
 public class AdvancedParseTest{
 

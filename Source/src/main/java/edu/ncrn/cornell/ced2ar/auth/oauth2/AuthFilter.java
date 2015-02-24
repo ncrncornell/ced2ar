@@ -60,7 +60,7 @@ import edu.ncrn.cornell.ced2ar.auth.OAUserDetail;
  */
 
 @PropertySource(value = { "classpath:ced2ar-web-config.properties" })
-public class AuthFilter extends  OAuth2ClientAuthenticationProcessingFilter {
+public class AuthFilter extends OAuth2ClientAuthenticationProcessingFilter {
 	private static final Logger logger = Logger.getLogger(AuthFilter.class);
 	protected OAuth2RestTemplate oauth2RestTemplate;
 	protected Config config;
@@ -76,7 +76,7 @@ public class AuthFilter extends  OAuth2ClientAuthenticationProcessingFilter {
 		this.environment = env;
 		populateOauth2Properties();
 	}
-
+	
 	/**
 	 * @param request
 	 * @param response
@@ -91,7 +91,8 @@ public class AuthFilter extends  OAuth2ClientAuthenticationProcessingFilter {
 	 *  posting a call to personInfoURL 
 	 */
 	@Override
-	public Authentication attemptAuthentication(HttpServletRequest request,HttpServletResponse response) throws AuthenticationException,IOException, ServletException {
+	public Authentication attemptAuthentication(HttpServletRequest request,HttpServletResponse response) 
+	throws AuthenticationException,IOException, ServletException {
 		logger.debug("AuthFilter Triggered. authURL URL =" + authURL);
 		
 		URI authorizationURI;
@@ -110,7 +111,7 @@ public class AuthFilter extends  OAuth2ClientAuthenticationProcessingFilter {
 			logger.debug("There is NO authorization code in the request. Client authentication filter is setting dummy authentication in the security context and requsting the authorization code.");
 			context.setAuthentication(getDummyAuthentication());
 			OAuth2AccessToken accessToken = restTemplate.getAccessToken();
-			if(accessToken != null) {
+			if(accessToken != null){
 				logger.debug("Access token exists. Fetching user information using it.");
 				ResponseEntity<Object> forEntity = restTemplate.getForEntity(personInfoURL,Object.class);
 				logger.debug("Fetched person info from  " +personInfoURL+ " forEntity: " + forEntity);
@@ -119,7 +120,7 @@ public class AuthFilter extends  OAuth2ClientAuthenticationProcessingFilter {
 				authToken.setAuthenticated(false);
 				logger.debug("Created authentication token with no roles " +authToken);
 				return getAuthenticationManager().authenticate(authToken);
-			}else {
+			}else{
 				logger.debug("Access token does not exist. Fetch authentication Token");
 				restTemplate.postForEntity(authorizationURI, null, Object.class);
 				return null;
@@ -169,12 +170,16 @@ public class AuthFilter extends  OAuth2ClientAuthenticationProcessingFilter {
 
 	/**
 	 * This method created a OAuth2Token using the email passed.
-	 * The returned OAuth2Token will not have any roles. USerDetails service is used to fill in roles
+	 * The returned OAuth2Token will not have any roles. UserDetails service is used to fill in roles
 	 * @return String email 
 	 */
 	private AuthToken getAuthToken(String email) {
 		List<GrantedAuthority> useRoles = new ArrayList<GrantedAuthority>();
 		List<String> roles = new ArrayList<String>();
+		//All users are added ROLE_USER group
+		if(config.getOpenAccess().equals("true")){
+			roles.add("ROLE_USER");
+		}
 		for(String role:roles) {
 			GrantedAuthority authority = new SimpleGrantedAuthority(role);
 			useRoles.add(authority);

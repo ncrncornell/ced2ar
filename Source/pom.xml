@@ -5,18 +5,171 @@
 	<groupId>edu.nrcn.ced2ar.web</groupId>
 	<artifactId>ced2ar-web</artifactId>
 	<packaging>war</packaging>
-	<version>2.5 RC1</version>
-	<name>CED2AR 2.5 Webapp</name>
+	<version>2.6 RC1</version>
+	<name>CED2AR 2.6 Webapp</name>
 	<url>http://maven.apache.org</url>
 	<!-- Profiles properties are read from /profiles/* -->
 	<profiles>
 		<profile>
-			<id>localtemp</id>
+			<id>local</id>
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
 			<properties>
+				<build.profile.id>local</build.profile.id>
+			</properties>
+			<build>
+				<filters>
+					<filter>profiles/${build.profile.id}/config.properties</filter>
+				</filters>
+				<resources>
+					<resource>
+						<filtering>true</filtering>
+						<directory>src/main/resources</directory>
+					</resource>
+				</resources>
+			</build>
+		</profile>
+		<profile>
+			<id>localtemp</id>
+			<properties>
 				<build.profile.id>localtemp</build.profile.id>
+			</properties>
+			<build>
+				<filters>
+					<filter>profiles/${build.profile.id}/config.properties</filter>
+				</filters>
+				<resources>
+					<resource>
+						<filtering>true</filtering>
+						<directory>src/main/resources</directory>
+					</resource>
+				</resources>
+			</build>
+		</profile>
+		<profile>
+			<id>cesdev</id>
+			<properties>
+				<build.profile.id>cesdev</build.profile.id>
+			</properties>
+			<build>
+				<filters>
+					<filter>profiles/${build.profile.id}/config.properties</filter>
+				</filters>
+				<resources>
+					<resource>
+						<filtering>true</filtering>
+						<directory>src/main/resources</directory>
+					</resource>
+				</resources>
+			</build>
+		</profile>
+		<profile>
+			<id>ciser</id>
+			<properties>
+				<build.profile.id>ciser</build.profile.id>
+			</properties>
+			<build>
+				<filters>
+					<filter>profiles/${build.profile.id}/config.properties</filter>
+				</filters>
+				<resources>
+					<resource>
+						<filtering>true</filtering>
+						<directory>src/main/resources</directory>
+					</resource>
+				</resources>
+			</build>
+		</profile>
+		<profile>
+			<id>dev</id>
+			<properties>
+				<build.profile.id>dev</build.profile.id>
+			</properties>
+			<build>
+				<filters>
+					<filter>profiles/${build.profile.id}/config.properties</filter>
+				</filters>
+				<resources>
+					<resource>
+						<filtering>true</filtering>
+						<directory>src/main/resources</directory>
+					</resource>
+				</resources>
+			</build>
+		</profile>
+		<profile>
+			<id>demo</id>
+			<properties>
+				<build.profile.id>demo</build.profile.id>
+			</properties>
+			<build>
+				<filters>
+					<filter>profiles/${build.profile.id}/config.properties</filter>
+				</filters>
+				<resources>
+					<resource>
+						<filtering>true</filtering>
+						<directory>src/main/resources</directory>
+					</resource>
+				</resources>
+			</build>
+		</profile>
+		<profile>
+			<id>prod</id>
+			<properties>
+				<build.profile.id>prod</build.profile.id>
+			</properties>
+			<build>
+				<filters>
+					<filter>profiles/${build.profile.id}/config.properties</filter>
+				</filters>
+				<resources>
+					<resource>
+						<filtering>true</filtering>
+						<directory>src/main/resources</directory>
+					</resource>
+				</resources>
+			</build>
+		</profile>
+		<profile>
+			<id>roots</id>
+			<properties>
+				<build.profile.id>roots</build.profile.id>
+			</properties>
+			<build>
+				<filters>
+					<filter>profiles/${build.profile.id}/config.properties</filter>
+				</filters>
+				<resources>
+					<resource>
+						<filtering>true</filtering>
+						<directory>src/main/resources</directory>
+					</resource>
+				</resources>
+			</build>
+		</profile>
+		<profile>
+			<id>acsdev</id>
+			<properties>
+				<build.profile.id>acsdev</build.profile.id>
+			</properties>
+			<build>
+				<filters>
+					<filter>profiles/${build.profile.id}/config.properties</filter>
+				</filters>
+				<resources>
+					<resource>
+						<filtering>true</filtering>
+						<directory>src/main/resources</directory>
+					</resource>
+				</resources>
+			</build>
+		</profile>
+		<profile>
+			<id>ssbdev</id>
+			<properties>
+				<build.profile.id>ssbdev</build.profile.id>
 			</properties>
 			<build>
 				<filters>
@@ -81,25 +234,25 @@
 			<version>3.2.5.RELEASE</version>
 		</dependency>
 		<dependency>
-		    <groupId>org.springframework.security</groupId>
-		    <artifactId>spring-security-taglibs</artifactId>
-		    <version>3.2.5.RELEASE</version>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-taglibs</artifactId>
+			<version>3.2.5.RELEASE</version>
 		</dependency>
 
-		<!-- Open ID -->	 
+		<!-- Open ID -->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-openid</artifactId>
 			<version>3.2.5.RELEASE</version>
 		</dependency>
-	
-		<!-- OAuth2 -->	 
+
+		<!-- OAuth2 -->
 		<dependency>
 			<groupId>org.springframework.security.oauth</groupId>
 			<artifactId>spring-security-oauth2</artifactId>
 			<version>2.0.3.RELEASE</version>
-		</dependency>		 
-		
+		</dependency>
+
 		<!-- OAuth2 Required XML parsers -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
@@ -111,7 +264,7 @@
 			<artifactId>jackson-annotations</artifactId>
 			<version>2.3.4</version>
 		</dependency>
-		 <dependency>
+		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-core-asl</artifactId>
 			<version>1.9.13</version>
@@ -121,7 +274,7 @@
 			<artifactId>jackson-databind</artifactId>
 			<version>2.3.4</version>
 		</dependency>
-	
+
 		<!-- Restlet -->
 		<dependency>
 			<groupId>org.restlet.jee</groupId>
@@ -229,7 +382,7 @@
 			<artifactId>commons-validator</artifactId>
 			<version>1.4.0</version>
 		</dependency>
-		
+
 		<!-- Version Control -->
 		<dependency>
 			<groupId>org.eclipse.jgit</groupId>
@@ -280,7 +433,7 @@
 			<artifactId>spring-test</artifactId>
 			<version>3.0.5.RELEASE</version>
 			<scope>test</scope>
-		</dependency>				
+		</dependency>
 		<dependency>
 			<groupId>javax.mail</groupId>
 			<artifactId>mail</artifactId>
@@ -302,11 +455,11 @@
 			<version>1.1.1</version>
 		</dependency>
 		<dependency>
-		   <groupId>taglibs</groupId>
-		   <artifactId>standard</artifactId>
-		   <version>1.1.2</version>
+			<groupId>taglibs</groupId>
+			<artifactId>standard</artifactId>
+			<version>1.1.2</version>
 		</dependency>
-		
+
 	</dependencies>
 	<repositories>
 		<repository>

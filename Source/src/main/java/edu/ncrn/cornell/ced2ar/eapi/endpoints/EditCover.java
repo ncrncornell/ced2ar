@@ -45,7 +45,6 @@ public class EditCover extends ServerResource{
 	 */
 	@Post
 	public Representation editCodebook(Representation entity) {
-		
 		try{
 			if( MediaType.MULTIPART_FORM_DATA.equals(entity.getMediaType(), false)){
 				String message = "Invalid argument type. Must be multipart form.";
@@ -77,6 +76,7 @@ public class EditCover extends ServerResource{
 		String value = "";
 		String field = "";
 		String append = "";
+		boolean delete = false;
 		String baseHandle = (String) getRequestAttributes().get("baseHandle");
 	    String version = ((String) getRequestAttributes().get("version")).replaceAll("[^A-Za-z0-9\\- ]", "");
 		String handle = baseHandle+version;
@@ -107,6 +107,9 @@ public class EditCover extends ServerResource{
 				  			String message = "Bad arguments. Index must be an int";
 							throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, message);	    
 				  		}
+				  	break;
+					case "delete":
+				  		if(QueryUtil.sanatize(f.getString()).equals("true")) delete = true;
 				  	break;
 				  	case "user":
 				  		user =  f.getString();
@@ -206,8 +209,13 @@ public class EditCover extends ServerResource{
 		//Auto updates version
 		String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date());
 		timestamp+= " (auto-generated)";
-	
-		if(doesAppend || value.contains("<") || value.contains(">")){
+		
+		//Remove node
+		if(delete){
+			XMLHandle xh = new XMLHandle(BaseX.get(handle),Config.getInstance().getSchemaURI());
+			xh.deleteNode("/codeBook"+path, true);
+			BaseX.put(handle, xh.docToString().replaceAll("&lt;", "<").replaceAll("&gt;", ">"));
+		}else if(doesAppend || value.contains("<") || value.contains(">")){
 			XMLHandle xh = new XMLHandle(BaseX.get(handle),Config.getInstance().getSchemaURI());
 			xh.addReplace("/codeBook"+path, value, doesAppend, true, false, replaceChildren);
 			BaseX.put(handle, xh.docToString().replaceAll("&lt;", "<").replaceAll("&gt;", ">"));
@@ -216,6 +224,7 @@ public class EditCover extends ServerResource{
 			value = value.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
 			String xquery = "let $path := collection('CED2AR/"+handle+"')/codeBook"+path+
 			" return replace value of node $path with '"+value+"'";
+			logger.debug("Writing cover edit to BaseX " + xquery);
 			BaseX.write(xquery);
 		}
 		

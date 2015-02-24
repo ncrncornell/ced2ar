@@ -7,10 +7,14 @@ import org.junit.Test;
 import edu.ncrn.cornell.ced2ar.web.classes.Query;
 
 /**
- * Class to test the private methods of the Query.java class within the package edu.ncrn.cornell.ced2ar.web.classes
- * @author NCRN-Cornell (Kyle)
+ *Tests the private methods of the Query.java class within the package edu.ncrn.cornell.ced2ar.web.classes
+ *@author Cornell University, Copyright 2012-2015
+ *@author Kyle Brumsted
+ *
+ *@author Cornell Institute for Social and Economic Research
+ *@author Cornell Labor Dynamics Institute
+ *@author NCRN Project Team 
  */
-
 public class QueryTest{
 
 	/**

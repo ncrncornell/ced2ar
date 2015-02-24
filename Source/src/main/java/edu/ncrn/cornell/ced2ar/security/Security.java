@@ -41,7 +41,6 @@ import edu.ncrn.cornell.ced2ar.auth.oauth2.AuthProvider;
 @EnableGlobalAuthentication
 @EnableOAuth2Client
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
-
 public class Security extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private ServletContext context;	
@@ -85,7 +84,7 @@ public class Security extends WebSecurityConfigurerAdapter {
 	        .and()
 	        .withUser("reader").password(readerHash).roles("USER","ADMIN");
 	      
-     	}else {
+     	}else{
      		auth.inMemoryAuthentication().passwordEncoder(shaE)
 	        .withUser("admin").password(hash).roles("USER","ADMIN")
 	        .and()
@@ -116,7 +115,6 @@ public class Security extends WebSecurityConfigurerAdapter {
 	 */
     private void configureOAuth2Authentication(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
-		//For CES server
 		/*
 		.antMatchers("/search").access("hasRole('ROLE_ADMIN')")
 		.antMatchers("/search/**").access("hasRole('ROLE_ADMIN')")
@@ -148,7 +146,6 @@ public class Security extends WebSecurityConfigurerAdapter {
 		.addFilterAfter(oAuth2ClientContextFilter,ExceptionTranslationFilter.class)
 		.addFilterBefore(oAuth2ClientAuthenticationProcessingFilter,FilterSecurityInterceptor.class)
 		.authenticationProvider(authProvider);
-
     }
     
     /**

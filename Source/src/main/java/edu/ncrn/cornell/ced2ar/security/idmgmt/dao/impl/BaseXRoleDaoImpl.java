@@ -9,7 +9,7 @@ import org.springframework.util.StringUtils;
 import edu.ncrn.cornell.ced2ar.api.data.BaseX;
 import edu.ncrn.cornell.ced2ar.security.idmgmt.dao.RoleDao;
 import edu.ncrn.cornell.ced2ar.security.idmgmt.model.Role;
-import edu.ncrn.cornell.ced2ar.security.idmgmt.model.User;
+
 /**
  * Implementation class of RoleDao for BaseX  datastore.
  * @author Cornell University, Copyright 2012-2015

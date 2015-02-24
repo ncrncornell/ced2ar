@@ -18,12 +18,13 @@
 		</em>
 	</c:if>
 	<c:if test="${not empty results}">
-		<a href="${baseURI}/codebooks/${baseHandle}/v/${version}/vars/${var}/exportToSTATA"
-		class="printButton3b printRemove" title="Download STATA variable values">Stata</a>
-		<a href="${baseURI}/codebooks/${baseHandle}/v/${version}/vars/${var}/exportToSAS"
-		class="printButton3b printRemove" title="Download SAS variable values">SAS</a>	
+	
 		<c:choose>
 			<c:when test="${type eq 'var'}">
+				<a href="${baseURI}/codebooks/${baseHandle}/v/${version}/vars/${var}/exportToSTATA"
+				class="printButton3b printRemove" title="Download STATA variable values">Stata</a>
+				<a href="${baseURI}/codebooks/${baseHandle}/v/${version}/vars/${var}/exportToSAS"
+				class="printButton3b printRemove" title="Download SAS variable values">SAS</a>	
 				<a href="?print=y" class="printButton" target="_blank"
 					title="View print version"> <i class="fa fa-print"></i>
 				</a>

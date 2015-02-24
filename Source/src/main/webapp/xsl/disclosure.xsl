@@ -3,19 +3,22 @@
 	<xsl:output method="html" indent="yes" encoding="UTF-8"
 		omit-xml-declaration="yes" />
 	<xsl:template match="/">
-		<em>
-			Last update to metadata:
-			<xsl:choose>
-				<xsl:when test="/codeBook/docDscr/citation/verStmt/version/@date != ''">
-					<span itemprop="dateModified">
-						<xsl:value-of select="/codeBook/docDscr/citation/verStmt/version/@date" />
-					</span>
-				</xsl:when>
-				<xsl:otherwise>
-					unavailable
-				</xsl:otherwise>
-			</xsl:choose>
-		</em>	
+		<div class="lb2">
+			<em>
+				Last update to metadata:
+				<xsl:choose>
+					<xsl:when test="/codeBook/docDscr/citation/verStmt/version/@date != ''">
+						<span itemprop="dateModified">
+							<xsl:value-of select="/codeBook/docDscr/citation/verStmt/version/@date" />
+						</span>
+					</xsl:when>
+					<xsl:otherwise>
+						unavailable
+					</xsl:otherwise>
+				</xsl:choose>
+			</em>	
+		</div>
+		
 		<!-- Abstract -->
 		<xsl:if test="codeBook/stdyDscr/stdyInfo/abstract != ''">
 			<div class="lb">
@@ -40,6 +43,49 @@
 			</xsl:if>
 		</div>
 		
+		<!-- Methodology -->
+		<div class="lb">
+			<xsl:if test="codeBook/stdyDscr/method/dataColl/collMode  != ''">
+				<div class="lb2">
+					<xsl:copy-of select="codeBook/stdyDscr/method/dataColl/collMode/node()" />
+				</div>
+			</xsl:if>
+			<xsl:if test="codeBook/stdyDscr/method/dataColl/sources/dataSrc  != ''">
+					<div>
+						<p>Sources</p>
+						<ol>
+							<xsl:for-each
+								select="codeBook/stdyDscr/method/dataColl/sources/dataSrc">
+								<li>
+									<xsl:copy-of select="current()" />
+								</li>
+							</xsl:for-each>
+						</ol>
+					</div>
+			</xsl:if>
+		</div>
+		
+		<!-- Other Materials -->
+		<div class="lb">
+			<xsl:if test="codeBook/stdyDscr/othrStdyMat/relMat != ''">
+				<div class="lb2">
+					<h3>Related Materials</h3>
+					<xsl:copy-of select="codeBook/stdyDscr/othrStdyMat/relMat/node()"></xsl:copy-of>
+				</div>
+			</xsl:if>
+			<xsl:if test="codeBook/stdyDscr/othrStdyMat/relPubl != ''">
+				<div class="lb2">
+					<h3>Related Publications</h3>
+					<xsl:copy-of select="codeBook/stdyDscr/othrStdyMat/relPubl/node()"></xsl:copy-of>
+				</div>
+			</xsl:if>
+			<xsl:if test="codeBook/stdyDscr/othrStdyMat/relStdy != ''">
+				<div class="lb2">
+					<h3>Related Studies</h3>
+					<xsl:copy-of select="codeBook/stdyDscr/othrStdyMat/relStdy/node()"></xsl:copy-of>
+				</div>
+			</xsl:if>
+		</div>
 		<!-- Variables -->
 		<h3>Variables</h3>
 			<xsl:for-each select="codeBook/dataDscr/var">
@@ -55,6 +101,16 @@
 						</xsl:if>
 						<xsl:if test="txt != ''">
 							<p><em>Description:</em>&#160;<xsl:value-of select="txt"></xsl:value-of></p>
+						</xsl:if>	
+						<xsl:if test="count(notes) gt 0">
+							<p><em>Notes:</em> </p>
+							<div>			
+								<xsl:for-each select="notes">
+								<p class="lb2"> 
+									#<xsl:value-of select="position()" />: <xsl:value-of select="current()" />
+								</p>
+								</xsl:for-each>
+							</div>
 						</xsl:if>		
 				</div>			
 			</xsl:for-each>

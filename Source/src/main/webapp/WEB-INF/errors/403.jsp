@@ -5,6 +5,11 @@
 <c:set var="baseURI" scope="request">${pageContext.request.contextPath}</c:set>
 <t:error>
 	<h1>Access Denied</h1>
-		<p>You are required to login before accessing this page</p>
+		<p>
+			You don't have permission to access this page 
+			<c:if test="${not empty userEmail}">
+				(${userEmail})
+			</c:if>
+		</p>
 	<a href="${baseURI}">Return to main page</a>
 </t:error>

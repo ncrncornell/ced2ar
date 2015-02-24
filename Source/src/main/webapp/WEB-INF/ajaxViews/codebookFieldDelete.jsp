@@ -7,7 +7,7 @@
 	<form id="editForm" action="${handle}/edit" method="POST">
 		<h4>
 			Are you sure you want to delete this
-			${fn:toLowerCase(title)}?
+			'${fn:toLowerCase(title)}' field?
 		</h4>
 		<p>	
 			<a href="../codebooks/${handle}" title="Cancel Changes"
@@ -20,7 +20,6 @@
 			</a>
 			<input type="hidden" name="field" value="${field}" /> 
 			<input type="hidden" name="index" value="${index}" /> 
-			<input type="hidden" name="index2" value="${index2}" />
 		</p>
 	</form>
 </div>

@@ -105,7 +105,6 @@ public class BaseX  {
 	 * @param contents
 	 */
 	public static void put2(String handle, String contents){
-		String results = null;
 		ClientSession session = null;
 		try {
 			//TODO: Switch and args for change auth level between writer and reader

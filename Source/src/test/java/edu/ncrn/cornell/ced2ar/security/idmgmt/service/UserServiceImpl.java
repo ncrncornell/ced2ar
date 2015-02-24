@@ -12,6 +12,14 @@ import org.springframework.util.Assert;
 
 import edu.ncrn.cornell.ced2ar.security.idmgmt.model.User;
 
+/**
+ *@author Cornell University, Copyright 2012-2015
+ *@author Venky Kambhampaty
+ *
+ *@author Cornell Institute for Social and Economic Research
+ *@author Cornell Labor Dynamics Institute
+ *@author NCRN Project Team 
+ */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:test-beans.xml")
 public class UserServiceImpl {
@@ -27,32 +35,30 @@ public class UserServiceImpl {
 	
 	//@Test
 	public void getUser() {
-		User user  =userService.getUser("kvrayudu@gmail.com");
+		User user=userService.getUser("user@domain.com");
 		assert(user !=null);
 
-		user  =userService.getUser("bperry@gmails.com");
+		user = userService.getUser("user2@domain2.com");
 		assert(user == null);
 		
-		user  =userService.getUser("lars@gmail.com");  //This user is inactive 
+		user = userService.getUser("user@gmail.com");//This user is inactive 
 		assert(user ==null);
-		user  =userService.getUser("lars@gmail.com",true);
+		user = userService.getUser("user@gmail.com",true);
 		assert(user != null);
 
-		user  =userService.getUser("lars@gmail.com",false);
+		user = userService.getUser("user@gmail.com",false);
 		assert(user == null);
-		
 	}
-	
-	
+
 	//@Test
 	public void getUsers() {
-		List<User> users  =userService.getUsers();
+		List<User> users=userService.getUsers();
 		assert(users.size() ==5);
 		
-		users  =userService.getUsers(false);
+		users = userService.getUsers(false);
 		assert(users.size() ==5);
 		
-		users  =userService.getUsers(true);
+		users = userService.getUsers(true);
 		assert(users.size() ==6);
 
 	}
@@ -62,29 +68,26 @@ public class UserServiceImpl {
 		User user = new User();
 		user.setFirstName("XXXX");
 		user.setLastName("xxxx");
-		user.setUserId("kvrayudu@gmail.com");
+		user.setUserId("user@domain.com");
 		user.setActiveUser(true);
 		String response = userService.updateUser(user);
-		
-		User u = userService.getUser("kvrayudu@gmail.com");
+		User u = userService.getUser("user@domain.com");
 
-		user.setFirstName("xxssss");
-		user.setLastName("xxxx");
-		user.setUserId("aaaakvrayudu@gmail.com");
+		user.setFirstName("first");
+		user.setLastName("last");
+		user.setUserId("testuser@domain.com");
 		user.setActiveUser(true);
 		response =userService.updateUser(user);
 		
-		u = userService.getUser("aaaakvrayudu@gmail.com");
-
-		
+		u = userService.getUser("testuser@domain.com");
 	}
 	
-//	@Test
+	//@Test
 	public void addUser() {
 		User user = new User();
-		user.setFirstName("HA");
-		user.setLastName("HAHA");
-		user.setUserId("KVRAYUDU@gmail.com");
+		user.setFirstName("first");
+		user.setLastName("last");
+		user.setUserId("user@domain.com");
 		user.setActiveUser(true);
 		String returnValue = userService.addUser(user);
 		Assert.isTrue(!StringUtils.isEmpty(returnValue));
@@ -92,38 +95,33 @@ public class UserServiceImpl {
 		user = new User();
 		user.setFirstName("HA");
 		user.setLastName("HAHA");
-		user.setUserId("LARS@gmail.com");
+		user.setUserId("user@gmail.com");
 		user.setActiveUser(false);
 		returnValue = userService.addUser(user);
 		Assert.isTrue(!StringUtils.isEmpty(returnValue));
-		
-		
-		
 	}
 	
 	@Test
 	public void testPermissions() {
-		boolean canView = userService.canView("kvrayudu@gmail.com", "usa_00007");
+		boolean canView = userService.canView("user@domain.com", "usa_00007");
 		assert(canView==true);
-		canView = userService.canView("kvrayudu@gmail.com", "qwi_01");
+		canView = userService.canView("user@domain.com", "qwi_01");
 		assert(canView==true);
 
-		canView = userService.canView("kvrayudu@gmail.com", "usa_00007a");
+		canView = userService.canView("user@domain.com", "usa_00007a");
 		assert(canView==false);
 		
-		canView = userService.canUpdate("kvrayudu@gmail.com", "qwi_01");
+		canView = userService.canUpdate("user@domain.com", "qwi_01");
 		assert(canView==true);
 
-		canView = userService.canUpdate("bperry@gmail.com", "qwi_01");
+		canView = userService.canUpdate("user2@domain.com", "qwi_01");
 		assert(canView==false);
 
-		canView = userService.canView("bperry@gmail.com", "qwi_01");
+		canView = userService.canView("user2@domain.com", "qwi_01");
 		assert(canView==true);
 
-		boolean isAdmin = userService.isUserInAdminRole("kvrayudu@gmail.com");
-		boolean isUser = userService.isUserInUserRole("kvrayudu@gmail.com");
-		isAdmin = userService.isUserInAdminRole("bperry@gmail.com");
+		boolean isAdmin = userService.isUserInAdminRole("user@domain.com");
+		boolean isUser = userService.isUserInUserRole("user@domain.com");
+		isAdmin = userService.isUserInAdminRole("user2@domain.com");
 	}
-	
-
 }

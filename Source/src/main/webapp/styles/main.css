@@ -270,6 +270,7 @@ strong, b{
 	display: inline-block;
 	color: #3886cc;
 	font-style: italic;
+	margin-left:.333em;
 }
 
 .truncExp:hover{
@@ -919,4 +920,20 @@ Browse
 	position: fixed;
 	/*background-color:rgba(255,255,255,.75)*/;
 	padding: 1em 2em 0em;
+}
+
+.iLinkR i{
+	padding-left:.333em;	
+}
+
+.iLinkL i{
+	padding-right:.333em;	
+}
+
+.tab{
+	margin-left:4em;	
+}
+
+.valueInline p:last-of-type{
+	display:inline;	
 }

@@ -41,21 +41,20 @@ function toggle(){
 
 /*JQuery sliding animation for long text*/
 function toggleText(){	
-	  $(".truncTxt").hide();
-	  $(".truncExp").on("click", function()
-	  {
-	  	var parent = this;
-	    $(parent).prev(".truncTxt").slideToggle(0, function(){
-	        if($(this).is(':visible')){
-	            $(parent).html("less");
-	            $(parent).css("display","block");
-	            $(this).css("display","inline");
-	        } else {
-	        	$(parent).html("...more");
-	        	$(parent).css("display","inline-block");
-	        }
-	    });
-	  });
+	$(".truncExp").on("click", function(){
+		var btn = this;
+		var pre = $(btn).prev().prev(".truncPre");
+		var full = $(btn).prev(".truncFull");
+		if($(full).hasClass("hidden")){
+		  $(full).removeClass("hidden");
+		  $(pre).addClass("hidden");
+		  $(btn).html("less");
+		}else{
+			 $(full).addClass("hidden");
+			 $(pre).removeClass("hidden");
+			 $(btn).html("...more");
+		}
+	});
 }
 
 /*Appends baseURI to links*/

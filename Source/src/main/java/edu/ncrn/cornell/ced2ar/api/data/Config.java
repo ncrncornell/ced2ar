@@ -16,9 +16,9 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  */
 public class Config {
 	
-	public static final String AUTHENTICATION_TYPE_OAUTH2 	= "OAUTH2";
-	public static final String AUTHENTICATION_TYPE_OPENID 	= "OPENID";
-	public static final String AUTHENTICATION_TYPE_DEFAULT 	= "DEFAULT";
+	public static final String AUTHENTICATION_TYPE_OAUTH2 = "OAUTH2";
+	public static final String AUTHENTICATION_TYPE_OPENID = "OPENID";
+	public static final String AUTHENTICATION_TYPE_DEFAULT = "DEFAULT";
 
 	private String baseXDB; 	
 	private String baseXReaderHash;
@@ -53,8 +53,6 @@ public class Config {
 	private boolean isGitEnabled;
 	private String remoteRepoURL;
 	private String authenticationType;
-	
-	
 
 //Getters and setters
 	

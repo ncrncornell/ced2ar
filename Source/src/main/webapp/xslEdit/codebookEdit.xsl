@@ -70,10 +70,18 @@
 				<xsl:when test="/codeBook/docDscr/citation/prodStmt/producer != ''">
 					<p class="value4">
 						Codebook prepared by:
-						<xsl:value-of select="/codeBook/docDscr/citation/prodStmt/producer" />
-						<a title="Edit field" class="editIcon2">
-							<xsl:attribute name="href">edit?f=docProducer</xsl:attribute>
-							<i class="fa fa-pencil"></i>
+						<xsl:for-each select="/codeBook/docDscr/citation/prodStmt/producer">
+							<xsl:value-of select="current()" />
+							<a title="Edit field" class="editIcon2">
+								<xsl:attribute name="href">edit?f=docProducer&amp;i=<xsl:value-of
+									select="position()" /></xsl:attribute>
+								<i class="fa fa-pencil"></i>
+							</a>
+						</xsl:for-each>
+						<a title="Add New Producer" class="editIcon2">
+							<xsl:attribute name="href">edit?f=docProducer&amp;i=<xsl:value-of
+								select="position()" />&amp;a=true</xsl:attribute>
+							<i class="fa fa-plus"></i>
 						</a>
 						<a title="Schema Documentation" class="schemaDocLink baseURIa">
 							<xsl:attribute name="href">/schema/doc/producer</xsl:attribute>
@@ -86,9 +94,9 @@
 						Codebook prepared by:
 						<em>No value entered</em>&#160;
 						<a title="Add field" class="editIcon2">
-							<xsl:attribute name="href">edit?f=docProducer&amp;a=true</xsl:attribute>
+							<xsl:attribute name="href">edit?f=docProducer&amp;a=true&amp;i=1</xsl:attribute>
 							<i class="fa fa-plus"></i>
-						</a>
+						</a>template
 						<a title="Schema Documentation" class="schemaDocLink baseURIa">
 							<xsl:attribute name="href">/schema/doc/producer</xsl:attribute>
 							<i class="fa fa-info-circle"></i>

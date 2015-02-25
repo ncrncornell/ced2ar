@@ -67,6 +67,8 @@ public class Loader implements InitializingBean{
 		if(config.isGitEnabled()){
 			context.setAttribute("git", true);	
 		}
+		
+		//Tests if bug report should be enabled
 		if(config.isBugReportEnable()) {
 			context.setAttribute("bugReportEnabled", true);
 		}

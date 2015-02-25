@@ -134,7 +134,7 @@ public class EditCover extends ServerResource{
 		validFields.put("version",
 			new String[] {"1","/docDscr/citation/prodStmt/prodDate","Version"});
 		validFields.put("docProducer",
-			new String[] {"1","/docDscr/citation/prodStmt/producer","Document Producer"});
+			new String[] {"3","/docDscr/citation/prodStmt/producer["+index+"]","Document Producer"});
 		validFields.put("stdyProducer",
 			new String[] {"3","/stdyDscr/citation/prodStmt/producer["+index+"]","Study Producer"});
 		validFields.put("distrbtr",

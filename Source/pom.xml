@@ -5,171 +5,18 @@
 	<groupId>edu.nrcn.ced2ar.web</groupId>
 	<artifactId>ced2ar-web</artifactId>
 	<packaging>war</packaging>
-	<version>2.6 RC1</version>
-	<name>CED2AR 2.6 Webapp</name>
+	<version>2.6</version>
+	<name>CED2AR 2.6</name>
 	<url>http://maven.apache.org</url>
 	<!-- Profiles properties are read from /profiles/* -->
 	<profiles>
 		<profile>
-			<id>local</id>
+			<id>localtemp</id>
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
 			<properties>
-				<build.profile.id>local</build.profile.id>
-			</properties>
-			<build>
-				<filters>
-					<filter>profiles/${build.profile.id}/config.properties</filter>
-				</filters>
-				<resources>
-					<resource>
-						<filtering>true</filtering>
-						<directory>src/main/resources</directory>
-					</resource>
-				</resources>
-			</build>
-		</profile>
-		<profile>
-			<id>localtemp</id>
-			<properties>
 				<build.profile.id>localtemp</build.profile.id>
-			</properties>
-			<build>
-				<filters>
-					<filter>profiles/${build.profile.id}/config.properties</filter>
-				</filters>
-				<resources>
-					<resource>
-						<filtering>true</filtering>
-						<directory>src/main/resources</directory>
-					</resource>
-				</resources>
-			</build>
-		</profile>
-		<profile>
-			<id>cesdev</id>
-			<properties>
-				<build.profile.id>cesdev</build.profile.id>
-			</properties>
-			<build>
-				<filters>
-					<filter>profiles/${build.profile.id}/config.properties</filter>
-				</filters>
-				<resources>
-					<resource>
-						<filtering>true</filtering>
-						<directory>src/main/resources</directory>
-					</resource>
-				</resources>
-			</build>
-		</profile>
-		<profile>
-			<id>ciser</id>
-			<properties>
-				<build.profile.id>ciser</build.profile.id>
-			</properties>
-			<build>
-				<filters>
-					<filter>profiles/${build.profile.id}/config.properties</filter>
-				</filters>
-				<resources>
-					<resource>
-						<filtering>true</filtering>
-						<directory>src/main/resources</directory>
-					</resource>
-				</resources>
-			</build>
-		</profile>
-		<profile>
-			<id>dev</id>
-			<properties>
-				<build.profile.id>dev</build.profile.id>
-			</properties>
-			<build>
-				<filters>
-					<filter>profiles/${build.profile.id}/config.properties</filter>
-				</filters>
-				<resources>
-					<resource>
-						<filtering>true</filtering>
-						<directory>src/main/resources</directory>
-					</resource>
-				</resources>
-			</build>
-		</profile>
-		<profile>
-			<id>demo</id>
-			<properties>
-				<build.profile.id>demo</build.profile.id>
-			</properties>
-			<build>
-				<filters>
-					<filter>profiles/${build.profile.id}/config.properties</filter>
-				</filters>
-				<resources>
-					<resource>
-						<filtering>true</filtering>
-						<directory>src/main/resources</directory>
-					</resource>
-				</resources>
-			</build>
-		</profile>
-		<profile>
-			<id>prod</id>
-			<properties>
-				<build.profile.id>prod</build.profile.id>
-			</properties>
-			<build>
-				<filters>
-					<filter>profiles/${build.profile.id}/config.properties</filter>
-				</filters>
-				<resources>
-					<resource>
-						<filtering>true</filtering>
-						<directory>src/main/resources</directory>
-					</resource>
-				</resources>
-			</build>
-		</profile>
-		<profile>
-			<id>roots</id>
-			<properties>
-				<build.profile.id>roots</build.profile.id>
-			</properties>
-			<build>
-				<filters>
-					<filter>profiles/${build.profile.id}/config.properties</filter>
-				</filters>
-				<resources>
-					<resource>
-						<filtering>true</filtering>
-						<directory>src/main/resources</directory>
-					</resource>
-				</resources>
-			</build>
-		</profile>
-		<profile>
-			<id>acsdev</id>
-			<properties>
-				<build.profile.id>acsdev</build.profile.id>
-			</properties>
-			<build>
-				<filters>
-					<filter>profiles/${build.profile.id}/config.properties</filter>
-				</filters>
-				<resources>
-					<resource>
-						<filtering>true</filtering>
-						<directory>src/main/resources</directory>
-					</resource>
-				</resources>
-			</build>
-		</profile>
-		<profile>
-			<id>ssbdev</id>
-			<properties>
-				<build.profile.id>ssbdev</build.profile.id>
 			</properties>
 			<build>
 				<filters>

@@ -213,6 +213,14 @@ public class QueryUtil {
 	protected static void insertCommit(String hash, String timeStamp, List<String> handles){
 		//TODO: Maybe add user info with commit in BaseX
 		//+" element user {'"+user+"'}"
+		
+		String xqueryTest =  "count(for $c in collection('git/git')/git/commits/commit "
+		+ "where $c/@hash='"+hash+"' return $c)";
+		int count = Integer.parseInt(BaseX.getXML(xqueryTest).trim());
+		if(count > 0){
+			return;
+		}
+		
 		String codebooks = "";
 		for(String handle:handles){
 			codebooks += ", element codeBook {attribute handle {'"+handle+"'}}";
@@ -232,31 +240,36 @@ public class QueryUtil {
 	 */
 	protected static void insertVarCommit(String hash, Hashtable<String,List<String>> handleVars){
 		Enumeration<String> enumration = handleVars.keys();
-		while(enumration.hasMoreElements()) {
+		while(enumration.hasMoreElements()){
 		    String handle = enumration.nextElement();
 		    List<String> vars = handleVars.get(handle);
-		    String varInsert = "";
-		    for(int i = 0; i < vars.size(); i++){
-				if(i != 0){
-					varInsert+=", ";
-				}
-				varInsert += "element var {attribute name {'"+vars.get(i)+"'}}";
-				
-				String xquery = " for $c in collection('git')/git/commits"
-					+" let $commit := $c/commit[@hash='"+hash+"']"
-					+" let $codebook := $commit/codeBook[@handle='"+handle+"'] return"
-					+" if($codebook) then"
-					+"	insert nodes ("
-					+	varInsert
-					+"	) into $codebook"
-					+" else insert node element codeBook {"
-					+"	attribute handle {'"+handle+"'},"
-					+ 	varInsert
-					+" }  into $commit";
-				logger.debug("Inserting var commit");
-				logger.debug(xquery);
-				BaseX.write(xquery);
-			}  
+		    
+		    String xqueryTest =  "count(for $c in collection('git/git')/git/commits/commit"
+    		+"[@hash='"+hash+"']/codeBook[@handle='"+handle+"']//var return $c)";
+    		int count = Integer.parseInt(BaseX.getXML(xqueryTest).trim());
+    		if(count <= 0){
+			    String varInsert = "";
+			    for(int i = 0; i < vars.size(); i++){
+					if(i != 0){
+						varInsert+=", ";
+					}
+					varInsert += "element var {attribute name {'"+vars.get(i)+"'}}";
+					
+					String xquery = " for $c in collection('git')/git/commits"
+						+" let $commit := $c/commit[@hash='"+hash+"']"
+						+" let $codebook := $commit/codeBook[@handle='"+handle+"'] return"
+						+" if($codebook) then"
+						+"	insert nodes ("
+						+	varInsert
+						+"	) into $codebook"
+						+" else insert node element codeBook {"
+						+"	attribute handle {'"+handle+"'},"
+						+ 	varInsert
+						+" }  into $commit";
+					logger.debug("Inserting var commit");
+					BaseX.write(xquery);
+				}  
+    		}
 		}	
 	}
 	

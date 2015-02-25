@@ -60,7 +60,7 @@
 					<xsl:value-of select="fileTxt/fileName" />
 					&#160;
 					<xsl:choose>
-						<xsl:when test="not(contains(@URI,'http')) and @URI != ''">
+						<xsl:when test="not(contains(@URI,'http') or contains(@URI,'ftp:')) and @URI != ''">
 							<xsl:value-of select="fileTxt/fileName" />
 							(Incomplete URL provided - <xsl:value-of select="@URI" />)
 						</xsl:when>
@@ -213,10 +213,10 @@
 			</p>
 			<div class="toggleContent">			
 				<xsl:for-each select="codeBook/var/notes">
-				<p class="lb2"> 
-					#<xsl:value-of select="position()" /><br />
-					<xsl:value-of select="current()" />
-				</p>
+				<div class="lb2"> 
+					<p>#<xsl:value-of select="position()" /></p>
+					<xsl:copy-of select="current()/node()" />
+				</div>
 				</xsl:for-each>
 			</div>
 		</xsl:if>

@@ -33,9 +33,21 @@
 			<xsl:if test="codeBook/docDscr/citation/prodStmt/producer != ''">
 				<p class="value4">
 					Codebook prepared by:
-					<span itemprop="publisher">
-						<xsl:value-of select="codeBook/docDscr/citation/prodStmt/producer" />
-					</span>
+					<xsl:for-each select="codeBook/docDscr/citation/prodStmt/producer">
+						<span itemprop="publisher">
+							<xsl:value-of select="current()" />
+								<xsl:if test="count(/codeBook/docDscr/citation/prodStmt/producer) gt 1">
+									<xsl:if
+										test="position() lt count(/codeBook/docDscr/citation/prodStmt/producer) -1">
+										,&#160;
+									</xsl:if>
+									<xsl:if
+										test="position() eq count(/codeBook/docDscr/citation/prodStmt/producer) -1">
+										,&#160;and&#160;
+									</xsl:if>
+								</xsl:if>
+						</span>
+					</xsl:for-each>
 				</p>
 				<div class="lb2" />
 			</xsl:if>

@@ -85,7 +85,7 @@ public class EditCodebooks {
 		validFields.put("version",
 		new String[] {"1","/codeBook/docDscr/citation/prodStmt/prodDate","Version","1"});
 		validFields.put("docProducer",
-		new String[] {"1","/codeBook/docDscr/citation/prodStmt/producer","Document Producer","1"});
+		new String[] {"3","/codeBook/docDscr/citation/prodStmt/producer["+index+"]","Document Producer","1"});
 		validFields.put("stdyProducer",
 		new String[] {"3","/codeBook/stdyDscr/citation/prodStmt/producer["+index+"]","Study Producer","1"});
 		validFields.put("distrbtr",
@@ -172,7 +172,7 @@ public class EditCodebooks {
 			
 		//define safe tags, clean input
 		if(!remove){
-			wl = wl.addTags("em","p","li","ul","a","xhtml:li","xhtml:ul");
+			wl = wl.addTags("em","p","li","ul","a","xhtml:li","xhtml:ul","br");
 			wl = wl.addAttributes("a","href","title","target");
 		}
 		
@@ -209,6 +209,8 @@ public class EditCodebooks {
 		}catch(UnsupportedEncodingException e){}
 		s = s.replaceAll("&rdquo;", "\"").replaceAll("&ldquo;", "\"");
 		s = s.replaceAll("“","\"").replaceAll("”", "\"");
+		s = s.replaceAll("&rsquo;", "'");
+		s = s.replaceAll("&.+;", "");
 		return s.trim();
 	}
 	
@@ -473,6 +475,7 @@ public class EditCodebooks {
 					throw new Exception("bad HTML");
 				String oldval = value;
 				value = HTMLcheck(value,false);
+			
 				if(oldval.replaceAll("[\\s]", "").length() != value.replaceAll("[\\s]", "").length()){
 					throw new Exception("bad HTML");
 				}
@@ -1147,12 +1150,11 @@ public class EditCodebooks {
      * @param response
      * @return
      */
-    @RequestMapping(value = "/edit/codebook/{c}/v/{v}/clone", method = RequestMethod.GET)
+    @RequestMapping(value = "/edit/codebook/{c}/v/{v}/clone", method = RequestMethod.POST)
     @ResponseBody
 	public String cloneCodebook(@PathVariable(value = "c") String baseHandle,
 	@PathVariable(value = "v") String version,Model model, HttpSession session, HttpServletResponse response)
-	{  	
-    	
+	{  	    	
     	if(context.getAttribute("codebooks") == null){
 			String baseURI = loader.getPath() + "/rest/";
 			TreeMap<String,String[]>  codebooks = loader.getCodebooks(baseURI);
@@ -1165,6 +1167,7 @@ public class EditCodebooks {
     		return "Version '"+version+"' already exists for "+baseHandle;
     	}else{
     		//Clone codebook
+    		//TODO:Not finished
     		return "";
     	}		
 	}

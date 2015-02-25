@@ -23,7 +23,13 @@ import org.eclipse.jgit.api.CommitCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.api.StatusCommand;
+import org.eclipse.jgit.api.errors.CheckoutConflictException;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.InvalidRefNameException;
+import org.eclipse.jgit.api.errors.InvalidRemoteException;
+import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
+import org.eclipse.jgit.api.errors.RefNotFoundException;
+import org.eclipse.jgit.api.errors.TransportException;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffFormatter;
 import org.eclipse.jgit.diff.RawTextComparator;
@@ -80,6 +86,7 @@ public class VersionControl {
 	private boolean isGitEnabled;
 	private int numberOfCommitsToPushRemote;
 	private final String branchPrefix = "refs/heads/";	
+	private final String startPoint = "origin/master";
 	
 	@Autowired
 	private ServletContext context;
@@ -92,6 +99,9 @@ public class VersionControl {
 	@Async
 	@Scheduled(cron="${gitLocalCommitCronExpression}")
 	public void taskCommitRepo(){
+		
+		recordCommits();
+		
 		if(!isGitEnabled()){
 			logger.debug("Version control is not enabled. Exiting.");
 			return;
@@ -166,75 +176,51 @@ public class VersionControl {
 	}
 	
 //Git methods
-	
 	/**
-	 * Writes commit info to BaseX DB
+	 * Writes all commit info to BaseX DB
 	 */
-	private void recordCommit(RevCommit commit){
-		logger.debug("recording commit...");
-		Git git = null;
-		Repository repo = null;	
-		try{
-			git = openRepo();
-			repo = git.getRepository();
-			RevWalk rw = new RevWalk(repo);
-			RevCommit parent = rw.parseCommit(commit.getParent(0).getId());
-			DiffFormatter df = new DiffFormatter(DisabledOutputStream.INSTANCE);
-			df.setRepository(repo);
-			df.setDiffComparator(RawTextComparator.DEFAULT);
-			df.setDetectRenames(true);
-			List<DiffEntry> diffs = df.scan(parent.getTree(), commit.getTree());
-			String timestamp = Integer.toString(commit.getCommitTime());
-			String hash =commit.getId().getName();
-			List<String> handles = new ArrayList<String>();
-			logger.debug(hash +" files changed:");
-			for(DiffEntry diff : diffs) {
-				try{
-					String fileName = diff.getNewPath();
-					String handle = fileName.substring(0, fileName.lastIndexOf(".")).replace(".", "");
-					handles.add(handle);
-					logger.debug(fileName + " "+handle);	
-				}catch(StringIndexOutOfBoundsException e){
-					logger.error(e.getMessage());
-				}
+	private void recordCommits(){
+			List<RevCommit> commits;
+			try {
+				commits = getCommitLog();
+			} catch (IOException | GitAPIException e) {
+				logger.error("Error reading commit log "+e.getLocalizedMessage());
+				return;
 			}
-			String shortMessage = commit.getShortMessage();
-			Pattern pattern = Pattern.compile("\\{(.+?)?\\}");
-			Matcher matcher = pattern.matcher(shortMessage);
-			Hashtable<String,List<String>> commitVars = new Hashtable<String,List<String>>();
-			while (matcher.find()) {
-			   String[] data = matcher.group(1).split(",");
-			   try{
-				   if(data[2].equals("var")){
-					   String handle = data[0];
-					   String name = data[3];
-					   if(commitVars.containsKey(handle)){
-						   List<String> vars = commitVars.get(handle);
-						   if(!vars.contains(name)){
-							   vars.add(name); 
-							   commitVars.put(handle, vars);
-						   }   
-					   }else{
-						   List<String> vars = new ArrayList<String>();
-						   vars.add(name);
-						   commitVars.put(handle, vars);
-						   logger.debug(handle + " "+name);
-					   } 
-				   }
-			   }catch(ArrayIndexOutOfBoundsException e){
-				   logger.error(e.getMessage());
-			   }
-			}			
-			QueryUtil.insertCommit(hash, timestamp, handles);
-			QueryUtil.insertVarCommit(hash, commitVars);
 			
-		}catch (IOException|NullPointerException e){
-			logger.error("Error reading current commits " + e.getMessage());
-			e.printStackTrace();
-		}finally{
-			if(git != null) git.close();
-			if(repo != null) repo.close();
-		}
+			for(RevCommit commit : commits){	
+				String shortMessage = commit.getShortMessage();
+				String hash =commit.getId().getName();
+				String timestamp = Integer.toString(commit.getCommitTime());
+				
+				Pattern pattern = Pattern.compile("\\{(.+?)?\\}");
+				Matcher matcher = pattern.matcher(shortMessage);
+				Hashtable<String,List<String>> commitVars = new Hashtable<String,List<String>>();
+				List<String> handles = new ArrayList<String>();
+				while (matcher.find()) {
+				   String[] data = matcher.group(1).split(",");
+					   if(data[2].equals("var")){
+						   String handle = data[0];
+						   if(!handles.contains(handle))
+							   handles.add(handle);
+						   String name = data[3];
+						   if(commitVars.containsKey(handle)){
+							   List<String> vars = commitVars.get(handle);
+							   if(!vars.contains(name)){
+								   vars.add(name); 
+								   commitVars.put(handle, vars);
+							   }   
+						   }else{
+							   List<String> vars = new ArrayList<String>();
+							   vars.add(name);
+							   commitVars.put(handle, vars);
+							   logger.debug(handle + " "+name);
+						   } 
+					   }
+				}			
+				QueryUtil.insertCommit(hash, timestamp, handles);
+				QueryUtil.insertVarCommit(hash, commitVars);
+			}	
 	}
 
 	/**
@@ -462,13 +448,7 @@ public class VersionControl {
 					 pendingCommits.add(rev);
 				 }
 				 count++;//Should test before incrementing
-			 }
-			 
-			 if(count >= getNumberOfCommitsToPushRemote()){
-				for(RevCommit pendingCommit : pendingCommits){
-					recordCommit(pendingCommit);
-				}	
-			}
+			 }	 
 		}catch(IOException|GitAPIException e) {
 			logger.error(e.getMessage());
 			e.printStackTrace();
@@ -498,9 +478,6 @@ public class VersionControl {
 			 Iterator<RevCommit> i = log.iterator();
 			 while(i.hasNext()){
 				 RevCommit rc = (RevCommit)i.next();
-				 repo = git.getRepository();
-				 ObjectLoader loader = repo.open(rc.getId());
-				 loader.copyTo(System.out);
 				 commitLog.add(rc);
 			 }
 		 }catch(NullPointerException e){
@@ -539,21 +516,39 @@ public class VersionControl {
         //localPath.delete();
         Repository repository = null;       
         try{
-	        // then clone
-        	logger.debug("Cloning " + remoteRepoURL);
-	        Git.cloneRepository()
+        	if(remoteContainsBranch(remoteBranch)) {
+        		logger.debug("Branch exists in the remote reposiory: " + remoteBranch);
+		        // then clone
+	        	logger.debug("Cloning " + remoteRepoURL);
+		        Git.cloneRepository()
+		            .setURI(remoteRepoURL)
+		            .setDirectory(localPath)
+		            .setBranch(branchPrefix+remoteBranch) // refs/heads/mastercodebooks
+		            .setCredentialsProvider(new UsernamePasswordCredentialsProvider(remoteUser,remotePass))
+		            .call();
+        	}
+        	else {
+        		logger.debug("Branch does NOT exists in the remote reposiory: " + remoteBranch);
+
+		        Git.cloneRepository()
 	            .setURI(remoteRepoURL)
 	            .setDirectory(localPath)
-	            .setBranch(branchPrefix+remoteBranch) // refs/heads/mastercodebooks
 	            .setCredentialsProvider(new UsernamePasswordCredentialsProvider(remoteUser,remotePass))
 	            .call();
-	
-	        // now open the created repository
+		        
+		        logger.debug("Cloned the remoete. Now creating a new branch for the CED2AR instance: " +  remoteBranch);
+        		createNewBranch(remoteBranch);
+        		logger.debug("Successfully created new branch for the CED2AR instance: " +  remoteBranch);
+        	}
+        	
+        	logger.debug("Opening repository...");
 	        FileRepositoryBuilder builder = new FileRepositoryBuilder();
 	        repository = builder.setGitDir(localPath)
                 .readEnvironment() // scan environment GIT_* variables
                 .findGitDir() // scan up the file system tree
                 .build();
+	        
+
         }catch(Exception e){
         	e.printStackTrace();
         }finally{
@@ -744,6 +739,62 @@ public class VersionControl {
 		}
 		return realGitDirectory;		
 	}
+	
+	/**
+	 * This method check the remote repository for the existence of the branch.
+	 * @param branchName name of the branch in the remote repository
+	 * @return true if the branch found in the remote repository; false otherwise.
+	 * @throws TransportException
+	 * @throws InvalidRemoteException
+	 * @throws GitAPIException
+	 */
+	
+    public boolean remoteContainsBranch(String branchName) throws TransportException,InvalidRemoteException,GitAPIException{
+    	boolean contains = false;
+        Collection<Ref> refs = Git.lsRemoteRepository()
+                .setHeads(true)
+                .setTags(false)
+                .setRemote(remoteRepoURL)
+                .setCredentialsProvider(new UsernamePasswordCredentialsProvider(remoteUser,remotePass))
+                .call();
+        for (Ref ref : refs) {
+        	if(ref.getName().equalsIgnoreCase(branchPrefix+branchName)) {
+        		contains= true;
+        	}
+        }
+        return contains;
+    }
+    /**
+     * This method creates a new branch in the local repository, makes it the head, then pushes newly created branch to the remote.
+     * This method should only be called after verifying that the branch des not exists in the remote reposiory. 
+     * @param branchName
+     * @throws IOException
+     * @throws RefAlreadyExistsException
+     * @throws RefNotFoundException
+     * @throws InvalidRefNameException
+     * @throws CheckoutConflictException
+     * @throws GitAPIException
+     */
+    public void createNewBranch(String branchName) throws IOException, RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, CheckoutConflictException, GitAPIException {
+		Git git = null;			
+		try{
+			git 	= openRepo();
+	    	git.checkout().
+	    	    setCreateBranch(true).
+	    	    setName(branchName).
+	    	    setStartPoint(startPoint).
+	    	    call();
+	    	
+	    	 git.push()
+				.setRemote(this.remoteRepoURL)
+				.setCredentialsProvider(new UsernamePasswordCredentialsProvider(getRemoteUser(),getRemotePass()))
+				.call();
+		}
+		finally {
+			if(git != null) git.close();
+		}
+    }
+    
 	
 //Getters and setter methods		
 	public String getRemoteRepoURL() {

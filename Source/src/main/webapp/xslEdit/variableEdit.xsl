@@ -152,7 +152,7 @@
 					<xsl:value-of select="fileTxt/fileName" />
 					&#160;
 					<xsl:choose>
-						<xsl:when test="not(contains(@URI,'http')) and @URI != ''">
+						<xsl:when test="not(contains(@URI,'http') or contains(@URI,'ftp:')) and @URI != ''">
 							<xsl:value-of select="fileTxt/fileName" />
 							(Incomplete URL provided - <xsl:value-of select="@URI" />)
 						</xsl:when>
@@ -448,32 +448,35 @@
 		</p>
 		<xsl:if test="count(/codeBook/var/notes) gt 0">
 			<xsl:for-each select="/codeBook/var/notes">
-				<p class="value2">
-					Note #<xsl:value-of select="position()" /> -
-					Access Level:&#160;
-					<xsl:choose>
-						<xsl:when test="current()/@access != ''">
-							<xsl:value-of select="current()/@access" />
-						</xsl:when>
-						<xsl:otherwise>
-							<em>undefined</em>
-						</xsl:otherwise>
-					</xsl:choose>
-					<a title="Edit field" class="editIcon2">
-						<xsl:attribute name="href">
-			    				<xsl:value-of select="$varname"/>/edit?f=notesAccs&amp;i=<xsl:value-of
-							select="position()" /></xsl:attribute>
-						<i class="fa fa-pencil"></i>
-					</a>
-					<br />
-					<xsl:value-of select="current()" />
+				<div class="value2">
+					<div>
+						Note #<xsl:value-of select="position()" /> -
+						Access Level:&#160;
+						<xsl:choose>
+							<xsl:when test="current()/@access != ''">					
+								<xsl:value-of select="current()/@access" />
+							</xsl:when>
+							<xsl:otherwise>
+								<em>undefined</em>
+							</xsl:otherwise>
+						</xsl:choose>
+						<a title="Edit field" class="editIcon2">
+							<xsl:attribute name="href">
+				    				<xsl:value-of select="$varname"/>/edit?f=notesAccs&amp;i=<xsl:value-of
+								select="position()" /></xsl:attribute>
+							<i class="fa fa-pencil"></i>
+						</a>
+					</div>
+					<span class="valueInline">
+						<xsl:copy-of select="current()/node()" />
+					</span>
 					<a title="Edit field" class="editIcon2">
 						<xsl:attribute name="href">
 			    				<xsl:value-of select="$varname"/>/edit?f=notes&amp;i=<xsl:value-of
 							select="position()" /></xsl:attribute>
 						<i class="fa fa-pencil"></i>
 					</a>
-				</p>
+				</div>
 			</xsl:for-each>
 		</xsl:if>
 		<p class="value2">

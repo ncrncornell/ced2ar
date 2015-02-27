@@ -96,7 +96,7 @@
 						<a title="Add field" class="editIcon2">
 							<xsl:attribute name="href">edit?f=docProducer&amp;a=true&amp;i=1</xsl:attribute>
 							<i class="fa fa-plus"></i>
-						</a>template
+						</a>
 						<a title="Schema Documentation" class="schemaDocLink baseURIa">
 							<xsl:attribute name="href">/schema/doc/producer</xsl:attribute>
 							<i class="fa fa-info-circle"></i>

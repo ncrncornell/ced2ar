@@ -99,7 +99,7 @@
 			<h3>Current Version</h3>
 			<p>
 				<%--TODO: Would be nice to automate this somehow --%>
-				CED<sup>2</sup>AR version <span itemprop="version">2.6.0.0</span> (Updated February 24<sup>th</sup> 2015)
+				CED<sup>2</sup>AR version <span itemprop="version">2.6.0.0</span> (Updated February 28<sup>th</sup> 2015)
 			</p>
 			<p>
 				For those interested in collaboration, please email us at

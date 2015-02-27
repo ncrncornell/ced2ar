@@ -305,7 +305,7 @@ public class EditVarGroups {
 	 * @param version
 	 * @param id
 	 * @param field
-	 * @param newTxt
+	 * @param newValue
 	 * @param model
 	 * @param session
 	 * @param response
@@ -316,7 +316,7 @@ public class EditVarGroups {
 	public String groupEditForm2P(@PathVariable(value = "c") String baseHandle, 
 	@PathVariable(value = "v") String version, @PathVariable(value = "id") String id,
 	@RequestParam(value = "f", defaultValue = "") String field,
-	@RequestParam(value = "newTxt", defaultValue = "") String newValue,
+	@RequestParam(value = "newValue", defaultValue = "") String newValue,
 	Model model, HttpSession session, HttpServletResponse response) throws Exception{
 		
 		String host = loader.getHostName();

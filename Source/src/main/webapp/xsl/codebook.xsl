@@ -35,17 +35,20 @@
 					Codebook prepared by:
 					<xsl:for-each select="codeBook/docDscr/citation/prodStmt/producer">
 						<span itemprop="publisher">
-							<xsl:value-of select="current()" />
-								<xsl:if test="count(/codeBook/docDscr/citation/prodStmt/producer) gt 1">
-									<xsl:if
-										test="position() lt count(/codeBook/docDscr/citation/prodStmt/producer) -1">
-										,&#160;
-									</xsl:if>
-									<xsl:if
-										test="position() eq count(/codeBook/docDscr/citation/prodStmt/producer) -1">
-										,&#160;and&#160;
-									</xsl:if>
+							<xsl:if
+								test="count(/codeBook/docDscr/citation/prodStmt/producer) gt 1">
+								<xsl:if
+									test="position() lt count(/codeBook/docDscr/citation/prodStmt/producer) -1">
+									<xsl:value-of select="current()" />
+									,
 								</xsl:if>
+								<xsl:if
+									test="position() eq count(/codeBook/docDscr/citation/prodStmt/producer) -1">
+									<xsl:value-of select="current()" />
+									,&#160;and&#160;
+									<xsl:value-of select="current()/following-sibling::*[1]" />
+								</xsl:if>
+							</xsl:if>
 						</span>
 					</xsl:for-each>
 				</p>
@@ -56,16 +59,18 @@
 					Data prepared by:
 					<xsl:for-each select="codeBook/stdyDscr/citation/prodStmt/producer">
 						<span itemprop="author">
-							<xsl:value-of select="current()" />
 							<xsl:if
 								test="count(/codeBook/stdyDscr/citation/prodStmt/producer) gt 1">
 								<xsl:if
 									test="position() lt count(/codeBook/stdyDscr/citation/prodStmt/producer) -1">
-									,&#160;
+									<xsl:value-of select="current()" />
+									,
 								</xsl:if>
 								<xsl:if
 									test="position() eq count(/codeBook/stdyDscr/citation/prodStmt/producer) -1">
+									<xsl:value-of select="current()" />
 									,&#160;and&#160;
+									<xsl:value-of select="current()/following-sibling::*[1]" />
 								</xsl:if>
 							</xsl:if>
 						</span>
@@ -88,7 +93,8 @@
 				</xsl:for-each>
 			</xsl:if>
 		</div>
-		<xsl:if test="codeBook/docDscr/citation/biblCit != '' or codeBook/stdyDscr/citation/biblCit !=''">
+		<xsl:if
+			test="codeBook/docDscr/citation/biblCit != '' or codeBook/stdyDscr/citation/biblCit !=''">
 			<p class="staticHeader">Citation</p>
 		</xsl:if>
 		<xsl:if test="codeBook/docDscr/citation/biblCit != ''">
@@ -96,7 +102,8 @@
 				<em>Please cite this codebook as:</em>
 				<br />
 				<xsl:copy-of select="codeBook/docDscr/citation/biblCit/node()" />
-				<xsl:copy-of select="codeBook/docDscr/citation/biblCit/node()/ExtLink/node()" />
+				<xsl:copy-of
+					select="codeBook/docDscr/citation/biblCit/node()/ExtLink/node()" />
 			</div>
 		</xsl:if>
 		<xsl:if test="codeBook/stdyDscr/citation/biblCit/node() != ''">
@@ -120,7 +127,7 @@
 					<xsl:when test="string-length($abstract) > 400">
 						<span class="truncPre printRemove">
 							<xsl:copy-of select="substring($abstract,0,400)" />
-						</span>				
+						</span>
 						<span class="truncFull hidden" itemprop="description">
 							<xsl:copy-of select="codeBook/stdyDscr/stdyInfo/abstract/node()" />
 						</span>
@@ -140,18 +147,23 @@
 			<div class="toggleText">
 				<xsl:for-each select="codeBook/fileDscr">
 					<p>
-						<xsl:value-of select="fileTxt/fileName" />&#160;
+						<xsl:value-of select="fileTxt/fileName" />
+						&#160;
 						<xsl:choose>
-							<xsl:when test="(not(contains(@URI,'http')) and not(contains(@URI,'ftp:'))) and @URI != ''">
+							<xsl:when
+								test="(not(contains(@URI,'http')) and not(contains(@URI,'ftp:'))) and @URI != ''">
 								<xsl:value-of select="fileTxt/fileName" />
-								(Incomplete URL provided - <xsl:value-of select="@URI" />)
+								(Incomplete URL provided -
+								<xsl:value-of select="@URI" />
+								)
 							</xsl:when>
 							<xsl:when test="string-length(@URI) gt 0 ">
 								<a itemprop="distribution" class="iLinkR">
 									<xsl:attribute name="target">_blank</xsl:attribute>
 									<xsl:attribute name="href"><xsl:value-of
 										select="@URI" /></xsl:attribute>
-									<xsl:value-of select="@URI" /><i class="fa fa-external-link"></i>
+									<xsl:value-of select="@URI" />
+									<i class="fa fa-external-link"></i>
 								</a>
 							</xsl:when>
 							<xsl:otherwise>
@@ -178,24 +190,22 @@
 				<p id="accessLevels" class="toggleHeader hs2">Access Levels</p>
 				<div class="toggleContent">
 					<div class="toggleText">
-							<!--  
-							<p>
-								<em>undefined</em>
-							</p>
-							<p class="lb2">
-								Elements flagged with undefined have not yet been reviewed for release
-							</p>
-							-->
+						<!-- <p> <em>undefined</em> </p> <p class="lb2"> Elements flagged with 
+							undefined have not yet been reviewed for release </p> -->
 						<xsl:for-each select="codeBook/stdyDscr/dataAccs[@ID]">
 							<p>
-								<em><xsl:value-of select="current()/@ID" /></em>
+								<em>
+									<xsl:value-of select="current()/@ID" />
+								</em>
 							</p>
 							<div class="lb2">
 								<xsl:choose>
 									<xsl:when test="current()/useStmt/restrctn/node() != ''">
 										<xsl:copy-of select="current()/useStmt/restrctn/node()" />
 									</xsl:when>
-									<xsl:otherwise><em>No description given</em></xsl:otherwise>
+									<xsl:otherwise>
+										<em>No description given</em>
+									</xsl:otherwise>
 								</xsl:choose>
 							</div>
 						</xsl:for-each>
@@ -206,7 +216,8 @@
 				<p class="toggleHeader hs2">Access Restrictions (Default)</p>
 				<div class="toggleContent">
 					<div class="toggleText">
-						<xsl:copy-of select="codeBook/stdyDscr/dataAccs[1]/useStmt/restrctn/node()" />
+						<xsl:copy-of
+							select="codeBook/stdyDscr/dataAccs[1]/useStmt/restrctn/node()" />
 					</div>
 				</div>
 			</xsl:if>
@@ -214,7 +225,8 @@
 				<p class="toggleHeader hs2">Access Requirements</p>
 				<div class="toggleContent">
 					<div class="toggleText">
-						<xsl:copy-of select="codeBook/stdyDscr/dataAccs[1]/useStmt/confDec/node()" />
+						<xsl:copy-of
+							select="codeBook/stdyDscr/dataAccs[1]/useStmt/confDec/node()" />
 						<br />
 						<xsl:variable name='useStmtURI'
 							select='codeBook/stdyDscr/dataAccs[1]/useStmt/confDec/@URI'></xsl:variable>
@@ -242,7 +254,8 @@
 				<p class="toggleHeader hs2">Access Permission Requirements</p>
 				<div class="toggleContent">
 					<div class="toggleText">
-						<xsl:copy-of select="codeBook/stdyDscr/dataAccs[1]/useStmt/specPerm/node()" />
+						<xsl:copy-of
+							select="codeBook/stdyDscr/dataAccs[1]/useStmt/specPerm/node()" />
 					</div>
 				</div>
 			</xsl:if>
@@ -268,7 +281,8 @@
 				<div class="toggleContent">
 					<div class="toggleText">
 						For questions regarding this data collection, please contact:
-						<xsl:copy-of select="codeBook/stdyDscr/dataAccs[1]/useStmt/contact/node()" />
+						<xsl:copy-of
+							select="codeBook/stdyDscr/dataAccs[1]/useStmt/contact/node()" />
 					</div>
 				</div>
 			</xsl:if>

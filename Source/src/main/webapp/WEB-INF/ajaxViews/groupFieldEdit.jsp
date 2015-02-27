@@ -13,11 +13,11 @@
 			id="editDiscard" class="editControl3 editIcon"> 
 			<i class="fa fa-trash-o"></i>
 		</a>
-		<c:set var="newTxtHeight" value="${((fn:length(curVal)/80)*1.1)+2}" />
-			<c:if test="${newTxtHeight lt 3}">
-				<c:set var="newTxtHeight" value="3" />
-			</c:if>
-		<textarea name="newTxt" style="height:${newTxtHeight}em">${curVal}</textarea>
+		<c:set var="newTxtHeight" value="${((fn:length(curVal)/120))}" />
+		<c:if test="${newTxtHeight lt 3}">
+			<c:set var="newTxtHeight" value="3" />
+		</c:if>
+		<textarea name="newValue" style="height:${newTxtHeight}em">${curVal}</textarea>
 		<c:if test="${not empty editDoc}">
 			<p class="editDoc">${editDoc}</p>
 		</c:if>

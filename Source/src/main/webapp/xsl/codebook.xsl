@@ -35,18 +35,13 @@
 					Codebook prepared by:
 					<xsl:for-each select="codeBook/docDscr/citation/prodStmt/producer">
 						<span itemprop="publisher">
-							<xsl:if
-								test="count(/codeBook/docDscr/citation/prodStmt/producer) gt 1">
-								<xsl:if
-									test="position() lt count(/codeBook/docDscr/citation/prodStmt/producer) -1">
-									<xsl:value-of select="current()" />
-									,
+							<xsl:value-of select="current()" />
+							<xsl:if test="count(/codeBook/docDscr/citation/prodStmt/producer) gt 1">
+								<xsl:if test="position() lt count(/codeBook/docDscr/citation/prodStmt/producer) -1">
+								,
 								</xsl:if>
-								<xsl:if
-									test="position() eq count(/codeBook/docDscr/citation/prodStmt/producer) -1">
-									<xsl:value-of select="current()" />
+								<xsl:if test="position() eq count(/codeBook/docDscr/citation/prodStmt/producer) -1">
 									,&#160;and&#160;
-									<xsl:value-of select="current()/following-sibling::*[1]" />
 								</xsl:if>
 							</xsl:if>
 						</span>
@@ -59,18 +54,13 @@
 					Data prepared by:
 					<xsl:for-each select="codeBook/stdyDscr/citation/prodStmt/producer">
 						<span itemprop="author">
-							<xsl:if
-								test="count(/codeBook/stdyDscr/citation/prodStmt/producer) gt 1">
-								<xsl:if
-									test="position() lt count(/codeBook/stdyDscr/citation/prodStmt/producer) -1">
-									<xsl:value-of select="current()" />
+							<xsl:value-of select="current()" />
+							<xsl:if test="count(/codeBook/stdyDscr/citation/prodStmt/producer) gt 1">
+								<xsl:if test="position() lt count(/codeBook/stdyDscr/citation/prodStmt/producer) -1">
 									,
 								</xsl:if>
-								<xsl:if
-									test="position() eq count(/codeBook/stdyDscr/citation/prodStmt/producer) -1">
-									<xsl:value-of select="current()" />
+								<xsl:if test="position() eq count(/codeBook/stdyDscr/citation/prodStmt/producer) -1">
 									,&#160;and&#160;
-									<xsl:value-of select="current()/following-sibling::*[1]" />
 								</xsl:if>
 							</xsl:if>
 						</span>

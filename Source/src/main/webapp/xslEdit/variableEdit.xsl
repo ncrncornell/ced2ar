@@ -1,7 +1,34 @@
 <xsl:stylesheet version="2.0"
-	xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-	<xsl:output method="html" indent="yes" encoding="UTF-8"
-		omit-xml-declaration="yes" />
+	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+	xmlns:cdr="http://www2.ncrn.cornell.edu/ced2ar-web"
+	exclude-result-prefixes="cdr">
+	<xsl:output method="html" indent="yes" encoding="UTF-8" omit-xml-declaration="yes" />
+	
+<!-- Functions -->	
+	<!-- Schema doc link-->
+	<xsl:function name="cdr:schemaDoc">
+		<xsl:param name="elementName"/>
+		<xsl:if test="$elementName ne ''">
+			<a title="Schema Documentation" class="schemaDocLink baseURIa">
+				<xsl:attribute name="href">/schema/doc/<xsl:value-of select="$elementName"/></xsl:attribute>
+				<i class="fa fa-info-circle"></i>
+			</a>
+		</xsl:if>
+	</xsl:function>	
+	
+	<!-- Schema doc link with label-->
+	<xsl:function name="cdr:schemaDoc2">
+		<xsl:param name="elementName"/>
+		<xsl:param name="label"/>
+		<xsl:if test="$elementName ne ''">
+			<a title="Schema Documentation" class="schemaDocLink iLinkL baseURIa">
+				<xsl:attribute name="href">/schema/doc/<xsl:value-of select="$elementName"/></xsl:attribute>
+				<i class="fa fa-info-circle"></i><xsl:value-of select="$label" />
+			</a>
+		</xsl:if>
+	</xsl:function>	
+	
+<!-- Main Template -->			
 	<xsl:template match="/">
 		<xsl:variable name='handle'>
 			<xsl:value-of select="/codeBook/@handle" />
@@ -13,10 +40,7 @@
 			<tr>
 				<td class="staticHeader">
 					Variable Name
-					<a title="Schema Documentation" class="schemaDocLink baseURIa">
-						<xsl:attribute name="href">/schema/doc/var</xsl:attribute>
-						<i class="fa fa-info-circle"></i>
-					</a>
+					<xsl:copy-of select="cdr:schemaDoc('var')" />				
 				</td>
 				<td class="value">
 					<xsl:value-of select="/codeBook/var/@name"></xsl:value-of>
@@ -40,10 +64,6 @@
 					</a>
 				</td>
 			</tr>
-			<!-- <tr> <td class="staticHeader">Version</td> <td class="value"> <xsl:choose> 
-				<xsl:when test="/codeBook/var/verStmt/@date != ''"> <xsl:value-of select="/codeBook/var/verStmt/@date" 
-				/> </xsl:when> <xsl:otherwise> <em>No Value Entered</em> </xsl:otherwise> 
-				</xsl:choose> </td> </tr> -->
 			<tr>
 				<td class="staticHeader">Label</td>
 				<td class="value">
@@ -82,11 +102,7 @@
 			</tr>
 			<tr>
 				<td class="staticHeader">
-					Concept
-					<a title="Schema Documentation" class="schemaDocLink baseURIa">
-						<xsl:attribute name="href">/schema/doc/concept</xsl:attribute>
-						<i class="fa fa-info-circle"></i>
-					</a>
+					Concept <xsl:copy-of select="cdr:schemaDoc('concept')" />	
 				</td>
 				<td class="value">
 					<xsl:if test="/codeBook/var/concept != ''">
@@ -114,12 +130,8 @@
 						<i class="fa fa-plus"></i>
 					</xsl:otherwise>
 				</xsl:choose>
-				
 			</a>
-			<a title="Schema Documentation" class="schemaDocLink baseURIa">
-				<xsl:attribute name="href">/schema/doc/qstn</xsl:attribute>
-				<i class="fa fa-info-circle"></i>
-			</a>
+			<xsl:copy-of select="cdr:schemaDoc('qstn')" />	
 		</p>
 		<div class="value2">
 			<xsl:copy-of select="/codeBook/var/qstn/node()" />
@@ -131,10 +143,7 @@
     				<xsl:value-of select="$varname" />/edit?f=txt</xsl:attribute>
 				<i class="fa fa-pencil"></i>
 			</a>
-			<a title="Schema Documentation" class="schemaDocLink baseURIa">
-				<xsl:attribute name="href">/schema/doc/txt</xsl:attribute>
-				<i class="fa fa-info-circle"></i>
-			</a>
+			<xsl:copy-of select="cdr:schemaDoc('txt')" />	
 		</p>
 		<div class="value2">
 			<xsl:copy-of select="/codeBook/var/txt/node()" />
@@ -142,10 +151,7 @@
 		<xsl:if test="/codeBook/var/@files  != ''">
 			<p>
 				<span class="staticHeader">Files</span>
-				<a title="Schema Documentation" class="schemaDocLink baseURIa">
-					<xsl:attribute name="href">/schema/doc/fileDscr</xsl:attribute>
-					<i class="fa fa-info-circle"></i>
-				</a>
+				<xsl:copy-of select="cdr:schemaDoc('fileDscr')" />	
 			</p>
 			<p class="value2">
 				<xsl:for-each select="codeBook/files/fileDscr">
@@ -179,10 +185,7 @@
 		<xsl:if test="count(/codeBook/var/sumStat) gt 0">
 			<p>
 				<span class="staticHeader">Summary Statistics </span>
-				<a title="Schema Documentation" class="schemaDocLink baseURIa">
-					<xsl:attribute name="href">/schema/doc/sumStat</xsl:attribute>
-					<i class="fa fa-info-circle"></i>
-				</a>
+				<xsl:copy-of select="cdr:schemaDoc('sumStat')" />
 			</p>
 			<div class="value2">
 				<table class="table3">
@@ -237,14 +240,8 @@
 		<xsl:if test="count(/codeBook/var/valrng) gt 0">
 			<p class="lb2">
 				<span class="staticHeader">Value Ranges</span>
-				<a title="Schema Documentation" class="schemaDocLink schemaDocLinkPad baseURIa">
-					<xsl:attribute name="href">/schema/doc/valrng</xsl:attribute>
-					<i class="fa fa-info-circle"></i>Value Range
-				</a>
-				<a title="Schema Documentation" class="schemaDocLink schemaDocLinkPad baseURIa">
-					<xsl:attribute name="href">/schema/doc/range</xsl:attribute>
-					<i class="fa fa-info-circle"></i>Range
-				</a>
+				<xsl:copy-of select="cdr:schemaDoc2('valrng','Value Ranges')" />
+				<xsl:copy-of select="cdr:schemaDoc2('range','Range')" />
 			</p>
 			<xsl:for-each select="/codeBook/var/valrng">
 				<xsl:variable name='valRangeI'>
@@ -298,10 +295,7 @@
 		<xsl:if test="count(/codeBook/groups/group) gt 0">
 			<p>
 				<span class="staticHeader">Groups</span>
-				<a title="Schema Documentation" class="schemaDocLink baseURIa">
-					<xsl:attribute name="href">/schema/doc/varGrp</xsl:attribute>
-					<i class="fa fa-info-circle"></i>
-				</a>
+				<xsl:copy-of select="cdr:schemaDoc('varGrp')" />
 			</p>
 			<p class="value2">
 				<xsl:for-each select="/codeBook/groups/group">
@@ -312,18 +306,9 @@
 		</xsl:if>
 		<p>
 			<span class="staticHeader">Values</span>
-			<a title="Schema Documentation" class="schemaDocLink schemaDocLinkPad baseURIa">
-				<xsl:attribute name="href">/schema/doc/catgry</xsl:attribute>
-				<i class="fa fa-info-circle"></i>Categories
-			</a>
-			<a title="Schema Documentation" class="schemaDocLink schemaDocLinkPad baseURIa">
-				<xsl:attribute name="href">/schema/doc/catValu</xsl:attribute>
-				<i class="fa fa-info-circle"></i>Category Values
-			</a>
-			<a title="Schema Documentation" class="schemaDocLink schemaDocLinkPad baseURIa">
-				<xsl:attribute name="href">/schema/doc/catStat</xsl:attribute>
-				<i class="fa fa-info-circle"></i>Category Statistics
-			</a>
+			<xsl:copy-of select="cdr:schemaDoc2('catgry','Categories')" />
+			<xsl:copy-of select="cdr:schemaDoc2('catValu','Category Values')" />
+			<xsl:copy-of select="cdr:schemaDoc2('catStat','Category Statistics')" />
 		</p>
 		<xsl:if test="/codeBook/var/catgry/*">
 			<div class="value2">
@@ -428,23 +413,15 @@
 		<xsl:if test="/codeBook/var/codInstr != 'None'">
 			<p>
 				<span class="staticHeader">Codebook Instructions</span>
-				<a title="Schema Documentation" class="schemaDocLink baseURIa">
-					<xsl:attribute name="href">/schema/doc/codInstr</xsl:attribute>
-					<i class="fa fa-info-circle"></i>
-				</a>
+				<xsl:copy-of select="cdr:schemaDoc('codInstr')" />
 			</p>
 			<div class="value2">
-				<p>
-					<xsl:value-of select="/codeBook/var/codInstr" />
-				</p>
+				<xsl:copy-of select="/codeBook/var/codInstr" />
 			</div>
 		</xsl:if>
 		<p>
 			<span class="staticHeader">Notes</span>
-			<a title="Schema Documentation" class="schemaDocLink baseURIa">
-				<xsl:attribute name="href">/schema/doc/notes</xsl:attribute>
-				<i class="fa fa-info-circle"></i>
-			</a>
+			<xsl:copy-of select="cdr:schemaDoc('notes')" />	
 		</p>
 		<xsl:if test="count(/codeBook/var/notes) gt 0">
 			<xsl:for-each select="/codeBook/var/notes">

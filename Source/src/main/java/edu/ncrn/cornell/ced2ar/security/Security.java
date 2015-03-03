@@ -115,6 +115,7 @@ public class Security extends WebSecurityConfigurerAdapter {
 	 */
     private void configureOAuth2Authentication(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
+		//TODO: add args for select specific paths
 		/*
 		.antMatchers("/search").access("hasRole('ROLE_ADMIN')")
 		.antMatchers("/search/**").access("hasRole('ROLE_ADMIN')")
@@ -155,13 +156,13 @@ public class Security extends WebSecurityConfigurerAdapter {
      */
     private void configureDefaultAuthentication(HttpSecurity http) throws Exception {
 		   http
-		   	.authorizeRequests()
+		   .authorizeRequests()
 		   		.antMatchers("/config").access("hasRole('ROLE_ADMIN')")
 	     		.antMatchers("/edit").access("hasRole('ROLE_ADMIN')")
 	     		.antMatchers("/edit/codebooks").access("hasRole('ROLE_ADMIN')")
 	 			.antMatchers("/edit/**").access("hasRole('ROLE_USER')")
 	 			.antMatchers("/monitoring/**").access("hasRole('ROLE_ADMIN')")
-			.and()
+	 		.and()
 			.formLogin()
 			.and()
 			.httpBasic()

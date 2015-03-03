@@ -28,7 +28,6 @@ textarea[name=newValue]{max-width:100%;min-width:100%;padding:.25em;max-height:2
 .schemaDocLink{color:#B5B5B5;border:1px solid transparent;border-radius:4px;padding:0.25em 0.125em;font-size:12pt !important;margin:auto 0.375em;display:inline-block;vertical-align:middle;}
 .schemaDocLink:hover{color:#0093d0;}
 .schemaDocLink i{font-size:16pt !important;}
-.schemaDocLinkPad i{padding:0 0.333em;}
 .schemaDesc{overflow-y:auto;max-height:40em;}
 .schemaDesc p{margin-bottom:.5em;}
 .schemaDesc .element_title{font-size:2.5em;}

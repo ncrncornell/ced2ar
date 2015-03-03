@@ -278,19 +278,19 @@
 			</xsl:if>
 		</div>
 		<xsl:variable name='relMat'>
-			<xsl:value-of select="codeBook/stdyDscr/othrStdyMat/relMat" />
+			<xsl:value-of select="codeBook/stdyDscr/othrStdyMat/relMat/node()" />
 		</xsl:variable>
 		<xsl:variable name='relPubl'>
-			<xsl:value-of select="codeBook/stdyDscr/othrStdyMat/relPubl" />
+			<xsl:value-of select="codeBook/stdyDscr/othrStdyMat/relPubl/node()" />
 		</xsl:variable>
 		<xsl:variable name='relStdy'>
-			<xsl:value-of select="codeBook/stdyDscr/othrStdyMat/relStdy" />
+			<xsl:value-of select="codeBook/stdyDscr/othrStdyMat/relStdy/node()" />
 		</xsl:variable>
 		<xsl:variable name='collMode'>
-			<xsl:value-of select="codeBook/stdyDscr/method/dataColl/collMode" />
+			<xsl:value-of select="codeBook/stdyDscr/method/dataColl/collMode/node()" />
 		</xsl:variable>
 		<xsl:variable name='dataSrc'>
-			<xsl:value-of select="codeBook/stdyDscr/method/dataColl/dataSrc" />
+			<xsl:value-of select="codeBook/stdyDscr/method/dataColl/dataSrc/node()" />
 		</xsl:variable>
 		<xsl:if
 			test="$relMat != '' or $relPubl !='' or $relStdy !='' or $collMode  != '' or $dataSrc != ''">

@@ -65,7 +65,7 @@ function submitListener(isEdit) {
             return false;
         });
     } else {
-        $(".dialogClose").click(function() {
+        $(".closeWindow").click(function() {
             hideAjax(isEdit);
             return false;
         });

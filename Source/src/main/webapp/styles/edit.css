@@ -185,10 +185,6 @@ textarea[name=newValue]{
 	font-size: 16pt !important;
 }
 
-.schemaDocLinkPad i{
-	padding: 0 0.333em;
-}
-
 .schemaDesc{
 	overflow-y: auto;
 	max-height: 40em;
@@ -220,9 +216,7 @@ textarea[name=newValue]{
 	border-radius: 3px;
 }
 
-
-
-#details .value2 ol {
+#details .value2 ol{
 	font-size: inherit !important;
 }
 

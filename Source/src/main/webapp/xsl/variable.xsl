@@ -109,8 +109,14 @@
 									<xsl:when test="@type eq 'mean'">
 										Mean
 									</xsl:when>
+									<xsl:when test="@type eq 'medn'">
+										Median
+									</xsl:when>
 									<xsl:when test="@type eq 'stdev'">
 										Standard deviation
+									</xsl:when>
+									<xsl:when test="@type eq 'mode'">
+										Mode
 									</xsl:when>
 								</xsl:choose>
 							</td>

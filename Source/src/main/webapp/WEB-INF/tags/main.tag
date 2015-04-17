@@ -8,7 +8,7 @@
 <html lang="en">
 <head>	
 	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-sc3ale=1.0">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<%--This is the rich snippet as seen by search engines. It is sometimes specific for a particular page --%>
 	<c:choose>
 		<c:when test="${empty metaDesc}">
@@ -44,8 +44,8 @@
 		</c:when>
 		<c:otherwise>
 			<link rel="stylesheet" type="text/css" href="${baseURI}/styles/fonts.css" />
-			<link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
-			<link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css" />
+			<link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
+			<link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css" />
 			<link rel="stylesheet" type="text/css" href="${baseURI}/styles/main.min.css" />
 			<link rel="stylesheet" type="text/css" media="print" href="${baseURI}/styles/print.css" />
 		</c:otherwise>
@@ -64,8 +64,12 @@
 	
 	<%--IE doesn't like loading Font Awesome --%>
 	<c:choose>
-		<c:when
-			test="${restricted || fn:contains(header['User-Agent'],'MSIE')}">
+		<%--
+		<c:when test="${fn:contains(header['User-Agent'],'MSIE') || fn:contains(header['User-Agent'],'Trident')}">
+			 <link rel="stylesheet" type="text/css" href="${baseURI}/font-awesome/css/font-awesome-ie.css" />		
+		</c:when>
+		--%>
+		<c:when test="${restricted}">
 			<link rel="stylesheet" type="text/css" href="${baseURI}/font-awesome/css/font-awesome.min.css" />
 		</c:when>
 		<c:otherwise>
@@ -85,8 +89,10 @@
 	<div id="wrapper" class="container-fluid">
 		<%--Chooses banner color based off server location --%>
 		<c:choose>
-			<c:when
-				test="${fn:contains(pageContext.request.serverName,'cornell.edu')}">
+			<c:when test="${fn:contains(pageContext.request.serverName,'demo.ncrn.cornell.edu')}">
+				<c:set var="hC" scope="application">hC3</c:set>
+			</c:when>
+			<c:when test="${fn:contains(pageContext.request.serverName,'cornell.edu')}">
 				<c:set var="hC" scope="application">hC0</c:set>
 			</c:when>
 			<c:when test="${pageContext.request.serverName == 'localhost'}">
@@ -103,6 +109,7 @@
 				<div class="row">
 					<div class="hidden-xs col-sm-8">
 						<p>
+							<c:if test="${hC eq 'hC3'}">Demo Mode - </c:if>
 							The Comprehensive Extensible Data Documentation and Access Repository
 							<c:if test="${restricted}">(Restricted Network Mode)</c:if>
 							<c:if test="${hC eq 'hC1'}">(Local Access)</c:if>
@@ -228,8 +235,8 @@
 	<%-- Loads mathjax if needed --%>
 	<c:if test="${hasMath}">
 		<script type="text/x-mathjax-config">
-  				MathJax.Hub.Config({messageStyle: "none"});
-			</script>
+			MathJax.Hub.Config({messageStyle: "none"});
+		</script>
 		<c:choose>
 			<c:when test="${restricted}">
 				<script type="text/javascript"
@@ -300,7 +307,7 @@
 			  $(".emailContact2").html(link);		
 			  $(".emailContact2").attr("href", "mailto:"+link);		
 			}	
-		</script>
+	</script>
 	<c:if test="${analytics}">
 	 	<%--Add your Google Analytics tracking code here--%>
 		<script>

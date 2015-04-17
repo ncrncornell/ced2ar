@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -52,13 +54,16 @@ import com.sun.xml.xsom.XSTerm;
 import com.sun.xml.xsom.parser.XSOMParser;
 
 import edu.ncrn.cornell.ced2ar.api.data.Config;
+import edu.ncrn.cornell.ced2ar.eapi.prov.model.Activity;
+import edu.ncrn.cornell.ced2ar.eapi.prov.model.Agent;
+import edu.ncrn.cornell.ced2ar.eapi.prov.model.Entity;
 
 /**
  * Class dealing with XML interaction
  * @author NCRN Project Team
  *
  *@author Cornell University, Copyright 2012-2015
- *@author Ben Perry, Kyle Brumsted
+ *@author Kyle Brumsted, Ben Perry
  *
  *@author Cornell Institute for Social and Economic Research
  *@author Cornell Labor Dynamics Institute
@@ -72,13 +77,14 @@ public class XMLHandle {
 	private Document _doc = null;
 	private String error = null;
 	private String repoXML = null;
-	
+	DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS");
+
 	/**
 	 * Constructor
 	 * @param ins input stream with xml content
 	 * @param sURI schema URI
 	 */
-	public XMLHandle(InputStream ins, String sURI){
+	public XMLHandle(InputStream ins, String sURI){	
 		_xmlStream = ins;
 		_schemaURI= sURI;
 		_schemaParser = getParser();
@@ -95,6 +101,11 @@ public class XMLHandle {
 		_schemaURI= sURI;
 		_schemaParser = getParser();
 		_doc = loadDoc();
+	}
+	
+	public XMLHandle(String sURI){
+		_schemaURI= sURI;
+		_schemaParser = getParser();
 	}
 	
 //Constructor dependency functions
@@ -196,19 +207,20 @@ public class XMLHandle {
 		int i = 0;
 		do{
 			Node node = nodes.item(i);
-			if(node.getNodeType() == Node.ATTRIBUTE_NODE){
-				Attr att = (Attr)node;
-				Element parent = att.getOwnerElement();
-				parent.removeAttribute(att.getNodeName());
-			}else{
-				Node parent = node.getParentNode();
-				parent.removeChild(node);
-			}
+			try{
+				if(node.getNodeType() == Node.ATTRIBUTE_NODE){
+					Attr att = (Attr)node;
+					Element parent = att.getOwnerElement();
+					parent.removeAttribute(att.getNodeName());
+				}else{
+					Node parent = node.getParentNode();
+					parent.removeChild(node);
+				}
+			}catch(NullPointerException e){}//Path is already deleted
 			i++;
 		}while(deleteAll && i < nodes.getLength());
 	}
-	
-	
+		
 	/**
 	 * Updates the version number of the variable, or creates one if there isn't one.
 	 * @param varName the name of the variable to update
@@ -286,20 +298,23 @@ public class XMLHandle {
 		String[] terms = xpath.split("/");
 		if(terms.length <= 2) return false;
 		String current;
+		
 		for( int i = 0 ; i < terms.length ; i++ ){
 			current = terms[i];
 			if(current == null || current.equals("")) continue;
 			if(current.matches(".[!#$%&*+_\\(\\)\\^-].*")) return false;//Term Matches:
-			if(! (current.matches("[0-9a-zA-Z_]+") ||//letters
+			if(!(current.matches("[0-9a-zA-Z_]+") ||//letters
 				  current.matches("@[0-9a-zA-Z_]+") ||//@letters
 				  current.matches("[0-9a-zA-Z_]+\\[[0-9]+\\]") ||//letters[numbers]			
 				  current.matches("[0-9a-zA-Z_]+\\[[0-9a-zA-Z_]+\\]") ||//letters[letters]
 				  current.matches("[0-9a-zA-Z_]+\\[[0-9a-zA-Z_]+\\]\\[[0-9]+\\]") ||//letters[letters][numbers]
 				  current.matches("[0-9a-zA-Z_]+\\[[0-9a-zA-Z_]+='[0-9a-zA-Z_]+'\\]") ||//letters[letters='letters']
-				  current.matches("[0-9a-zA-Z_]+\\[@[0-9a-zA-Z_]+='[0-9a-zA-Z_]+'\\]") ||//letters[@letters='letters']
+				  current.matches("[0-9a-zA-Z_]+\\[@[0-9a-zA-Z_]+='[\\.0-9a-zA-Z_]+'\\]") ||//letters[@letters='letters'] - needs to include decimal for attr
 				  current.matches("[0-9a-zA-Z_]+\\[[0-9a-zA-Z_]+='[0-9a-zA-Z_]+'\\]\\[[0-9]+\\]") ||//letters[letters='letters'][numbers]
-				  current.matches("[0-9a-zA-Z_]+\\[@[0-9a-zA-Z_]+='[0-9a-zA-Z_]+'\\]\\[[0-9]+\\]") //letters[@letters='letters'][numbers]
-				  )) return false;
+				  current.matches("[0-9a-zA-Z_]+\\[@[0-9a-zA-Z_]+='[\\.0-9a-zA-Z_]+'\\]\\[[0-9]+\\]") || //letters[@letters='letters'][numbers] - needs to include decimal for attr
+				  current.matches("[0-9a-zA-Z_]+\\[last\\(\\)+\\]")//letters[last()]
+			)) return false;
+			
 		}
 		return true;
 	}
@@ -315,13 +330,15 @@ public class XMLHandle {
 	 * @param updateAll  if true, we apply the change to every node that the xpath matches, if false we only change the first one.
 	 * @param replaceChildren TODO
 	 */
-	public void addReplace(String xpathString, String value, boolean doesAppend, boolean isRecursive, boolean updateAll, boolean replaceChildren){
+	public void addReplace(String xpathString, String value, boolean doesAppend, 
+	boolean isRecursive, boolean updateAll, boolean replaceChildren){
 		//get rid of parenthesis
-		xpathString = xpathString.replaceAll("\\(\\)","");
+		//xpathString = xpathString.replaceAll("\\(\\)","");
 		//System.out.println("Add replace called for "+xpathString +" with value '" + value + "' and doesAppend is "+doesAppend);
 				
 		//Check xpath is in form we can handle
 		if(!checkXpath(xpathString)){
+			System.out.println("cannot handle " + xpathString);
 			error = "xpath does not match accepted xpath regexes!";
 			return;
 		}
@@ -368,11 +385,15 @@ public class XMLHandle {
 		
 		//logic to add structure
 		if(doesAppend){
-			if(target.matches("[0-9a-zA-Z_]+")){//letters
+			if(target.matches("[0-9a-zA-Z_]+")){//letters		
 				//System.out.println("match found for letters");
 				addNode(xpathStringP, target, value, updateAll);
-			}
-			else if(target.matches("@[0-9a-zA-Z_]+")){//@letters
+			}else if(target.matches("[0-9a-zA-Z_]+\\[last\\(\\)+\\]")){//letters[last()]
+				//TODO:Not %100 stable?
+				//System.out.println("match found for last()");
+				String child = target.substring(target.indexOf("[")+1, target.indexOf("]"));
+				addComplexNode(xpathStringP, target, value, child, "", false, updateAll);
+			}else if(target.matches("@[0-9a-zA-Z_]+")){//@letters
 				//System.out.println("match found for @letters");
 				target = target.replaceAll("@", "");
 				if("".equals(value)) deleteNode(xpathString, updateAll);
@@ -404,7 +425,7 @@ public class XMLHandle {
 				String subVal = subelemAndValue[1];
 				addComplexNode(xpathStringP, node, value, subElem, subVal, false, updateAll);
 			}
-			else if(target.matches("[0-9a-zA-Z_]+\\[@[0-9a-zA-Z_]+='[0-9a-zA-Z_]+'\\]")){//letters[@letters='letters']
+			else if(target.matches("[0-9a-zA-Z_]+\\[@[0-9a-zA-Z_]+='[\\.0-9a-zA-Z_]+'\\]")){//letters[@letters='letters']
 				//System.out.println("match found for letters[@letters='letters']");
 				String[] nodeAndAttr = target.split("\\[");
 				nodeAndAttr[1] = nodeAndAttr[1].replaceAll("@", "").replaceAll("\\]", "").replaceAll("\"", "").replaceAll("\'", "");
@@ -425,7 +446,7 @@ public class XMLHandle {
 				String subVal = subelemAndValue[1];
 				addComplexNode(xpathStringP, node, value, subElem, subVal, false, updateAll);
 			}
-			else if(target.matches("[0-9a-zA-Z_]+\\[@[0-9a-zA-Z_]+='[0-9a-zA-Z_]+'\\]\\[[0-9]+\\]")){//letters[@letters='letters'][numbers]
+			else if(target.matches("[0-9a-zA-Z_]+\\[@[0-9a-zA-Z_]+='[\\.0-9a-zA-Z_]+'\\]\\[[0-9]+\\]")){//letters[@letters='letters'][numbers]
 				//System.out.println("match found for letters[@letters='letters'][numbers]");
 				target = target.replaceAll("\\[[0-9]+\\]", "");
 				String[] nodeAndAttr = target.split("\\[");
@@ -438,7 +459,8 @@ public class XMLHandle {
 			}
 			//if more formats are necessary, add more else if statements here.
 			else{
-				//System.out.println("Input xpath does not match any of the accepted formats.");
+				System.out.println("Input xpath does not match any of the accepted formats.");
+				System.out.println(target);
 				return;
 			}
 			return;
@@ -538,7 +560,7 @@ public class XMLHandle {
 	 * @param isAttr whether or not the sub-structure is an attribute
 	 * @param updateAll whether or not to add this new structure to all of the nodes pointed to by xpathStringP
 	 */
-	private void addComplexNode(String xpathStringP, String target, String value, String subTarget, String subValue, boolean isAttr, boolean updateAll){
+	public void addComplexNode(String xpathStringP, String target, String value, String subTarget, String subValue, boolean isAttr, boolean updateAll){
 		NodeList nodes = getNodeList(xpathStringP);
 		if(nodes == null || nodes.getLength() < 1) return;
 		int i = 0;
@@ -565,6 +587,130 @@ public class XMLHandle {
 	}
 	
 	/**
+	 * This method adds a single Entity Node in the codebook to the path identified by xPath
+	 * It is assumed that xPath exists
+	 * @param xPath
+	 * @param entity
+	 */
+	public void addEntityNode(String xPath, Entity entity){
+		NodeList nodes = getNodeList(xPath);		
+		if(nodes == null || nodes.getLength() < 1) return;
+		Node parent = nodes.item(0);
+		Element newNode = _doc.createElement(Entity.NODE_PROV_ENTITY);
+		newNode.setAttribute(Entity.PROV_ATTR_ID,entity.getId());
+		
+		if(StringUtils.isNotEmpty(entity.getLabel())) {
+			Element labelNode = _doc.createElement(Entity.NODE_PROV_LABEL);
+			labelNode.setTextContent(entity.getLabel());
+			newNode.appendChild(labelNode);
+		}
+		if(StringUtils.isNotEmpty(entity.getLocation())) {
+			Element locationNode = _doc.createElement(Entity.NODE_PROV_LOCATION);
+			locationNode.setTextContent(entity.getLocation());
+			newNode.appendChild(locationNode);
+		}
+		if(StringUtils.isNotEmpty(entity.getType())) {
+			Element typeNode = _doc.createElement(Entity.NODE_PROV_TYPE);
+			typeNode.setTextContent(entity.getType());
+			newNode.appendChild(typeNode);
+		}
+		if(StringUtils.isNotEmpty(entity.getValue())) {
+			Element valueNode = _doc.createElement(Entity.NODE_PROV_VALUE);
+			valueNode.setTextContent(entity.getValue());
+			newNode.appendChild(valueNode);
+		}
+		if(StringUtils.isNotEmpty(entity.getDate())) {
+			Element dateNode = _doc.createElement(Entity.NODE_PROV_DATE);
+			dateNode.setTextContent(entity.getDate());
+			newNode.appendChild(dateNode);
+		}
+		if(StringUtils.isNotEmpty(entity.getTitle())) {
+			Element titleNode = _doc.createElement(Entity.NODE_PROV_TITLE);
+			titleNode.setTextContent(entity.getTitle());
+			newNode.appendChild(titleNode);
+		}
+		parent.appendChild(newNode);		
+	}
+	
+	/**
+	 * This method adds a single Agent Node in the codebook to the path identified by xPath
+	 * It is assumed that xPath exists
+	 * @param xPath
+	 * @param agent
+	 */
+	public void addAgentNode(String xPath, Agent agent){
+		NodeList nodes = getNodeList(xPath);		
+		if(nodes == null || nodes.getLength() < 1) return;
+		Node parent = nodes.item(0);
+		Element newNode = _doc.createElement(Agent.NODE_PROV_AGENT);
+		newNode.setAttribute(Entity.PROV_ATTR_ID,agent.getId());
+
+		if(StringUtils.isNotEmpty(agent.getLabel())) {
+			Element labelNode = _doc.createElement(Agent.NODE_PROV_LABEL);
+			labelNode.setTextContent(agent.getLabel());
+			newNode.appendChild(labelNode);
+		}
+		if(StringUtils.isNotEmpty(agent.getLocation())) {
+			Element locationNode = _doc.createElement(Agent.NODE_PROV_LOCATION);
+			locationNode.setTextContent(agent.getLocation());
+			newNode.appendChild(locationNode);
+		}
+		if(StringUtils.isNotEmpty(agent.getType())) {
+			Element typeNode = _doc.createElement(Agent.NODE_PROV_TYPE);
+			typeNode.setTextContent(agent.getType());
+			newNode.appendChild(typeNode);
+		}
+		/*
+		if(StringUtils.isNotEmpty(agent.getGivenName())) {
+			Element givenNameNode = _doc.createElement(Agent.NODE_PROV_GIVEN_NAME);
+			givenNameNode.setTextContent(agent.getGivenName());
+			newNode.appendChild(givenNameNode);
+		}
+		if(StringUtils.isNotEmpty(agent.getWorkInfoHomepage())) {
+			Element wihpNode = _doc.createElement(Agent.NODE_PROV_WORK_INFO_HOME_PAGE);
+			wihpNode.setTextContent(agent.getWorkInfoHomepage());
+			newNode.appendChild(wihpNode);
+		}
+		*/
+		parent.appendChild(newNode);		
+	}
+
+	/**
+	 * This method adds a single Entity Node in the codebook to the path identified by xPath
+	 * It is assumed that xPath exists
+	 * @param xPath
+	 * @param activity
+	 */
+	public void addActivityNode(String xPath, Activity activity){
+		NodeList nodes = getNodeList(xPath);		
+		if(nodes == null || nodes.getLength() < 1) return;
+		Node parent = nodes.item(0);
+		Element newNode = _doc.createElement(Activity.NODE_PROV_ACTIVITY);
+		newNode.setAttribute(Entity.PROV_ATTR_ID,activity.getId());
+
+		if(StringUtils.isNotEmpty(activity.getLabel())) {
+			Element labelNode = _doc.createElement(Activity.NODE_PROV_LABEL);
+			labelNode.setTextContent(activity.getLabel());
+			newNode.appendChild(labelNode);
+		}
+		if(StringUtils.isNotEmpty(activity.getLocation())) {
+			Element locationNode = _doc.createElement(Activity.NODE_PROV_LOCATION);
+			locationNode.setTextContent(activity.getLocation());
+			newNode.appendChild(locationNode);
+		}
+		if(StringUtils.isNotEmpty(activity.getType())) {
+			Element typeNode = _doc.createElement(activity.NODE_PROV_TYPE);
+			typeNode.setTextContent(activity.getType());
+			newNode.appendChild(typeNode);
+		}
+		/*
+		 * TODO Add StartTime and endTime
+		*/
+		parent.appendChild(newNode);		
+	}
+
+	
+	/**
 	 * adds a new node to the XML document
 	 * @param xpathP the xpath for the parent of the new node
 	 * @param target the new node to be added
@@ -572,7 +718,7 @@ public class XMLHandle {
 	 * @param updateAll whether or not to add this node to every element pointed to by xpathP
 	 */
 	private void addNode(String xpathP, String target, String value, boolean updateAll){
-		NodeList nodes = getNodeList(xpathP);
+		NodeList nodes = getNodeList(xpathP);		
 		if(nodes == null || nodes.getLength() < 1) return;
 		int i = 0;
 		do{
@@ -581,7 +727,11 @@ public class XMLHandle {
 			newNode = _doc.createElement(target);
 			newNode.setTextContent(value);
 			Node nextSibling = getNextSibling(xpathP+"/"+target);
-			if(nextSibling == null){
+			if(error != null){
+				System.out.println(error);
+				error = null;
+				return;
+			}else if(nextSibling == null){
 				prnt.appendChild(newNode);
 			}else{
 				prnt.insertBefore(newNode, nextSibling);
@@ -649,7 +799,7 @@ public class XMLHandle {
 				}
 				else if(pterm instanceof XSModelGroup){
 					//System.out.println("model group found");
-					XSModelGroup grp = (XSModelGroup)pterm;
+					XSModelGroup grp = (XSModelGroup) pterm;
 					particles.addAll(i+1, Arrays.asList(grp.getChildren()));
 					continue;
 				}
@@ -795,7 +945,7 @@ public class XMLHandle {
 					String name = e.getAttribute("name");
 					String id = "v_"+name;
 					e.setAttribute("ID", id);
-					System.out.println("adding id "+id+" for "+name);
+					//System.out.println("adding id "+id+" for "+name);
 				}		
 			}
 		}catch(XPathExpressionException e) {
@@ -833,6 +983,16 @@ public class XMLHandle {
 	public Document getDoc()
 	{
 		return _doc;
+	}
+
+	/**
+	 * Loads document for instances without _xmlStream set in constructor
+	 * @return the document
+	 * */
+	public void initDoc(String xml)
+	{
+		_xmlStream = new ByteArrayInputStream(xml.getBytes());
+		_doc = loadDoc();
 	}
 	
 	/**Returns error

@@ -157,6 +157,18 @@ public class Security extends WebSecurityConfigurerAdapter {
     private void configureDefaultAuthentication(HttpSecurity http) throws Exception {
 		   http
 		   .authorizeRequests()
+		   		/*
+		   		.antMatchers("/search").access("hasRole('ROLE_ADMIN')")
+				.antMatchers("/search/**").access("hasRole('ROLE_ADMIN')")
+				.antMatchers("/codebooks").access("hasRole('ROLE_ADMIN')")
+				.antMatchers("/codebooks/**").access("hasRole('ROLE_ADMIN')")
+				.antMatchers("/groups").access("hasRole('ROLE_ADMIN')")
+				.antMatchers("/groups/**").access("hasRole('ROLE_ADMIN')")
+				.antMatchers("/all").access("hasRole('ROLE_ADMIN')")
+				.antMatchers("/all/**").access("hasRole('ROLE_ADMIN')")
+				.antMatchers("/browse").access("hasRole('ROLE_ADMIN')")
+				.antMatchers("/browse/**").access("hasRole('ROLE_ADMIN')")
+				*/
 		   		.antMatchers("/config").access("hasRole('ROLE_ADMIN')")
 	     		.antMatchers("/edit").access("hasRole('ROLE_ADMIN')")
 	     		.antMatchers("/edit/codebooks").access("hasRole('ROLE_ADMIN')")

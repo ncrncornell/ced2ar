@@ -48,9 +48,12 @@ public class Main extends Application {
 		router.attach(apiUrl +" codebooks/{codebookId}/release/", CodebookRelease.class);
 		router.attach(apiUrl + "codebooks/{codebookId}/studydesc", StudyDesc.class);		
 		router.attach(apiUrl + "codebooks/{codebookId}/studydesc/", StudyDesc.class);
+		router.attach(apiUrl + "codebooks/{codebookId}/score", CodebookScore.class);		
+		router.attach(apiUrl + "codebooks/{codebookId}/score/", CodebookScore.class);	
 		router.attach(apiUrl + "codebooks/{codebookId}/titlepage", TitlePage.class);		
 		router.attach(apiUrl + "codebooks/{codebookId}/titlepage/", TitlePage.class);
 		router.attach(apiUrl + "codebooks/{codebookId}/variables", Vars.class);		
+			
 		router.attach(apiUrl + "codebooks/{codebookId}/variables/", Vars.class);		
 		router.attach(apiUrl + "codebooks/{codebookId}/versions", Versions.class);		
 		router.attach(apiUrl + "codebooks/{codebookId}/versions/", Versions.class);		

@@ -210,7 +210,7 @@ public class QueryUtil {
 	 * @param timeStamp
 	 * @param handles
 	 */
-	protected static void insertCommit(String hash, String timeStamp, List<String> handles){
+	protected static void insertCommit(String hash, String local, String timeStamp, String user, List<String> handles){
 		//TODO: Maybe add user info with commit in BaseX
 		//+" element user {'"+user+"'}"
 		
@@ -226,8 +226,10 @@ public class QueryUtil {
 			codebooks += ", element codeBook {attribute handle {'"+handle+"'}}";
 		}		
 		String xquery = "insert node element commit {"
+		+" attribute local {'"+local+"'},"		
 		+" attribute hash {'"+hash+"'},"
-		+" attribute timestamp {'"+timeStamp+"'}"
+		+" attribute timestamp {'"+timeStamp+"'},"
+		+" attribute user {'"+user+"'}"
 		+codebooks
 		+"}  into collection('git/git')/git/commits";
 		BaseX.write(xquery);
@@ -281,15 +283,27 @@ public class QueryUtil {
 	 */
 	public static String getCommits(String handle, String type){
 		String xquery = "for $c in collection('git/git')/git/commits/commit"
-		+" where $c/codeBook[@handle='"+handle+"']"
-		+" order by number($c/@timestamp) descending";
+		+" where $c/codeBook[@handle='"+handle+"']";
 		
 		switch(type){
+			case "vars":
+				xquery = "for $v in collection('git/git')/git/commits/"
+				+ "commit/codeBook[@handle='"+handle+"']/var "
+				+ " order by number($v/../../@timestamp) descending"
+				+ " return string-join(("
+				+ "data($v/@name),',',data($v/../../@hash),',',data($v/../../@timestamp),"
+				+ "',',data($v/../../@user),',',data($v/../../@local),';&#xa;'),'')";
+			break;
 			case "hash":
 				xquery+=" return string-join((data($c/@hash),' '))";
 			break;
+			case "local":
+				xquery+=" and $c[@local='true'] return string-join(string-join((data($c/@hash),data($c/@timestamp)),'.'),' ')";
+			break;
 			default:
-				xquery+=" return string-join(string-join((data($c/@hash),data($c/@timestamp)),'.'),' ')";
+				//$c/@local descending,
+				xquery+="order by number($c/@timestamp) descending return string-join(string-join((data($c/@hash),"
+				+ "data($c/@timestamp),data($c/@user),data($c/@local)),','),' ')";
 			break;
 		}
 
@@ -305,14 +319,17 @@ public class QueryUtil {
 	 */
 	public static String getVarCommits(String handle, String var, String type){	
 		String xquery = "for $c in collection('git/git')/git/commits/commit"
-		+" where $c/codeBook[@handle='"+handle+"']/var[@name='"+var+"']"
-		+" order by number($c/@timestamp) descending";	
+		+" where $c/codeBook[@handle='"+handle+"']/var[@name='"+var+"']";	
 		switch(type){
 		case "hash":
-			xquery+=" return string-join((data($c/@hash),' '))";
+			xquery+=" order by number($c/@timestamp) descending return string-join((data($c/@hash),' '))";
+		break;
+		case "local":
+			xquery+=" and $c[@local='true'] return string-join(string-join((data($c/@hash),data($c/@timestamp)),'.'),' ')";
 		break;
 		default:
-			xquery+=" return string-join(string-join((data($c/@hash),data($c/@timestamp)),'.'),' ')";
+			//$c/@local descending,
+			xquery+=" order by number($c/@timestamp) descending return string-join(string-join((data($c/@hash),data($c/@timestamp),data($c/@local)),'.'),' ')";
 		break;
 	}
 		

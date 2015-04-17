@@ -136,7 +136,13 @@ public class Upload {
 			MultipartFile file = uploadForm.getFile();	
 			InputStream ins = file.getInputStream();
 			String host = loader.getHostName();
-			String rep = Fetch.uploadCodebook(host, ins, handle,version, label);
+			
+			String user = "anonymous";
+			if(session.getAttribute("userEmail") != null){
+				user = (String) session.getAttribute("userEmail");
+			}
+			
+			String rep = Fetch.uploadCodebook(host, ins, handle,version, label,user,false);
 			if(rep.equals("")){
 				String message = "Upload complete, "+handle+" ("+version+") was sucessfully added.&nbsp;"
 						+"<a href='"+loader.getBuildName()+"/codebooks/"+handle+"/v/"+version+"'>View codebook</a>";
@@ -186,10 +192,17 @@ public class Upload {
 			MultipartFile file = uploadForm.getFile();			
 			ins = file.getInputStream();
 			String host = loader.getHostName();
-			String rep = Fetch.uploadCodebook(host,ins, handleInfo[0], handleInfo[1]);
+			
+			String user = "anonymous";
+			if(session.getAttribute("userEmail") != null){
+				user = (String) session.getAttribute("userEmail");
+			}
+			
+			String rep = Fetch.uploadCodebook(host,ins, handleInfo[0], handleInfo[1],user);
 			if(rep.equals("")){
-				String message = "Upload complete, "+handleInfo[0]+" ("+handleInfo[1]+") was sucessfully modified. &nbsp;"
-				+"<a href='"+loader.getBuildName()+"/codebooks/"+handleInfo[0]+"/v/"+handleInfo[1]+"'>View codebook</a>";
+				String message = "Upload complete, "+handleInfo[0]+" ("+handleInfo[1]+") was sucessfully modified. "
+				+"&nbsp; <a href='"+loader.getBuildName()+"/codebooks/'>View codebooks</a>";
+				//TODO:Direct link to codebook doesnt work "+handleInfo[0]+"/v/"+handleInfo[1]+"
 				session.setAttribute("info_splash", message);
 				session.removeAttribute("error");
 				clearCodebookCache(model);	
@@ -270,5 +283,16 @@ public class Upload {
 		clearCodebookCache(model);
 		session.setAttribute("info_splash", "Codebook cache refreshed");
 		return "redirect:/";
+	}	
+	
+	/**
+	 * Refreshes current list of codebooks 
+	 * @return redirect
+	 */
+	@RequestMapping(value = "/update/cache", method = RequestMethod.GET)
+	@ResponseBody
+	public String clearCache(Model model){
+		clearCodebookCache(model);
+		return "";
 	}	
 }

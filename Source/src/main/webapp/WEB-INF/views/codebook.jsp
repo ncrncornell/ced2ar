@@ -13,7 +13,7 @@
 				${codebooks[newHandle][4]} </a>
 		</em>
 	</c:if>
-	<c:if test="${not empty codebook}">		
+	<c:if test="${not empty codebook}">			
 			<c:if test="${not empty pdf}">
 				<a href="${pdf}" class="printButton" target="_blank"
 					title="Download as PDF" download="${codebookTitl}.pdf"> <i
@@ -24,7 +24,7 @@
 				class="printButton3b printRemove" title="Download STATA variable values">Stata</a>
 			<a href="${baseURI}/codebooks/${baseHandle}/v/${version}/vars/exportToSAS"
 				class="printButton3b printRemove" title="Download SAS variable values">SAS</a>
-			<a href="${baseURI}/rest/codebooks/${handle}?type=gitNotes"
+			<a href="${baseURI}/rest/codebooks/${handle}"<%--?type=gitNotes --%>
 				class="printButton" target="_blank" title="Download raw XML"
 				download="${codebookTitl}.xml"> <i class="fa fa-code"></i>
 			</a>

@@ -43,7 +43,6 @@ public class CodebooksEndpoint {
 		return returnValue;
 	}
 
-	
 	/**
 	 * This method is the Spring endPoint
 	 * @return String returns all codebooks. A Request header 'id-type' is used  controls information retrieved

@@ -8,6 +8,7 @@ import org.restlet.resource.Get;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
+import edu.ncrn.cornell.ced2ar.api.Utilities;
 import edu.ncrn.cornell.ced2ar.eapi.QueryUtil;
 
 /**
@@ -41,11 +42,16 @@ public class VarVersions extends ServerResource{
 			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, message);
 		}
 		
+		if(!Utilities.codebookExists(codebookId)){
+			String message = " \"" + codebookId + "\" is an invalid codebookId";
+			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND,message);	
+		}
+		
 		if (var == null || var.length() == 0) {
 			String message = " \"" + var + "\" is an invalid variable name";
 			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, message);
 		}
-		
+
 		String commits = QueryUtil.getVarCommits(codebookId, var,type);
 		return new StringRepresentation(commits, MediaType.TEXT_HTML);
 	}

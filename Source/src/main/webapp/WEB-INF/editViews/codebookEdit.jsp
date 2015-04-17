@@ -43,6 +43,9 @@
 						</c:otherwise>
 					</c:choose>
 				</p>
+				<p class="value4">
+					<a title="View score" href="${baseURI}/edit/codebooks/${baseHandle}/v/${version}/score">View codebook score</a>
+				</p>
 				${codebook}
 			</div>
 	</c:if>

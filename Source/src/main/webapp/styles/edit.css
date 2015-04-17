@@ -1,16 +1,26 @@
 /*Editing controls
 =============================================================================*/
-.editIcon,.editIcon2{
+.editIcon,.editIcon2,.editIcon3{
 	color: #B5B5B5;
 	padding: 0.25em 0.5em;
 	border-radius: 4px;
 }
 
-.editIcon{
-	float: right;
+.editIcon:hover, .editIcon2:hover, .delIcon:hover, .editIcon3:hover {
+	color: #f3f3f3;
+	background-color: #0093d0;
+	border: 1px solid #0093d0;
+	text-decoration: none;
+}
+
+.editIcon,.editIcon3{
 	border: 1px solid #ccc;	
 	margin-right: 0.25em;
 	font-size: 1.5em;
+}
+
+.editIcon{
+	float: right;
 }
 
 .editIcon2 {
@@ -20,6 +30,11 @@
 	font-size: 16pt !important;
 }
 
+.editIcon3 {
+	display:inline-block;
+	margin: auto auto .5em;
+}
+
 .editIconText i, .editIconText2 i {
 	vertical-align: middle;
 }
@@ -27,13 +42,6 @@
 .editIconText em, .editIconText2 em{
 	font-size: 11pt !important;
 	padding-left: .75em;
-}
-
-.editIcon:hover, .editIcon2:hover, .delIcon:hover {
-	color: #f3f3f3;
-	background-color: #0093d0;
-	border: 1px solid #0093d0;
-	text-decoration: none;
 }
 
 .editI{
@@ -53,13 +61,16 @@ textarea[name=newValue]{
 	max-height: 27.5em;
 }
 
-.newTxtPlain{
+.newTxtPlain, .newTxtPlain2{
 	min-width: 75%;
 	padding: .25em .5em;
 	border:1px solid #ccc;
-	border-radius:4px;
-	height:2.4em;
 	
+	height:2.4em;
+}
+
+.newTxtPlain{
+	border-radius:4px;
 }
 
 .loadShow{
@@ -75,7 +86,7 @@ textarea[name=newValue]{
 	background-color: white;
 	padding: 1em 2em 2em;
 	margin-top: 3%;
-	box-shadow: 0px 15px 55px rgba(0, 0, 0, .5);
+	box-shadow: 0px 15px 55px rgba(0, 0, 0, .5)editControl4;
 	border-radius: 4px;
 	max-height: 40em;
 }

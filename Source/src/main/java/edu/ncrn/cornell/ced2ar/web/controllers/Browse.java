@@ -49,7 +49,6 @@ public class Browse {
 	
 	private static final Logger logger = Logger.getLogger(Browse.class);
 
-
 	 /**
 	  * Method browse.
 	  * Fetches browsing results alphabetically based off of input from frontend. 

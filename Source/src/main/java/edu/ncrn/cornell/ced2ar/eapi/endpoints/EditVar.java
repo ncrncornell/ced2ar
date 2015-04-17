@@ -170,7 +170,6 @@ public class EditVar extends ServerResource{
 			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, message);	    
 		}
 
-		//String type = validFields.get(field)[0];
 		String path = validFields.get(field)[1];
 		 	
 		//Auto updates version
@@ -179,7 +178,6 @@ public class EditVar extends ServerResource{
 		
 		if(doesAppend || delete.equals("true") || validFields.get(field)[0].equals("5") 
 		|| value.contains("<") || value.contains(">")){
-			//XMLHandle xh = new XMLHandle(BaseX.get(handle),Config.getSchemaURI());
 			XMLHandle xh = new XMLHandle(BaseX.get(handle),Config.getInstance().getSchemaURI());
 	
 			if(doesAppend && field.equals("catLabl")){
@@ -193,10 +191,10 @@ public class EditVar extends ServerResource{
 			}else{
 				xh.addReplace("/codeBook/dataDscr"+path, value, doesAppend, true, false, true);
 			}
-			BaseX.put(handle, xh.docToString().replaceAll("&lt;", "<").replaceAll("&gt;", ">"));
+			BaseX.put(handle, xh.docToString().replaceAll("(&lt;)([^-\\s]+?)(&gt;)", "<$2>"));
 		}else{
 			//Can save item by making xquery replace statement
-			value = value.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
+			value = value.replaceAll("(&lt;)([^-\\s]+?)(&gt;)", "<$2>");
 			String xquery = "let $path := collection('CED2AR/"+handle+"')/codeBook/dataDscr"+path+
 			" return replace value of node $path with '"+value+"'";
 			BaseX.write(xquery);			

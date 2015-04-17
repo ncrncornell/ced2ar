@@ -29,8 +29,7 @@ public class Codebooks extends ServerResource {
 	//private final static Logger logger = Logger.getLogger(Codebooks.class.getName());
 	
     /**
-     * Method doInit.
-    
+     * Method doInit. 
      * @throws ResourceException */
     @Override
     public void doInit() throws ResourceException {

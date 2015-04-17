@@ -89,8 +89,6 @@
 			<p class="lb2">
 				The work is provided on an "AS IS" basis, and Cornell University has no obligation 
 				to provide maintenance, support, updates, enhancements, or modifications. 
-				Cornell University makes no representations and extends no warranties of any kind, 
-				either express or implied, including, but not limited to, the implied warranties 
 				of merchantability or fitness for a particular purpose, or that the use of work 
 				and its associated copyrights will not infringe any patent, trademark or other rights.
 			</p>	
@@ -99,8 +97,13 @@
 			<h3>Current Version</h3>
 			<p>
 				<%--TODO: Would be nice to automate this somehow --%>
-				CED<sup>2</sup>AR version <span itemprop="version">2.6.0.1</span> (Updated March 3<sup>rd</sup> 2015)
+				CED<sup>2</sup>AR version <span itemprop="version">2.6.0.4</span> 
 			</p>
+			<c:if test="${initParam.buildTimeStamp ne '${maven.build.timestamp}'}">
+				<p>
+					This instance was built on <span itemprop="dateModified">${initParam.buildTimeStamp}</span>
+				</p>
+			</c:if>	
 			<p>
 				For those interested in collaboration, please email us at
 				<a class="emailContact2"></a>

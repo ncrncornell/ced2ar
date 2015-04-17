@@ -8,6 +8,7 @@ import org.restlet.resource.Get;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
+import edu.ncrn.cornell.ced2ar.api.Utilities;
 import edu.ncrn.cornell.ced2ar.eapi.QueryUtil;
 
 /**
@@ -39,6 +40,12 @@ public class Versions extends ServerResource{
 			String message = " \"" + codebookId + "\" is an invalid codebookId";
 			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, message);
 		}
+		
+		if(!Utilities.codebookExists(codebookId)){
+			String message = " \"" + codebookId + "\" is an invalid codebookId";
+			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND,message);	
+		}
+		
 		String commits = QueryUtil.getCommits(codebookId,type);
 		return new StringRepresentation(commits, MediaType.TEXT_HTML);
 	}

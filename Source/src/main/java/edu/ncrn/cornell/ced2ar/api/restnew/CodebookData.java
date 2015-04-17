@@ -71,7 +71,7 @@ public class CodebookData {
 			case "gitNotes":
 				xquery = " let $codeBook:= collection('CED2AR/"+codebookId+"')/codeBook return $codeBook";
 				xh = new XMLHandle(BaseX.getXML(xquery,false),Config.getInstance().getSchemaURI());
-				String commits = QueryUtil.getCommits(codebookId,"full");
+				String commits = QueryUtil.getCommits(codebookId,"local");
 				if(!commits.equals("")){
 					//Just latest commit
 					String remoteRepo = Config.getInstance().getRemoteRepoURL();

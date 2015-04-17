@@ -58,6 +58,11 @@ function submitListener(isEdit) {
             notPressed = false;
             hideAjax(isEdit);
         }
+        if (e.keyCode == 13) {
+         
+            hideAjax(isEdit);
+        }
+        
     });
     if (isEdit) {
         $("#editDiscard").click(function() {

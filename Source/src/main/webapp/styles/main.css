@@ -170,6 +170,10 @@ strong, b{
 	background-color: #14874d;
 }
 
+.hC3{
+	background-color: #ff4000;
+}
+
 /*Navbar
 =============================================================================*/
 .navbar .nav>li>.dropdown-menu:after{
@@ -627,7 +631,7 @@ Browse
 	font-size: 0.85em;
 	padding-left: 4em;
 	text-indent: 0;
-	margin: 1em 0em 2em;
+	margin: 1em 0em 1.25em;
 }
 
 #details .value2 ul{
@@ -936,4 +940,8 @@ Browse
 
 .valueInline p:last-of-type{
 	display:inline;	
+}
+
+.capitalize{
+	text-transform: capitalize;
 }

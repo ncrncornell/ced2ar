@@ -1,11 +1,14 @@
 package edu.ncrn.cornell.ced2ar.api.data;
 
 import org.apache.log4j.Logger;
+
 import edu.ncrn.cornell.ced2ar.api.data.Connector.RequestType;
 
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.TreeMap;
 
 /**
@@ -106,16 +109,7 @@ public class Fetch {
 	 * @return String[] the data returned from the request paired with the count header
 	 */
 	public static String[] getXML(String uri){
-		Connector c  = null;
-		try{
-			c = new Connector(uri);
-			c.buildRequest(RequestType.GET);
-			String data = c.execute().replaceAll("&#x\\d+;", "");
-			String count = c.getHeader("Count");
-			return new String[] {data,count};
-		}finally{
-			c.close();
-		}
+		return getXML(uri,null);
 	}
 	
 	/**
@@ -125,13 +119,43 @@ public class Fetch {
 	 * @return String[] the data in short XML form, paired with the count header
 	 */
 	public static String[] getShortXML(String uri){
+		Hashtable<String,String> headers = new Hashtable<String,String>();
+		headers.put("partial-text", "true");
+		return getXML(uri,headers);
+	}
+	
+	/**
+	 * Retrieves XML from master branch
+	 * @param uri
+	 * @return
+	 */
+	public static String[] getMasterXML(String uri){
+		Hashtable<String,String> headers = new Hashtable<String,String>();
+		headers.put("partial-text", "true");
+		headers.put("master", "true");
+		return getXML(uri,headers);
+	}
+	
+	/**
+	 * Allows for static reference of retrieving XML from CED2AR API
+	 * Provides the ability to set headers
+	 * @param uri String the location to request content from
+	 * @return String[] the data in short XML form, paired with the count header
+	 */
+	public static String[] getXML(String uri, Hashtable<String,String> headers){
 		Connector c  = null;
 		try{
 			c = new Connector(uri);
 			c.buildRequest(RequestType.GET);
-			c.setHeader("partial-text", "true");
-			String data = c.execute().replaceAll("&#x\\d+;", "");
+			if(headers != null){
+				Iterator<Map.Entry<String,String>> itr = headers.entrySet().iterator();
+				while (itr.hasNext()) {
+					Map.Entry<String,String> pair = (Map.Entry<String,String>) itr.next();
+					c.setHeader(pair.getKey(), pair.getValue());
+				}
+			}
 			String count = c.getHeader("Count");
+			String data = c.execute().replaceAll("&#x\\d+;", "");
 			return new String[] {data,count};
 		}finally{
 			c.close();
@@ -269,12 +293,13 @@ public class Fetch {
 	 * @param fullName the full name of the codebook
 	 * @param shortName the short name of the codebook
 	 */
-	public static String uploadCodebook(String host, InputStream file, String baseHandle, String version){
+	public static String uploadCodebook(String host, InputStream file, String baseHandle, String version, String user){
 		Connector con = null;
 		try{
 			con = new Connector(host,0,"/codebooks/"+baseHandle+"/"+version);
 			con.buildRequest(RequestType.POST);
 			con.setPostFile(file, "file");
+			con.setPostFormContent("user", user);
 			String message = con.execute();
 			if(con.getResponseCode() >= 400){
 				con.close();
@@ -295,13 +320,15 @@ public class Fetch {
 	 * @param label
 	 * @return
 	 */
-	public static String uploadCodebook(String host, InputStream file, String baseHandle, String version, String label){
+	public static String uploadCodebook(String host, InputStream file, String baseHandle, String version, String label, String user, boolean isMaster){
 		Connector con = null;
 		try{
 			con = new Connector(host,0,"/codebooks/"+baseHandle+"/"+version);
 			con.buildRequest(RequestType.POST);
 			con.setPostFile(file, "file");
 			con.setPostFormContent("label", label);
+			con.setPostFormContent("user", user);
+			if(isMaster) con.setPostFormContent("master", "true");
 			String message = con.execute();
 			if(con.getResponseCode() >= 400){
 				con.close();
@@ -312,6 +339,7 @@ public class Fetch {
 			con.close();
 		}		
 	}
+	
 	
 	/**
 	 * Removes a codebook
@@ -358,6 +386,42 @@ public class Fetch {
 			if(index != 0){
 				c.setPostFormContent("index", Integer.toString(index));
 			}
+			c.execute();
+			int code = c.getResponseCode();
+			return code;
+		}finally{
+			c.close();
+		}
+	}
+	
+	
+	/**
+	 *Edits several fields on a titlepage at once
+	 * @param host
+	 * @param baseHandle
+	 * @param version
+	 * @param var
+	 * @param paths
+	 * @param values
+	 * @param user
+	 * @return
+	 */
+	public static int editCoverMulti(String host, String baseHandle, String version,
+	String[] paths, String[] values, String append, String user){
+		Connector c = null;
+		try{
+			c =	new Connector(host,0,"/codebooks/"+baseHandle+"/"+version+"/editMulti");
+			c.buildRequest(RequestType.POST);
+			
+			for(String path : paths){ 
+				c.setPostFormContent("paths", path);
+			}
+			for(String value : values){ 
+				c.setPostFormContent("values", value);
+			};
+			
+			c.setPostFormContent("user", user);
+			c.setPostFormContent("append", append);
 			c.execute();
 			int code = c.getResponseCode();
 			return code;
@@ -427,6 +491,41 @@ public class Fetch {
 			    	c.setPostFormContent("index2",index2);
 			    }
 		    }  
+			c.execute();
+			int code = c.getResponseCode();
+			return code;
+		}finally{
+			c.close();
+		}
+	}
+	
+	/**
+	 *Edits several fields in a variable at once 
+	 * @param host
+	 * @param baseHandle
+	 * @param version
+	 * @param var
+	 * @param paths
+	 * @param values
+	 * @param user
+	 * @return
+	 */
+	public static int editVarMulti(String host, String baseHandle, String version, String var,
+	String[] paths, String[] values, String append, String user){
+		Connector c = null;
+		try{
+			c =	new Connector(host,0,"/codebooks/"+baseHandle+"/"+version+"/vars/"+var+"/editMulti");
+			c.buildRequest(RequestType.POST);
+			
+			for(String path : paths){ 
+				c.setPostFormContent("paths", path);
+			}
+			for(String value : values){ 
+				c.setPostFormContent("values", value);
+			};
+			
+			c.setPostFormContent("user", user);
+			c.setPostFormContent("append", append);
 			c.execute();
 			int code = c.getResponseCode();
 			return code;

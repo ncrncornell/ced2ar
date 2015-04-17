@@ -118,7 +118,9 @@
 		  		<c:if test="${git}">
 		  			<div class="tab-pane" id="t5">
 			  			<h4>Version Control</h4>
-						<p>Coming soon</p>
+						<p>
+							See the <a title="statusPage" href="${baseURI}/edit/gitStatus">status page</a>
+						</p>
 			  		</div>
 		  		</c:if>
 			</div>

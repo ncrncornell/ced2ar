@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,7 @@ import javax.xml.xpath.*;
 import net.sf.saxon.TransformerFactoryImpl;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -324,8 +326,8 @@ public class Parser {
 		return out;
 	}
 	
-	/**		
-				
+	
+	/**				
 	 *Returns content from specific xpath statement
 	 * @param path String the xpath statement
 	 * @return String the value of the node located where the xpath specifies
@@ -403,6 +405,21 @@ public class Parser {
 			e.printStackTrace();
 		}		
 		return null;		
+	}
+	/**
+	 * Parses either element value or attribute value
+	 * @param path
+	 * @return
+	 */
+	public String getValue2(String p){
+		if(p.contains("//")) return null;//No double slashes allowed
+		String[] path = p.split("/");
+		if(path[path.length-1].contains("@")){
+			String basePath = StringUtils.join(Arrays.copyOfRange(path, 0, path.length-1),"/");
+			String attr = path[path.length-1].replaceAll("[^A-Za-z0-9]", "");
+			return getAttrValue(basePath, attr);
+		}		
+		return getValue(p);
 	}
 	
 	/**

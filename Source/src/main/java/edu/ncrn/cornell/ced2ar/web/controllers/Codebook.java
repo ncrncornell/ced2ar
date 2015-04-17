@@ -5,7 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Hashtable;
 import java.util.TreeMap;
 
 import javax.servlet.ServletContext;
@@ -61,7 +60,6 @@ public class Codebook {
 	private Loader loader;
 	
 	private static final Logger logger = Logger.getLogger(Codebook.class);
-	
 	
 //Utilties
 	
@@ -210,8 +208,8 @@ public class Codebook {
 	}
 	
 	@RequestMapping(value = "/codebooks/{c}/v/{v}/versions", method = RequestMethod.GET)
-	public String showCodebookGit(Model model, @PathVariable(value = "c") String baseHandle,
-	@PathVariable(value = "v") String version){
+	public String showCodebookGit(@PathVariable(value = "c") String baseHandle, 
+	@PathVariable(value = "v") String version, Model model){
 		if(!config.isGitEnabled()){
 			return "redirected:/codebooks/"+baseHandle+"/v/"+version;
 		}
@@ -233,17 +231,64 @@ public class Codebook {
 		if(data != null && !data.equals("")){
 			String[] commits = data.split(" ");
 			for(String commit : commits){
-				String[] commitData = commit.split("\\.");
+				String[] commitData = commit.split(",");
 				Long epoch = Long.valueOf(commitData[1].trim()).longValue() * 1000;
 				SimpleDateFormat format = new SimpleDateFormat("MMMM d, yyyy 'at' h:mm a");
 				String timeStamp = format.format(epoch);
-				versions.add(new String[]{commitData[0], timeStamp});
+				versions.add(new String[]{commitData[0], timeStamp, commitData[2], commitData[3]});
 			}
 			model.addAttribute("gitURL",config.getRemoteRepoURL());
 			model.addAttribute("versions", versions);	
 		}
 	
 		return "/WEB-INF/views/versions.jsp";
+	}
+	
+	@RequestMapping(value = "/codebooks/{c}/v/{v}/versions2", method = RequestMethod.GET)
+	public String showCodebookGit2(@PathVariable(value = "c") String baseHandle, 
+	@PathVariable(value = "v") String version, Model model){
+		if(!config.isGitEnabled()){
+			return "redirected:/codebooks/"+baseHandle+"/v/"+version;
+		}
+		String baseURI = loader.getPath() + "/rest/";
+		String handle = baseHandle+version;	
+		TreeMap<String,String[]> codebooks = loader.getCodebooks(baseURI);
+		String title = codebooks.get(handle)[4];
+		String codebookURL = "codebooks/"+baseHandle+"/v/"+version+"/";	 
+		String[][] crumbs = new String[][] {{title,codebookURL},{"Variable Versions",""}};
+		
+		model.addAttribute("crumbs",crumbs);
+		model.addAttribute("baseHandle", baseHandle);
+		model.addAttribute("version", version);
+		model.addAttribute("title", title);
+		model.addAttribute("subTitl","Commits - "+ handle.toUpperCase());
+		 
+		try{
+			String data = Fetch.get(baseURI+"codebooks/"+handle+"/versions?type=vars").trim();
+			ArrayList<String[]> versions= new ArrayList<String[]>(); 
+			if(data != null && !data.equals("")){
+				String[] commits = data.split(";");
+				for(String commit : commits){
+					commit = commit.trim();
+					String[] commitData = commit.split(",");	
+					Long epoch = Long.valueOf(commitData[2].trim()).longValue() * 1000;
+					SimpleDateFormat format = new SimpleDateFormat("MMMM d, yyyy 'at' h:mm a");
+					String timeStamp = format.format(epoch);
+					versions.add(new String[]{commitData[0].trim(), commitData[1].trim(), timeStamp, commitData[3].trim()});
+				}
+				model.addAttribute("gitURL",config.getRemoteRepoURL());
+				model.addAttribute("versions", versions);	
+				model.addAttribute("baseHandle", baseHandle);	
+				model.addAttribute("codebookVersion", version);				
+			}
+		}catch(NullPointerException e){
+			//No commits
+			model.addAttribute("gitURL",config.getRemoteRepoURL());
+			model.addAttribute("baseHandle", baseHandle);	
+			model.addAttribute("codebookVersion", version);
+			
+		}
+		return "/WEB-INF/views/versions2.jsp";
 	}
 
 	/**
@@ -456,7 +501,7 @@ public class Codebook {
 				Long epoch = Long.valueOf(commitData[1].trim()).longValue() * 1000;
 				SimpleDateFormat format = new SimpleDateFormat("MMMM d, yyyy 'at' h:mm a");
 				String timeStamp = format.format(epoch);
-				versions.add(new String[]{commitData[0], timeStamp});
+				versions.add(new String[]{commitData[0], timeStamp,commitData[2]});
 			}
 			model.addAttribute("gitURL",config.getRemoteRepoURL());
 			model.addAttribute("versions", versions);	

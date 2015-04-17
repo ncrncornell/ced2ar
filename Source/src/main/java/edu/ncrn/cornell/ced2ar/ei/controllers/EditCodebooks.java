@@ -3,6 +3,7 @@ package edu.ncrn.cornell.ced2ar.ei.controllers;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.TreeMap;
@@ -14,6 +15,9 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.HandlerMapping;
+import org.xml.sax.SAXParseException;
 
 import edu.ncrn.cornell.ced2ar.api.data.Config;
 import edu.ncrn.cornell.ced2ar.api.data.Fetch;
@@ -77,6 +82,66 @@ public class EditCodebooks {
 		validFields.put("notes", new String[] {"1","/codeBook/var[@name='"+var+"']/notes["+index+"]","Notes","0"});
 		validFields.put("notesAccs", new String[] {"5","/codeBook/var/notes["+index+"]/@access","Note Access", "1"});
 		validFields.put("qstn", new String[] {"1","/codeBook/var/qstn","Question Text","0"});
+		return validFields;
+	}
+	
+	private Hashtable<String,String[]> getGroupedTitleFields(String[] index){
+		Hashtable<String,String[]> validFields = new Hashtable<String,String[]>();
+		validFields.put("docProducer",
+		new String[]{
+			"docDscr/citation/prodStmt/producer["+index[0]+"]",
+			"docDscr/citation/prodStmt/producer["+index[0]+"]/@abbr", 
+			"docDscr/citation/prodStmt/producer["+index[0]+"]/@affiliation",
+			"docDscr/citation/prodStmt/producer["+index[0]+"]/@role"
+		});
+		validFields.put("stdyProducer",
+		new String[]{
+			"stdyDscr/citation/prodStmt/producer["+index[0]+"]",
+			"stdyDscr/citation/prodStmt/producer["+index[0]+"]/@abbr", 
+			"stdyDscr/citation/prodStmt/producer["+index[0]+"]/@affiliation",
+			"stdyDscr/citation/prodStmt/producer["+index[0]+"]/@role"
+		});
+		return validFields;
+	}
+	
+	private Hashtable<String,String[]> getGroupedTitleFieldsLabels(String[] index){
+		Hashtable<String,String[]> validFields = new Hashtable<String,String[]>();
+		validFields.put("docProducer",
+		new String[]{
+			"Producer",
+			"Abbrevation", 
+			"Affiliation",
+			"Role"
+		});
+		validFields.put("stdyProducer",
+		new String[]{
+			"Producer",
+			"Abbrevation", 
+			"Affiliation",
+			"Role"
+		});
+		return validFields;
+	}
+	
+	private Hashtable<String,String[]> getGroupedVarFields(String[] index){
+		Hashtable<String,String[]> validFields = new Hashtable<String,String[]>();
+		validFields.put("concept",
+		new String[]{
+			"concept["+index[0]+"]",
+			"concept["+index[0]+"]/@vocab", 
+			"concept["+index[0]+"]/@vocabURI"
+		});
+		return validFields;
+	}
+	
+	private Hashtable<String,String[]> getGroupedVarFieldsLabels(String[] index){
+		Hashtable<String,String[]> validFields = new Hashtable<String,String[]>();
+		validFields.put("concept",
+		new String[]{
+			"Concept",
+			"Vocabulary", 
+			"Vocabulary URI"
+		});
 		return validFields;
 	}
 	
@@ -172,7 +237,7 @@ public class EditCodebooks {
 			
 		//define safe tags, clean input
 		if(!remove){
-			wl = wl.addTags("em","p","li","ul","a","xhtml:li","xhtml:ul","br");
+			wl = wl.addTags("em","p","li","ul","a","xhtml:li","xhtml:ul");
 			wl = wl.addAttributes("a","href","title","target");
 		}
 		
@@ -192,6 +257,8 @@ public class EditCodebooks {
 	private static String htmlDDIClean(String value){
 		value = value.replaceAll("target=\".+\"", "");
 		value = value.replaceAll("title=\".+\"", "");
+		value = value.replaceAll("<br.*?>", "").replaceAll("<br.*?/>", "");
+		value = value.replaceAll("title=\".+\"", "");
 		value = value.replaceAll("<a href=","<ExtLink URI=").replaceAll("</a>","</ExtLink>");
 		value = value.replaceAll("<ul>", "<xhtml:ul>").replaceAll("</ul>", "</xhtml:ul>");
 		value = value.replaceAll("<li>", "<xhtml:li>").replaceAll("</li>", "</xhtml:li>");
@@ -208,7 +275,7 @@ public class EditCodebooks {
 			s = new String(Charset.forName("UTF-8").encode(s).array(), "UTF-8");
 		}catch(UnsupportedEncodingException e){}
 		s = s.replaceAll("&rdquo;", "\"").replaceAll("&ldquo;", "\"");
-		s = s.replaceAll("“","\"").replaceAll("”", "\"");
+		s = s.replaceAll("â€œ","\"").replaceAll("â€�", "\"");
 		s = s.replaceAll("&rsquo;", "'");
 		s = s.replaceAll("&.+;", "");
 		return s.trim();
@@ -431,6 +498,60 @@ public class EditCodebooks {
 		}
 		return "/WEB-INF/ajaxViews/codebookEdit.jsp";
 	}
+	
+	@RequestMapping(value = "/edit/codebooks/{c}/v/{v}/editMulti", method = RequestMethod.GET)
+	public String editMultiTitlePage(@PathVariable(value = "c") String baseHandle,
+	@PathVariable(value = "v") String version,	
+	@RequestParam(value = "f", defaultValue = "") String field, 
+	@RequestParam(value = "i") String[] index,
+	@RequestParam(value = "a", defaultValue = "false") String append, 
+	Model model, HttpSession session, HttpServletResponse response)
+	{
+		Hashtable<String,String[]> validFields = null;
+		try{
+			String handle = baseHandle + version;
+			if(index != null){
+				try{
+					for(String i : index) Integer.parseInt(i);
+				}catch(NumberFormatException e){
+					response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+					logger.error("Bad index request to "+handle+". Should be array of ints. Index is: "+index);
+					return "redirect://edit/codebooks/{c}/v/{v}/vars/{var}";
+				}
+			}
+			
+			validFields = getGroupedTitleFields(index);
+			if(!validFields.containsKey(field)){
+				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				logger.error("Invalid multi var field: "+field);
+				return "redirect://edit/codebooks/{c}/v/{v}/vars/{var}";
+			}
+			String[] fieldLabels = getGroupedTitleFieldsLabels(index).get(field);
+			
+			String baseURI = loader.getPath();
+			String apiURI = baseURI + "/rest/codebooks/"+ handle + "/titlepage";
+			String xml = Fetch.getShortXML(apiURI)[0];
+			
+			ArrayList<String> values = new ArrayList<String>();
+			String[] xpaths  = validFields.get(field);
+			Parser xp = new Parser(xml);
+			for(String xpath : xpaths){
+				values.add(xp.getValue2("/codeBook/"+xpath));
+			}
+			//TODO: Limiting chooses to a controlled vocabulary 
+			//TODO: Add schema doc or more detailed info for the fields?			
+			model.addAttribute("field", field);	
+			model.addAttribute("title", fieldLabels[0]);	
+			model.addAttribute("values", values);	
+			model.addAttribute("labels", fieldLabels);	
+			model.addAttribute("append", append);	
+			
+		}finally{
+			validFields.clear();
+		}
+		return "/WEB-INF/ajaxViews/editMulti.jsp";
+	}	
+	
 	/**
 	 * Sends the request to edit field in title page
 	 * @param handle the codebook being edited
@@ -485,6 +606,7 @@ public class EditCodebooks {
 			break;
 			//Plain Text
 			case "1":
+				value = value.trim();
 				//Access Level ID must be lowercase alphanumeric
 				if(field.equals("accessRstrID"))
 					value = value.toLowerCase().replaceAll("[^a-z0-9]", "");
@@ -528,6 +650,64 @@ public class EditCodebooks {
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		}
 		return "redirect:/edit/codebooks/"+baseHandle+"/v/"+version+"/";
+	}
+	
+	@RequestMapping(value = "/edit/codebooks/{c}/v/{v}/editMulti", method = RequestMethod.POST)
+	public String editCodebookMulti(@PathVariable(value = "c") String baseHandle,
+	@PathVariable(value = "v") String version,
+	@RequestParam(value = "field", defaultValue = "") String field,
+	@RequestParam(value = "newValue", defaultValue = "") String[] values, 
+	@RequestParam(value = "i", defaultValue = "") String[] index,
+	@RequestParam(value = "append", defaultValue = "false") String append,
+	Model model, HttpSession session, HttpServletRequest request, HttpServletResponse response)
+	{
+		String baseURI = loader.getHostName();
+		Hashtable<String,String[]> validFields = null;
+		try{
+			String handle = baseHandle + version;
+			if(index != null){
+				try{
+					for(String i : index) Integer.parseInt(i);
+				}catch(NumberFormatException e){
+					response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+					logger.error("Bad index request to "+handle+". Should be array of ints. Index is: "+index);
+					return "redirect://edit/codebooks/"+baseHandle+"/v/"+version+"/";
+				}
+			}
+			
+			validFields = getGroupedTitleFields(index);
+			if(!validFields.containsKey(field)){
+				System.out.println(field);
+				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				logger.error("Invalid multi var field: "+field);
+				return "redirect://edit/codebooks/"+baseHandle+"/v/"+version+"/";
+			}			
+
+			String user = "anonymous";
+			if(session.getAttribute("userEmail") != null){
+				user = (String) session.getAttribute("userEmail");
+			}
+			String[] paths = validFields.get(field);
+			
+			int code = -1;
+			code = Fetch.editCoverMulti(baseURI, baseHandle, version, paths, values, append, user);
+
+			//Response
+			if(code > 0 && code < 400){
+				session.setAttribute("info_splash2","Changes Saved");
+			}else if(code == 404){ 
+				session.setAttribute("error2", "There was a problem connecting to the database.");
+				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			}else{
+				session.setAttribute("error2", "Your request could not be completed.\nYour edit may have created an invalid document.");
+				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			}
+			
+		}finally{
+			validFields.clear();
+		}
+		
+		return "redirect:/edit/codebooks/"+baseHandle+"/v/"+version;	
 	}
 	
 	/**
@@ -799,6 +979,116 @@ public class EditCodebooks {
 	        return "Done";        
 	 }
 	
+	/**
+	 * Page for releasing data from codebook
+	 * @param baseHandle
+	 * @param version
+	 * @param model
+	 * @param session
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")	
+	@RequestMapping(value = "/edit/codebooks/{c}/v/{v}/score", method = RequestMethod.GET)
+	
+	public String score(@PathVariable(value = "c") String baseHandle, 
+	@PathVariable(value = "v") String version, Model model, 
+    HttpSession session, HttpServletResponse response) throws Exception{
+		String baseURI = loader.getPath() + "/rest/";
+		String handle = baseHandle + version;
+		
+		if(!loader.hasCodebook(handle)){
+			session.setAttribute("error","Codebook with handle '"+handle+"' does not exist");			
+			return "redirect:/";
+		}	
+		
+		TreeMap<String,String[]> codebooks = null;
+		if(session.getAttribute("codebooks") == null){
+			codebooks = loader.getCodebooks(baseURI);
+			session.setAttribute("codebooks", codebooks);
+		}else{
+			codebooks = (TreeMap<String, String[]>) session.getAttribute("codebooks");
+		}
+
+		JSONObject scores = new JSONObject(Fetch.getJson(baseURI+"codebooks/"+handle+"/score")[0]);
+		JSONObject vars = (JSONObject) scores.get("variables");
+		
+		JSONArray jsonLabl = (JSONArray) vars.get("labl");
+		JSONArray jsonTxt = (JSONArray) vars.get("txt");
+		JSONArray jsonCat = (JSONArray) vars.get("cat");
+		JSONArray jsonSumStat = (JSONArray) vars.get("sumStat");	
+
+		ArrayList<String> lablMissing = new ArrayList<String>();
+		if(jsonTxt.length() > 0){
+			for(int i=0; i<jsonLabl.length(); i++) {
+				lablMissing.add(jsonLabl.getString(i));
+			}
+		}
+		
+		ArrayList<String> txtMissing = new ArrayList<String>();
+		if(jsonTxt.length() > 0){
+			for(int i=0; i<jsonTxt.length(); i++) {
+				txtMissing.add(jsonTxt.getString(i));
+			}
+		}
+		
+		ArrayList<String> catMissing = new ArrayList<String>();
+		if(jsonTxt.length() > 0){
+			for(int i=0; i<jsonCat.length(); i++) {
+				catMissing.add(jsonCat.getString(i));
+			}
+		}
+		
+		ArrayList<String> sumStatMissing = new ArrayList<String>();
+		if(jsonTxt.length() > 0){
+			for(int i=0; i<jsonSumStat.length(); i++) {
+				sumStatMissing.add(jsonSumStat.getString(i));
+			}
+		}
+		
+		JSONObject vs = (JSONObject) vars.getJSONObject("scores");
+		double lablScore = (double) vs.get("labl");
+		double txtScore = (double) vs.get("txt");
+		double catScore = (double) vs.get("cat");
+		double sumStatScore = (double) vs.get("sumStat");
+		double varTotalScore = (double) vs.get("overall");
+		
+		JSONObject ts = (JSONObject) scores.get("titlePage");
+		JSONObject os = (JSONObject) scores.get("overallScore");
+		String overallScore = os.get("total").toString();
+		
+		HashMap<String,Object> titlePageScores = new ObjectMapper().readValue(ts.toString(), HashMap.class);
+		
+		String codebookURL = "edit/codebooks/"+baseHandle+"/v/"+version+"/";
+		String[][] crumbs = new String[][] {
+			{codebooks.get(handle)[4],codebookURL},
+			{"Score",""}
+		};	
+		
+		model.addAttribute("titlePageScores", titlePageScores);
+		model.addAttribute("overallScore", overallScore);
+		
+		model.addAttribute("lablScore", lablScore);
+		model.addAttribute("txtScore", txtScore);
+		model.addAttribute("catScore", catScore );
+		model.addAttribute("sumStatScore", sumStatScore);
+		model.addAttribute("varTotalScore", varTotalScore);
+		
+		model.addAttribute("lablMissing", lablMissing);
+		model.addAttribute("txtMissing", txtMissing);
+		model.addAttribute("catMissing", catMissing);
+		model.addAttribute("sumStatMissing", sumStatMissing);
+			
+		model.addAttribute("subTitl", "Scoring ("+handle.toUpperCase()+")");
+		model.addAttribute("crumbs", crumbs);
+		model.addAttribute("handle", handle);
+		model.addAttribute("basehandle", baseHandle);
+		model.addAttribute("version", version);
+		
+		return "/WEB-INF/editViews/score.jsp";
+	}
+	
 //Variable Mappings
 	
 	/**
@@ -877,23 +1167,30 @@ public class EditCodebooks {
 	@RequestParam(value = "a", defaultValue = "false") String append, 
 	Model model, HttpSession session, HttpServletResponse response)
 	{
+		//TODO: Switch to enable or disable crowdsourcing
+		boolean showMaster = false;
+		
 		String handle = baseHandle + version;
 		if(field.equals(""))
 			return "redirect:/codebooks/"+baseHandle+"/v/"+version+"/vars/"+var+"/edit";	
 		
-		//String apiURI = Config.getApiUri() + "codebooks/"+ handle + "/variables/"+var;		
 		String baseURI = loader.getPath();
 		String apiURI = baseURI + "/rest/codebooks/"+ handle + "/variables/"+var;
-		String xml =   Fetch.getShortXML(apiURI)[0];
+		String xml = Fetch.getShortXML(apiURI)[0];
+
+		String xmlMaster = showMaster ? Fetch.getMasterXML(apiURI)[0] : ""; 
 	
 		//All valid fields to edit
 		Hashtable<String,String[]> validFields = null;
 		try{	
 			validFields = getVarFields(var,index,index2);
 			Parser xp = new Parser(xml);	
+			Parser xpm = showMaster ? new Parser(xmlMaster) : null;
+			
 			if(validFields.containsKey(field)){ 
 				
 				String currentValue = "";
+				String masterValue = "";
 				String[] path = validFields.get(field);
 				if(path[0].equals("5")){				
 					Hashtable<String,String[]> codebooksAccs = Fetch.getCodebooksAccs(baseURI+"/rest/");
@@ -902,7 +1199,9 @@ public class EditCodebooks {
 					int pos = path[1].lastIndexOf("/");
 					String p1 = path[1].substring(0,pos);
 					String p2 = path[1].substring(pos,path[1].length()).replace("/@", "");
+					
 					String curAccs = xp.getAttrValue(p1, p2);
+					masterValue = xpm != null ? xpm.getAttrValue(p1, p2) : "";
 					
 					model.addAttribute("accessLevels", accessLevels);
 					model.addAttribute("curAccs", curAccs);
@@ -912,17 +1211,25 @@ public class EditCodebooks {
 					int pos = path[1].lastIndexOf("/");
 					String p1 = path[1].substring(0,pos);
 					String p2 = path[1].substring(pos,path[1].length()).replace("/@", "");
+					
 					currentValue = xp.getAttrValue(p1, p2);
+					masterValue = xpm != null ? xpm.getAttrValue(p1, p2) : "";
+					
 					model.addAttribute("type", "attr");
 				}else{
 					if(append.equals("true")){
-						currentValue = "";
+						currentValue = "";	
 					}else{
 						try{
 							currentValue = xp.getNode(path[1]);
 						}catch(NullPointerException e){
 							append = "true";
 						}
+					}
+					try{
+						masterValue = xpm != null ? xpm.getNode(path[1]) : "";
+					}catch(NullPointerException e){
+						masterValue = "";
 					}
 					model.addAttribute("type", "elem");
 				}
@@ -931,13 +1238,15 @@ public class EditCodebooks {
 					currentValue = "";
 				}else{
 					currentValue = HTMLcheck(currentValue,false);
-				}
+				}			
 				
+				model.addAttribute("showMaster", showMaster);
 				model.addAttribute("editorType", path[3]);
 				model.addAttribute("field", field);
 				model.addAttribute("index",index);	
 				model.addAttribute("handle", handle);	
 				model.addAttribute("curVal", currentValue);
+				model.addAttribute("masterVal", masterValue);
 				model.addAttribute("title", path[2]);	
 				model.addAttribute("append", append);
 				
@@ -948,6 +1257,60 @@ public class EditCodebooks {
 			validFields.clear();
 		}
 		return "/WEB-INF/ajaxViews/varEdit.jsp";
+	}
+	
+	@RequestMapping(value = "/edit/codebooks/{c}/v/{v}/vars/{var}/editMulti", method = RequestMethod.GET)
+	public String editMultiVariablePage(@PathVariable(value = "c") String baseHandle,
+	@PathVariable(value = "v") String version,
+	@PathVariable(value = "var") String var,		
+	@RequestParam(value = "f", defaultValue = "") String field, 
+	@RequestParam(value = "i") String[] index,
+	@RequestParam(value = "a", defaultValue = "false") String append, 
+	Model model, HttpSession session, HttpServletResponse response)
+	{
+		Hashtable<String,String[]> validFields = null;
+		try{
+			String handle = baseHandle + version;
+			if(index != null){
+				try{
+					for(String i : index) Integer.parseInt(i);
+				}catch(NumberFormatException e){
+					response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+					logger.error("Bad index request to var "+var+" in "+handle+". Should be array of ints. Index is: "+index);
+					return "redirect://edit/codebooks/"+baseHandle+"/v/"+version+"/vars/"+var+"";
+				}
+			}
+			
+			validFields = getGroupedVarFields(index);
+			if(!validFields.containsKey(field)){
+				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				logger.error("Invalid multi var field: "+field);
+				return "redirect://edit/codebooks/"+baseHandle+"/v/"+version+"/vars/"+var+"";
+			}
+			String[] fieldLabels = getGroupedVarFieldsLabels(index).get(field);
+			
+			String baseURI = loader.getPath();
+			String apiURI = baseURI + "/rest/codebooks/"+ handle + "/variables/"+var;
+			String xml = Fetch.getShortXML(apiURI)[0];
+			
+			ArrayList<String> values = new ArrayList<String>();
+			String[] xpaths  = validFields.get(field);
+			Parser xp = new Parser(xml);
+			for(String xpath : xpaths){
+				values.add(xp.getValue2("/codeBook/var/"+xpath));
+			}
+			//TODO: Limiting chooses to a controlled vocabulary 
+			//TODO: Add schema doc or more detailed info for the fields?
+			model.addAttribute("field", field);	
+			model.addAttribute("title", fieldLabels[0]);			
+			model.addAttribute("values", values);	
+			model.addAttribute("labels", fieldLabels);	
+			model.addAttribute("append", append);	
+			
+		}finally{
+			validFields.clear();
+		}
+		return "/WEB-INF/ajaxViews/editMulti.jsp";
 	}
 	
 	/**
@@ -977,6 +1340,7 @@ public class EditCodebooks {
 	@RequestParam(value = "append", defaultValue = "false") String append,
 	Model model, HttpSession session, HttpServletRequest request, HttpServletResponse response) throws Exception
 	{
+		//TODO: Remove generic throws Exception
 		value = specialCharClean(value);
 		
 		String baseURI = loader.getHostName();
@@ -1031,6 +1395,7 @@ public class EditCodebooks {
 					break;
 					//Plain text
 					case "1":
+						value = value.trim();
 						value = HTMLcheck(value,true);
 					break;
 				}
@@ -1055,6 +1420,64 @@ public class EditCodebooks {
 		return "redirect:/edit/codebooks/"+baseHandle+"/v/"+version+"/vars/"+var+"/";	
 	}
 	
+	@RequestMapping(value = "/edit/codebooks/{c}/v/{v}/vars/{var}/editMulti", method = RequestMethod.POST)
+	public String editVariableMulti(@PathVariable(value = "c") String baseHandle,
+	@PathVariable(value = "v") String version,
+	@PathVariable(value = "var") String var,	
+	@RequestParam(value = "field", defaultValue = "") String field,
+	@RequestParam(value = "newValue", defaultValue = "") String[] values, 
+	@RequestParam(value = "i", defaultValue = "") String[] index,
+	@RequestParam(value = "append", defaultValue = "false") String append,
+	Model model, HttpSession session, HttpServletRequest request, HttpServletResponse response)
+	{		
+		String baseURI = loader.getHostName();
+		Hashtable<String,String[]> validFields = null;
+		try{
+			String handle = baseHandle + version;
+			if(index != null){
+				try{
+					for(String i : index) Integer.parseInt(i);
+				}catch(NumberFormatException e){
+					response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+					logger.error("Bad index request to var "+var+" in "+handle+". Should be array of ints. Index is: "+index);
+					return "redirect://edit/codebooks/{c}/v/{v}/vars/{var}";
+				}
+			}
+			
+			validFields = getGroupedVarFields(index);
+			if(!validFields.containsKey(field)){
+				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				logger.error("Invalid multi var field: "+field);
+				return "redirect://edit/codebooks/{c}/v/{v}/vars/{var}";
+			}			
+
+			String user = "anonymous";
+			if(session.getAttribute("userEmail") != null){
+				user = (String) session.getAttribute("userEmail");
+			}
+			String[] paths = validFields.get(field);
+
+			int code = -1;
+			code = Fetch.editVarMulti(baseURI, baseHandle, version, var, paths, values, append, user);
+			
+			//Response
+			if(code > 0 && code < 400){
+				session.setAttribute("info_splash2","Changes Saved");
+			}else if(code == 404){ 
+				session.setAttribute("error2", "There was a problem connecting to the database.");
+				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			}else{
+				session.setAttribute("error2", "Your request could not be completed.\nYour edit may have created an invalid document.");
+				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			}
+			
+		}finally{
+			validFields.clear();
+		}
+		
+		return "redirect:/edit/codebooks/"+baseHandle+"/v/"+version+"/vars/"+var+"/";	
+	}
+	
 	/**
 	 * Method to display delete variable content page
 	 * @param handle the codebook containing the variable
@@ -1066,36 +1489,36 @@ public class EditCodebooks {
 	 * @param session the current session
 	 * @return the ajax view for confirming deletion
 	 */
-	@RequestMapping(value = "/edit/codebooks/{c}/v/{v}/vars/{var}/delete", method = RequestMethod.GET)
-	public String deleteVariablePage(@PathVariable(value = "c") String baseHandle,
-	@PathVariable(value = "v") String version, @PathVariable(value = "var") String var,		
-	@RequestParam(value = "f", defaultValue = "") String field, @RequestParam(value = "i", defaultValue = "1") String index,
-	@RequestParam(value = "k", defaultValue = "1") String index2,
-	Model model, HttpSession session)
-	{
-		String handle = baseHandle + version;
-		if(field.equals(""))
-			return "redirect:/edit/codebooks/"+baseHandle+"/v/"+version+"/vars/"+var+"/";	
-		
-		//All valid fields to edit
-		Hashtable<String,String[]> validFields = new Hashtable<String,String[]>();
-		validFields.put("catgry", new String[] {"1","codeBook/var[@name='"+var+"']/catgry["+index+"]","Category"});
-		
-		if(validFields.containsKey(field)){
-			String[] inf = validFields.get(field);
-			String title = inf[2];
-			
-			model.addAttribute("field", field);
-			model.addAttribute("index",index);	
-			model.addAttribute("handle", handle);	
-			model.addAttribute("index2", index2);
-			model.addAttribute("title", title);	
-			validFields.clear();					
-			return "/WEB-INF/ajaxViews/deleteVarContent.jsp";
-		}
-		return "redirect:/edit/codebooks/"+baseHandle+"/v/"+version+"/vars/"+var+"/";		
-	}
-	
+	 @RequestMapping(value = "/edit/codebooks/{c}/v/{v}/vars/{var}/delete", method = RequestMethod.GET)
+    public String deleteVariablePage(@PathVariable(value = "c") String baseHandle,
+    @PathVariable(value = "v") String version, @PathVariable(value = "var") String var,             
+    @RequestParam(value = "f", defaultValue = "") String field, @RequestParam(value = "i", defaultValue = "1") String index,
+    @RequestParam(value = "k", defaultValue = "1") String index2,
+    Model model, HttpSession session)
+    {
+            String handle = baseHandle + version;
+            if(field.equals(""))
+                    return "";   
+            
+            //All valid fields to edit
+            Hashtable<String,String[]> validFields = new Hashtable<String,String[]>();
+            validFields.put("catgry", new String[] {"1","codeBook/var[@name='"+var+"']/catgry["+index+"]","Category"});
+            
+            if(validFields.containsKey(field)){
+                    String[] inf = validFields.get(field);
+                    String title = inf[2];
+                    
+                    model.addAttribute("field", field);
+                    model.addAttribute("index",index);      
+                    model.addAttribute("handle", handle);   
+                    model.addAttribute("index2", index2);
+                    model.addAttribute("title", title);     
+                    validFields.clear();                                    
+                    return "/WEB-INF/ajaxViews/deleteVarContent.jsp";
+            }
+            return "";           
+    }
+
 	/**
 	 * Handles variable content deletion requests
 	 * @param handle the codebook containing the variable

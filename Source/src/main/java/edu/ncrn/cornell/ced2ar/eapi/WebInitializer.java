@@ -12,6 +12,8 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.ContextRefreshedEvent;
 
+import edu.ncrn.cornell.ced2ar.sql.dao.VariableDAO;
+
 /**
  * Clones a remote repository after the application context is loaded. 
  * Code will be executed when application is started, context is refreshed and application is shutdown.
@@ -43,15 +45,15 @@ public class WebInitializer implements ApplicationListener{
 	 * @param applicationEvent ApplicationEvent
 	 */
 	public void onApplicationEvent(ApplicationEvent applicationEvent){	
+	
 		logger.debug("Application Event  " + applicationEvent.getClass());
 		// ContextStartedEvent is not fired always. Don't know why...
 		if(applicationEvent instanceof ContextRefreshedEvent){
-			
 			logger.debug("Version control is starting");
 			if(versionControl.hasLocalRepo()){
-				logger.debug("Found local repository at " + versionControl.getGitWorkingDirectory());
+				logger.debug("Found local repository");
 			}else{
-				logger.debug("Cloning remote repository from: " + versionControl.getRemoteRepoURL() + " to local " + versionControl.getGitWorkingDirectory()) ;
+				logger.debug("Cloning remote repository from: " + versionControl.getRemoteRepoURL()) ;
 				versionControl.cloneRemote();
 				logger.debug("Done cloning remote repository");
 			}

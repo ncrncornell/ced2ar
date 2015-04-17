@@ -4,7 +4,7 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
 	version="3.0">
 	<display-name>CED2AR Main</display-name>
-
+	
 	<!-- Web endpoints -->
 	<servlet>
 		<servlet-name>mappings</servlet-name>
@@ -34,6 +34,10 @@
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>/WEB-INF/context.xml</param-value>
+	</context-param>
+	<context-param>
+	    <param-name>buildTimeStamp</param-name>
+	    <param-value>${timestamp}</param-value>
 	</context-param>
 
 	<!-- Servlet for /rest/ (read only REST API) -->

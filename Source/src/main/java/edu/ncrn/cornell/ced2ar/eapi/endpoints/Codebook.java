@@ -65,18 +65,22 @@ public class Codebook extends ServerResource{
 		    FileItem file = null;
 		    String baseHandle = ((String) getRequestAttributes().get("baseHandle")).toLowerCase();
 		    
+		    String user = "anonymous";
 		    String version = ((String) getRequestAttributes().get("version")).replaceAll("[^A-Za-z0-9\\- ]", "").toLowerCase();
 			String handle = baseHandle+version;
 		    String label = null;
+		    boolean isMaster = false;//If the codebook is part of the read only master database
 
 		    //Parses form into file and 
 		    for(FileItem f : files){		    	
 		    	if(!f.isFormField() && f.getFieldName().equals("file")){
 		    		file = f;
-		    	}
-		    	else if(f.isFormField() && f.getFieldName().equals("label")){
+		    	}else if(f.isFormField() && f.getFieldName().equals("label")){
 		    		label = f.getString().replaceAll("[^A-Za-z0-9 \\-]", ""); 
-
+		    	}else if(f.isFormField() && f.getFieldName().equals("user")){
+		    		user = f.getString();
+		    	}else if(f.isFormField() && f.getFieldName().equals("master")){
+		    		if(f.getString().equals("true")) isMaster = true;
 		    	}else{
 		    		String message = "Bad arguments. Required file = <inputXML>";
 					throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, message);	    
@@ -100,7 +104,7 @@ public class Codebook extends ServerResource{
 		    	String message = "Label must be alphanumeric and atmost 15 characters.";
 				throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, message);	 
 		    }
-		    		
+		 
 		    try{
 		    	ins = file.getInputStream();   
 		    }catch(NullPointerException e){
@@ -130,21 +134,18 @@ public class Codebook extends ServerResource{
 		    	//TODO: Causes bug and adds two titles
 		    	xh.addReplace("/codeBook/docDscr/citation/titlStmt/titl", title, true, true, false, false);
 		    }
-		    
-		    //Adds default access levels if absent, 
-		    //TODO: Maybe add in switch? removing for now since editing can handle this
-		    /*
-		    if(xh.getValue("/codeBook/stdyDscr/dataAccs/@ID") == null){ 
-			    //TODO:Fix add replace to allow inserting parent with ID and child
-			    String releasable="/codeBook/stdyDscr/dataAccs[2]/@ID";
-			    String restricted="/codeBook/stdyDscr/dataAccs[3]/@ID";
-			    xh.addReplace(releasable, "releasable", true, true, false, true);
-			    xh.addReplace(restricted, "restricted", true, true, false, true);
-			    xh.addReplace("/codeBook/stdyDscr/dataAccs[@ID='releasable']/useStmt/restrctn", 
-			    	"Elements flaged with this access level can be released", true, true, false, true);
-			    xh.addReplace("/codeBook/stdyDscr/dataAccs[@ID='restricted']/useStmt/restrctn", 
-			    	"Elements flaged with this access level cannot be released", true, true, false, true);
-		    }*/
+		
+		    if(isMaster){
+		    	if(!xh.isValid()){
+			    	String message = xh.getError();
+			    	throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, message);	 
+			    }
+		    	BaseX.putM(handle, xh.getRepoXML());
+		    	Representation response = new StringRepresentation("Master codebook updated", 
+		    	MediaType.TEXT_PLAIN);
+		    	this.setStatus(Status.SUCCESS_OK);
+				return response;
+		    }
 		    
 		    String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date());
 			timestamp+= " (upload date)";
@@ -157,9 +158,8 @@ public class Codebook extends ServerResource{
 				xh.addReplace("/codeBook/docDscr/citation/verStmt/version/@date", timestamp, true, true, true, true);
 			}
    
-		    String software="The Comprehensive Extensible Data Documentation and Access Repository 2.5";
-		    xh.addReplace("/codeBook/docDscr/citation/prodStmt/software", software, true, true, false, false);
-		    
+		    String software="The Comprehensive Extensible Data Documentation and Access Repository 2.6";
+		    xh.addReplace("/codeBook/docDscr/citation/prodStmt/software[1]", software, true, true, false, true);
 		    //Validates XML 
 		    try{
 			    if(!xh.isValid()){
@@ -172,6 +172,8 @@ public class Codebook extends ServerResource{
 		    }
 		    
 		    logger.info("File is valid. Uploading to database...");
+		    
+		  
     
 		    //Checks to see if codebook version exists
 		    if(!QueryUtil.hasVersionIndex(baseHandle, version)){
@@ -211,6 +213,10 @@ public class Codebook extends ServerResource{
 		      
 		    //Uploads codebook
 		    BaseX.put(handle, xh.getRepoXML());
+		    
+		    if(Config.getInstance().isGitEnabled()){
+				QueryUtil.insertPending(handle, "upload", "/codeBook",user);
+			}
 		    
 		    //New BaseX config
 		    //BaseX.put2(handle, xh.getRepoXML());

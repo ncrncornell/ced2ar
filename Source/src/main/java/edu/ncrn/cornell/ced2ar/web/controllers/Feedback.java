@@ -206,8 +206,12 @@ public class Feedback {
 //Registration Endpoints			
 	@RequestMapping(value = "/register", method = RequestMethod.GET)
     public String register(Model model){
+		return "redirect:/search";
+		/*
+		*TODO: Current not used, but still a functional page
 		model.addAttribute("subTitl","Registration");	
 		return "/WEB-INF/editViews/register.jsp";
+		*/
     } 
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
@@ -237,6 +241,8 @@ public class Feedback {
 				session.setAttribute("error", "Invalid email address");
 				return "redirect:/register";
 			}
+			
+			//TODO:Disabled for now
 			/*
 			//Checks if email address in use
 			if(QueryUtil.hasAccount(email)){

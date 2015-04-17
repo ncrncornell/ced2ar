@@ -45,8 +45,7 @@ public class AuthProvider  implements AuthenticationProvider {
 		logger.debug("Authentication Started");
 		AuthToken token = (AuthToken) authentication;
 		logger.debug("OAuth2Token = " + token);
-		OAUserDetail user = (OAUserDetail) token.getPrincipal();
-		
+		OAUserDetail user = (OAUserDetail) token.getPrincipal();		
 		try{
 			user = (OAUserDetail) userDetailService.loadUserByUsername(user.getUsername());
 			logger.debug("User with token  " + token + " is successfully authorized and a registered user of CED2AR. Assigning roles to the user ...");

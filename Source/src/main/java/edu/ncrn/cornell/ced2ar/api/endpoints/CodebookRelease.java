@@ -12,6 +12,7 @@ import org.restlet.resource.Get;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
+import edu.ncrn.cornell.ced2ar.api.Utilities;
 import edu.ncrn.cornell.ced2ar.api.data.BaseX;
 import edu.ncrn.cornell.ced2ar.api.data.Config;
 import edu.ncrn.cornell.ced2ar.eapi.XMLHandle;
@@ -43,6 +44,12 @@ public class CodebookRelease extends ServerResource {
 			String message = " \"" + codebookId + "\" is an invalid codebookId";
 			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, message);
 		}
+		
+		if(!Utilities.codebookExists(codebookId)){
+			String message = " \"" + codebookId + "\" does not exist";
+			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND,message);	
+		}
+		
 		List<String> includeList = null;
 		try{
 			String include  =  getQuery().getFirstValue("i");

@@ -1,7 +1,6 @@
 <xsl:stylesheet version="2.0"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-	<xsl:output method="html" indent="yes" encoding="UTF-8"
-		omit-xml-declaration="yes" />
+	<xsl:output method="html" indent="yes" encoding="UTF-8" omit-xml-declaration="yes" />
 	<xsl:template match="/">
 		<xsl:variable name='handle'>
 			<xsl:value-of select="codeBook/@handle" />
@@ -292,8 +291,7 @@
 		<xsl:variable name='dataSrc'>
 			<xsl:value-of select="codeBook/stdyDscr/method/dataColl/dataSrc/node()" />
 		</xsl:variable>
-		<xsl:if
-			test="$relMat != '' or $relPubl !='' or $relStdy !='' or $collMode  != '' or $dataSrc != ''">
+		<xsl:if test="$relMat != '' or $relPubl !='' or $relStdy !='' or $collMode  != '' or $dataSrc != ''">
 			<p class="toggleHeader">Additional Information</p>
 			<div class="toggleContent value2">
 				<xsl:if test="$collMode  != '' or $dataSrc != ''">
@@ -311,7 +309,7 @@
 									<xsl:for-each
 										select="codeBook/stdyDscr/method/dataColl/sources/dataSrc">
 										<li>
-											<xsl:copy-of select="current()" />
+											<xsl:copy-of select="current()/node()" />
 										</li>
 									</xsl:for-each>
 								</ol>
@@ -321,12 +319,13 @@
 				</xsl:if>
 				<xsl:if test="$relMat  != ''">
 					<p class="toggleHeader">Related Material</p>
+					
 					<div class="toggleContent">
 						<div class="toggleText2">
 							<ol>
 								<xsl:for-each select="codeBook/stdyDscr/othrStdyMat/relMat">
 									<li>
-										<xsl:copy-of select="current()" />
+										<xsl:copy-of select="current()/node()" />
 									</li>
 								</xsl:for-each>
 							</ol>
@@ -340,7 +339,7 @@
 							<ol>
 								<xsl:for-each select="codeBook/stdyDscr/othrStdyMat/relPubl">
 									<li>
-										<xsl:copy-of select="current()" />
+										<xsl:copy-of select="current()/node()" />
 									</li>
 								</xsl:for-each>
 							</ol>
@@ -354,7 +353,7 @@
 							<ol>
 								<xsl:for-each select="codeBook/stdyDscr/othrStdyMat/relStdy">
 									<li>
-										<xsl:copy-of select="current()" />
+										<xsl:copy-of select="current()/node()" />
 									</li>
 								</xsl:for-each>
 							</ol>
@@ -367,7 +366,7 @@
 			<p>
 				This documentation derived from:
 				<br />
-				<xsl:value-of select="codeBook/docDscr/docSrc/biblCit" />
+				<xsl:copy-of select="codeBook/docDscr/docSrc/biblCit/node()" />
 			</p>
 		</xsl:if>
 	</xsl:template>

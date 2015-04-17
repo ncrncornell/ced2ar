@@ -6,3 +6,4 @@ Disallow: /edit
 Disallow: /read
 Disallow: /config
 Disallow: /register
+Disallow: /test

@@ -75,3 +75,8 @@ body{
 .codebookColumn{
 	width: auto !important;
 }
+
+span.truncFull.hidden{
+	visibility:visible!important;
+	display:block!important;		
+}

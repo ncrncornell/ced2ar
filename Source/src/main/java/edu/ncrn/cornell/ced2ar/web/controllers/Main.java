@@ -120,6 +120,17 @@ public class Main {
     } 
 	
 	/**
+	 * Test page
+	 * @param model Model
+	 * @return String the ddi ncrn page location
+	 */
+	@RequestMapping(value = "/test", method = RequestMethod.GET)
+    public String test(Model model) {
+		model.addAttribute("subTitl","Test Page");
+        return "/WEB-INF/views/test.jsp";
+    } 
+	
+	/**
 	 * Method splash.
 	 * Redirects to any page and selects codebook for filtering
 	 * @param c String codebook to filter 

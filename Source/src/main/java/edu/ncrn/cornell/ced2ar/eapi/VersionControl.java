@@ -1,24 +1,29 @@
 package edu.ncrn.cornell.ced2ar.eapi;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.servlet.ServletContext;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jgit.api.AddCommand;
+import org.eclipse.jgit.api.CheckoutCommand.Stage;
 import org.eclipse.jgit.api.CommitCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.Status;
@@ -27,18 +32,19 @@ import org.eclipse.jgit.api.errors.CheckoutConflictException;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.InvalidRefNameException;
 import org.eclipse.jgit.api.errors.InvalidRemoteException;
+import org.eclipse.jgit.api.errors.NoFilepatternException;
+import org.eclipse.jgit.api.errors.NoHeadException;
 import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
 import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.eclipse.jgit.api.errors.TransportException;
 import org.eclipse.jgit.diff.DiffEntry;
-import org.eclipse.jgit.diff.DiffFormatter;
-import org.eclipse.jgit.diff.RawTextComparator;
 import org.eclipse.jgit.errors.CorruptObjectException;
 import org.eclipse.jgit.errors.IncorrectObjectTypeException;
 import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectLoader;
+import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.RepositoryCache;
@@ -48,10 +54,10 @@ import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
+import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.treewalk.filter.PathFilter;
 import org.eclipse.jgit.util.FS;
-import org.eclipse.jgit.util.io.DisabledOutputStream;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -63,7 +69,7 @@ import edu.ncrn.cornell.ced2ar.api.data.Config;
 import edu.ncrn.cornell.ced2ar.api.data.Fetch;
 
 /**
- *Prepackaged queries and preparped functions that access BaseX and PgSQL
+ *Manages the version control workflow via Git
  *
  *@author Cornell University, Copyright 2012-2015
  *@author Venky Kambhampaty, Kyle Brumsted, Ben Perry
@@ -76,6 +82,7 @@ public class VersionControl {
 	
 	private static final Logger logger = Logger.getLogger(VersionControl.class);
 	public static final String gitWorkingDirectory = "git";
+	public static final String gitRemoteCopyDirectory = "gitRemoteCopy";
 	
 	private boolean loadedBaseX = false;
 	private String remoteRepoURL;
@@ -87,6 +94,8 @@ public class VersionControl {
 	private int numberOfCommitsToPushRemote;
 	private final String branchPrefix = "refs/heads/";	
 	private final String startPoint = "origin/master";
+	private final String webAppName = "ced2ar-web";
+	private final String gitMasterDirectory = "gitMaster";
 	
 	@Autowired
 	private ServletContext context;
@@ -100,12 +109,18 @@ public class VersionControl {
 	@Scheduled(cron="${gitLocalCommitCronExpression}")
 	public void taskCommitRepo(){
 		
-		recordCommits();
-		
 		if(!isGitEnabled()){
 			logger.debug("Version control is not enabled. Exiting.");
 			return;
 		}	
+		
+		//TODO: Maybe run less frequently
+		try{
+			recordAllCommits();
+		}catch(IOException | GitAPIException e1){
+			logger.error(e1.getLocalizedMessage());
+			e1.printStackTrace();
+		}
 		
 		try{
 			logger.debug("Commit repo task called");
@@ -126,8 +141,8 @@ public class VersionControl {
 				logger.debug("Version control commit to local repository started");
 				String message = QueryUtil.getPending();
 				logger.debug(message);
-				//Removes duplicates
 				
+				//Removes duplicates
 				Pattern pattern = Pattern.compile("\\{(.+?)?\\}");
 				Matcher matcher = pattern.matcher(message);
 				List<String> statements = new ArrayList<String>();
@@ -177,53 +192,6 @@ public class VersionControl {
 	
 //Git methods
 	/**
-	 * Writes all commit info to BaseX DB
-	 */
-	private void recordCommits(){
-			List<RevCommit> commits;
-			try {
-				commits = getCommitLog();
-			} catch (IOException | GitAPIException e) {
-				logger.error("Error reading commit log "+e.getLocalizedMessage());
-				return;
-			}
-			
-			for(RevCommit commit : commits){	
-				String shortMessage = commit.getShortMessage();
-				String hash =commit.getId().getName();
-				String timestamp = Integer.toString(commit.getCommitTime());
-				
-				Pattern pattern = Pattern.compile("\\{(.+?)?\\}");
-				Matcher matcher = pattern.matcher(shortMessage);
-				Hashtable<String,List<String>> commitVars = new Hashtable<String,List<String>>();
-				List<String> handles = new ArrayList<String>();
-				while (matcher.find()) {
-				   String[] data = matcher.group(1).split(",");
-					   if(data[2].equals("var")){
-						   String handle = data[0];
-						   if(!handles.contains(handle))
-							   handles.add(handle);
-						   String name = data[3];
-						   if(commitVars.containsKey(handle)){
-							   List<String> vars = commitVars.get(handle);
-							   if(!vars.contains(name)){
-								   vars.add(name); 
-								   commitVars.put(handle, vars);
-							   }   
-						   }else{
-							   List<String> vars = new ArrayList<String>();
-							   vars.add(name);
-							   commitVars.put(handle, vars);
-							   logger.debug(handle + " "+name);
-						   } 
-					   }
-				}			
-				QueryUtil.insertCommit(hash, timestamp, handles);
-				QueryUtil.insertVarCommit(hash, commitVars);
-			}	
-	}
-
-	/**
 	 * Checks if any changes are staged but not committed
 	 * @return whether or not uncommitted changes are made
 	 */
@@ -233,8 +201,8 @@ public class VersionControl {
 			git = openRepo();
 		    StatusCommand sc = git.status();
 		    Status status = sc.call();
-		    Set changedSet = status.getChanged();
-		    Set addedSet = status.getAdded();
+		    Set<String> changedSet = status.getChanged();
+		    Set<String> addedSet = status.getAdded();
 		    if(changedSet.size() > 0 || addedSet.size() > 0){
 		    	logger.debug("Changes found");
 		    	return true;
@@ -248,21 +216,37 @@ public class VersionControl {
 		logger.debug("No changes found");
 		return false;
 	}
+	
+	/**
+	 * Returns a String that represents latest committed version of codebook from local working repository.
+	 * If there is no codebook in the repository, an empty string is returned    
+	 * @param codebookName
+	 * @return 
+	 * @throws IOException
+	 */
+	private String getCodebook(String codebookName) throws IOException{
+		return getCodebook(codebookName,false);
+	}
 
 	/**
 	 * Returns a String that represents latest committed version of codebook.
 	 * If there is no codebook in the repository, an empty string is returned    
-	 * @param  codebookName  Name of the Codebook 
+	 * @param  codebookName  Name of the Codebook
+	 * @param  useRemoteCopy  switch to use local working or local remote copy as repository
 	 * @return contents of the Codebook as a String
 	 * @throws IOException 
 	 */	
-	private String getCodebook(String codebookName) throws IOException{
+	
+	private String getCodebook(String codebookName,boolean useRemoteCopy) throws IOException{
 		//TODO:Method will be made public once the versioning is exposed to the user
 		Git git = null;
 		Repository repo = null;
 		String codebookAsString  = "";
 		try{
-		    git = openRepo();
+			if(useRemoteCopy)
+				git = openRepo(gitRemoteCopyDirectory);
+			else 
+				git = openRepo();
 		    repo = git.getRepository();
 		    ObjectId lastCommitId = repo.resolve(Constants.HEAD);
 		    RevWalk revWalk = new RevWalk(repo);
@@ -274,6 +258,7 @@ public class VersionControl {
 		}
 	    return codebookAsString;	    
 	}
+
 	
 	/**
 	 * Retrieves the names of all codebooks currently in the repository
@@ -284,14 +269,17 @@ public class VersionControl {
 		ArrayList<String> names = new ArrayList<String>();
 		Git git = null;
 		Repository repo = null;
+		RevWalk revWalk = null;
+		TreeWalk treeWalk = null;
 		try{
 			git = openRepo();
 		    repo = git.getRepository();
 		    ObjectId lastCommitId = repo.resolve(Constants.HEAD);
-		    RevWalk revWalk = new RevWalk(repo);
+		    revWalk = new RevWalk(repo);
 		    RevCommit commit = revWalk.parseCommit(lastCommitId);//TODO: still occasionally causes nullpointer
 		    RevTree tree = commit.getTree();
-		    TreeWalk treeWalk = new TreeWalk(repo);
+
+		    treeWalk = new TreeWalk(repo);
 		    treeWalk.addTree(tree);
 		    treeWalk.setRecursive(true);
 		    while(treeWalk.next()){
@@ -301,10 +289,12 @@ public class VersionControl {
 		}finally{
 			if(repo != null) repo.close();
 			if(git != null) git.close();
+			if(revWalk != null) revWalk.dispose();
+			if(treeWalk != null) treeWalk.release();
 		}
 	    return names;
 	}
-
+ 
 	/**
 	 * Stages the file in the local repository.  
 	 * @param fileName the name of the file to stage
@@ -325,7 +315,8 @@ public class VersionControl {
 		Git git = null;
 		File file;
 		try{
-			file = new File(getGitWorkingDirectory(), fileName);
+			String path = getGitDirectory(gitWorkingDirectory);
+			file = new File(path, fileName);
 			writeRepository(file, codeBookContent);
 			git = openRepo();
 			AddCommand add = git.add();
@@ -356,7 +347,8 @@ public class VersionControl {
 		content = xh.docToString();
 		Git git = null;
 		try{
-			File file = new File(getGitWorkingDirectory(), fileName);
+			String path = getGitDirectory(gitWorkingDirectory);
+			File file = new File(path, fileName);
 			writeRepository(file, content);
 			git = openRepo();
 			AddCommand add = git.add();
@@ -409,6 +401,7 @@ public class VersionControl {
         int count = 0;
         Repository repo = null;
         Git git = null;
+        RevWalk walk = null;
 		try{
 			refs = Git.lsRemoteRepository()
 		        .setHeads(true)
@@ -426,7 +419,7 @@ public class VersionControl {
 			 git = openRepo();//open local repository
 			 repo = git.getRepository();
 			 Ref head = repo.getRef(this.branchPrefix+this.getLocalBranch());
-			 RevWalk walk = new RevWalk(repo);
+			 walk = new RevWalk(repo);
 			 RevCommit commit = null;
 			 try{
 				 commit = walk.parseCommit(head.getObjectId());
@@ -455,6 +448,7 @@ public class VersionControl {
 		}finally{
 			if(repo != null) repo.close();
 			if(git != null) git.close();
+			if(walk != null) walk.dispose();
 		}
 		return count;
 	}
@@ -465,16 +459,15 @@ public class VersionControl {
 	 * @return List of RevCommit objects.
 	 * @throws IOException 
 	 * @throws GitAPIException 
-	 * @throws Exception
 	 */
-	protected List<RevCommit> getCommitLog() throws  IOException, GitAPIException  {
+	protected List<RevCommit> getCommitLog(String path) throws  IOException, GitAPIException {
 		 Iterable<RevCommit> log;
 		 Git git  = null;
-		 Repository repo = null;
 		 ArrayList<RevCommit> commitLog = new ArrayList<RevCommit>();
 		 try{	 
 			 git = openRepo();
-			 log = git.log().call();
+			
+			 log = git.log().addPath(path).call();
 			 Iterator<RevCommit> i = log.iterator();
 			 while(i.hasNext()){
 				 RevCommit rc = (RevCommit)i.next();
@@ -485,19 +478,93 @@ public class VersionControl {
 			 e.printStackTrace();
 		 }
 		 finally{
-			 if(repo!=null) repo.close();
 			 if(git !=null) git.close(); 
 		 }
 		 return commitLog;
 	 }
+	
+	/**
+	 * Writes all commit info to BaseX DB
+	 * @throws IOException
+	 * @throws GitAPIException
+	 */
+	public void recordAllCommits() throws IOException, GitAPIException {
+		Repository repo = null;
+		Git git = null;
+		RevWalk walk = null;
+		try{
+		    git = openRepo();
+		    repo = git.getRepository();
+		    walk = new RevWalk(repo); 
+		    //TODO: Sometimes throwing NoHeadException
+	        Iterable<RevCommit> commits = git.log().all().call();
+	        for(RevCommit commit : commits){	
+	        	String local = "false";
+				String fullMessage = commit.getFullMessage();
+				String hash = commit.getId().getName();
+				String timestamp = Integer.toString(commit.getCommitTime());
+				
+				RevCommit targetCommit = walk.parseCommit(repo.resolve(commit.getName()));
+	            for (Entry<String, Ref> e : repo.getAllRefs().entrySet()){
+	                if (e.getKey().startsWith(Constants.R_HEADS)) {
+	                    if(walk.isMergedInto(targetCommit, walk.parseCommit(e.getValue().getObjectId()))) {
+	                        String branchName = e.getValue().getName();
+	                        branchName = branchName.replace("refs/heads/", "");
+	                        if(getLocalBranch().equals(branchName)) {
+	                        	local = "true";
+	                            break;
+	                        }
+	                    }
+	                }
+	            }
+				Pattern pattern = Pattern.compile("\\{(.+?)?\\}");
+				Matcher matcher = pattern.matcher(fullMessage);
+				Hashtable<String,List<String>> commitVars = new Hashtable<String,List<String>>();
+				List<String> handles = new ArrayList<String>();
+				String user = "anonymous";
+				while (matcher.find()) {
+				   String[] data = matcher.group(1).split(",");
+				   	try{
+					   if(data[2].equals("var")){
+						   String handle = data[0];
+						   if(!handles.contains(handle))
+							   handles.add(handle);
+						   String name = data[3];
+						   if(commitVars.containsKey(handle)){
+							   List<String> vars = commitVars.get(handle);
+							   if(!vars.contains(name)){
+								   vars.add(name); 
+								   commitVars.put(handle, vars);
+							   }   
+						   }else{
+							   List<String> vars = new ArrayList<String>();
+							   vars.add(name);
+							   commitVars.put(handle, vars);
+							   logger.debug(handle + " "+name);
+						   } 
+					   }
+					   user = data[1];
+				   	}catch(NullPointerException e){
+				   		logger.error("Null pointer for git log"+matcher.group(1));
+				   	}
+				}		
+				QueryUtil.insertCommit(hash, local, timestamp, user, handles);
+				QueryUtil.insertVarCommit(hash, commitVars);
+			}
+		}finally{
+			if(repo != null) repo.close();
+			if(git != null) git.close();
+			walk.dispose();
+		}
+	}
 
 	/**
 	 * boolean test to see if there exists a GIT repo in the working directory provided
 	 * @return a boolean whether or not the directory has a git repo
 	 */
 	public boolean hasLocalRepo(){
-		String gitLocation = getGitWorkingDirectory()+"/.git";
-		if(RepositoryCache.FileKey.isGitRepository(new File(gitLocation), FS.DETECTED))
+		String path = getGitDirectory(gitWorkingDirectory)+"/.git";
+		if(RepositoryCache.FileKey.isGitRepository(new File(path), FS.DETECTED))
 			return true;
 		else
 			return false;
@@ -512,31 +579,69 @@ public class VersionControl {
 			logger.debug("Version Control is not enabled. Exiting.");
 			return;
 		}
-		File localPath = new File(getGitWorkingDirectory());
+		File localPath = null;
+		File remoteCopyPath = null;
+		File masterPath = null;
         //localPath.delete();
         Repository repository = null;       
         try{
+        	
+        	localPath = new File(getGitDirectory(gitWorkingDirectory));
+    		remoteCopyPath = new File(getGitDirectory(gitRemoteCopyDirectory));
+    		masterPath = new File(getGitDirectory(gitMasterDirectory));
+        	
         	if(remoteContainsBranch(remoteBranch)) {
         		logger.debug("Branch exists in the remote reposiory: " + remoteBranch);
-		        // then clone
-	        	logger.debug("Cloning " + remoteRepoURL);
+	        	logger.debug("Cloning into " + localPath);
 		        Git.cloneRepository()
 		            .setURI(remoteRepoURL)
 		            .setDirectory(localPath)
 		            .setBranch(branchPrefix+remoteBranch) // refs/heads/mastercodebooks
 		            .setCredentialsProvider(new UsernamePasswordCredentialsProvider(remoteUser,remotePass))
 		            .call();
+		       
+        		//Adds remote read only copy
+		        Git.cloneRepository()
+		            .setURI(remoteRepoURL)
+		            .setDirectory(remoteCopyPath)
+		            .setBranch(branchPrefix+remoteBranch) // refs/heads/mastercodebooks
+		            .setCredentialsProvider(new UsernamePasswordCredentialsProvider(remoteUser,remotePass))
+		            .call();
+		        
+		        //Adds master copy TODO: logic if running the master copy, and make configurable
+		        Git.cloneRepository()
+	            .setURI(remoteRepoURL)
+	            .setDirectory(masterPath)
+	            .setBranch(branchPrefix+"master") // refs/heads/mastercodebooks
+	            .setCredentialsProvider(new UsernamePasswordCredentialsProvider(remoteUser,remotePass))
+	            .call();
+		        
+        		logger.debug("Successfully cloned remote repository into localWorkingDirectory and localRemoteCopy");
         	}
         	else {
         		logger.debug("Branch does NOT exists in the remote reposiory: " + remoteBranch);
 
 		        Git.cloneRepository()
-	            .setURI(remoteRepoURL)
-	            .setDirectory(localPath)
-	            .setCredentialsProvider(new UsernamePasswordCredentialsProvider(remoteUser,remotePass))
-	            .call();
-		        
-		        logger.debug("Cloned the remoete. Now creating a new branch for the CED2AR instance: " +  remoteBranch);
+	            	.setURI(remoteRepoURL)
+	            	.setDirectory(localPath)
+	            	.setBranch(branchPrefix+remoteBranch) // refs/heads/mastercodebooks
+	            	.setCredentialsProvider(new UsernamePasswordCredentialsProvider(remoteUser,remotePass))
+	            	.call();
+		        //Adds remote read only copy
+		        Git.cloneRepository()
+	            	.setURI(remoteRepoURL)
+	            	.setDirectory(remoteCopyPath)
+	            	.setBranch(branchPrefix+remoteBranch) // refs/heads/mastercodebooks
+	            	.setCredentialsProvider(new UsernamePasswordCredentialsProvider(remoteUser,remotePass))
+	            	.call();
+		        //Adds master copy
+		        Git.cloneRepository()
+		            .setURI(remoteRepoURL)
+		            .setDirectory(masterPath)
+		            .setBranch(branchPrefix+"master") // refs/heads/mastercodebooks
+		            .setCredentialsProvider(new UsernamePasswordCredentialsProvider(remoteUser,remotePass))
+		            .call();
+		        logger.debug("Cloned the remote. Now creating a new branch for the CED2AR instance: " +  remoteBranch);
         		createNewBranch(remoteBranch);
         		logger.debug("Successfully created new branch for the CED2AR instance: " +  remoteBranch);
         	}
@@ -547,8 +652,6 @@ public class VersionControl {
                 .readEnvironment() // scan environment GIT_* variables
                 .findGitDir() // scan up the file system tree
                 .build();
-	        
-
         }catch(Exception e){
         	e.printStackTrace();
         }finally{
@@ -561,10 +664,9 @@ public class VersionControl {
 	 * @throws GitAPIException 
 	 * @throws IOException 
 	 */
-	private void pushToRemote() throws GitAPIException, IOException{
+	public void pushToRemote() throws GitAPIException, IOException{
 		if(!isGitEnabled()){
 			logger.debug("Version control is not enabled. Exiting.");
-			return;
 		}
 		
 		long startTime = System.currentTimeMillis();
@@ -578,7 +680,6 @@ public class VersionControl {
 				.setRefSpecs(ref)
 				.setCredentialsProvider(new UsernamePasswordCredentialsProvider(this.getRemoteUser(),this.getRemotePass()))
 				.call();
-			
 			long endTime = System.currentTimeMillis();
 			logger.debug("Version control push to remote repository ended, taking "+(endTime-startTime)+"ms");
 		}finally{
@@ -619,11 +720,18 @@ public class VersionControl {
 	* @throws IOException
 	*/
 	private Git openRepo() throws IOException{
-		//TODO: Keeps throwing false positive for repoNotFoundException
-		Git git = Git.open(new File(getGitWorkingDirectory()));
-		return git;
+		return openRepo(gitWorkingDirectory);
 	}
-	
+
+	/**
+	 * @param remoteCopyRepo switch to determine remoteCopyRepo or localWorkingRepo
+	 * @return the Git repository object
+	 * @throws IOException
+	 */
+	private Git openRepo(String directory) throws IOException{
+		return Git.open(new File(getGitDirectory(directory)));
+	}
+
 	/**
 	 * This method performs physical write operation of a file
 	 * that would be staged in the git.
@@ -659,7 +767,6 @@ public class VersionControl {
 	 * @throws CorruptObjectException 
 	 * @throws IncorrectObjectTypeException 
 	 * @throws MissingObjectException 
-	 * @throws Exception
 	 */
 	private String getCodebook(String codebookName, Repository repo, RevCommit commit) 
 	throws MissingObjectException, IncorrectObjectTypeException, CorruptObjectException, IOException{
@@ -693,8 +800,9 @@ public class VersionControl {
 		String temp = s.replaceAll(".xml", "");
 		String[] handles = QueryUtil.getFullHandles();
 		for(int i = 0; i < handles.length; i++){
-			if(handles[i].replace(".", "").equals(temp))
-				return handles[i]+".xml";
+			String handle = handles[i].trim();  // remove newline or whitespace 
+			if(handle.replace(".", "").equals(temp))
+				return handle+".xml";
 		}
 		return s;
 	}
@@ -717,38 +825,38 @@ public class VersionControl {
 	}
 	
 	/**
-	 *Retrieves path to git directory
+	 *Retrieves path to a git directory
 	 *@return absolute path of the git repository
 	 */
 	//TODO:When context is not null, git working directory is extracted from the context
 	//When context is null, the git directory is extracted from the url
-	public String getGitWorkingDirectory() {
+	public String getGitDirectory(String folder) {
 		String realGitDirectory ="";
 		if(context == null){ 
 			URL url = VersionControl.class.getResource("VersionControl.class");
 			String className = url.getFile();
 			String webInfPath = className.substring(0,className.indexOf("WEB-INF") + "WEB-INF".length());
-			realGitDirectory=webInfPath+"/"+gitWorkingDirectory+"/"; 
+			realGitDirectory=webInfPath+"/"+folder+"/"; 
 		}
 		else{
-			realGitDirectory = context.getRealPath("/WEB-INF/"+gitWorkingDirectory+"/");
+			realGitDirectory = context.getRealPath("/WEB-INF/"+folder+"/");
 		}
 		File dir = new File(realGitDirectory);
 		if(!dir.exists()){
 			dir.mkdir();
 		}
+		logger.debug("Opening directory " + realGitDirectory);
 		return realGitDirectory;		
 	}
-	
+
 	/**
-	 * This method check the remote repository for the existence of the branch.
+	 * This method checks the remote repository for the existence of the branch.
 	 * @param branchName name of the branch in the remote repository
 	 * @return true if the branch found in the remote repository; false otherwise.
 	 * @throws TransportException
 	 * @throws InvalidRemoteException
 	 * @throws GitAPIException
 	 */
-	
     public boolean remoteContainsBranch(String branchName) throws TransportException,InvalidRemoteException,GitAPIException{
     	boolean contains = false;
         Collection<Ref> refs = Git.lsRemoteRepository()
@@ -764,9 +872,10 @@ public class VersionControl {
         }
         return contains;
     }
+
     /**
      * This method creates a new branch in the local repository, makes it the head, then pushes newly created branch to the remote.
-     * This method should only be called after verifying that the branch des not exists in the remote reposiory. 
+     * This method should only be called after verifying that the branch does not exists in the remote repository
      * @param branchName
      * @throws IOException
      * @throws RefAlreadyExistsException
@@ -778,25 +887,643 @@ public class VersionControl {
     public void createNewBranch(String branchName) throws IOException, RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, CheckoutConflictException, GitAPIException {
 		Git git = null;			
 		try{
-			git 	= openRepo();
+			git = openRepo();
 	    	git.checkout().
 	    	    setCreateBranch(true).
 	    	    setName(branchName).
 	    	    setStartPoint(startPoint).
 	    	    call();
-	    	
-	    	 git.push()
+	    	logger.debug("Created a new branch called " + branchName);
+	    	logger.debug("Now Pushing the newly created branch " + branchName);
+	    	git.push()
 				.setRemote(this.remoteRepoURL)
 				.setCredentialsProvider(new UsernamePasswordCredentialsProvider(getRemoteUser(),getRemotePass()))
 				.call();
+	    	logger.debug("Successfully created and pushed new branch " + branchName);
 		}
 		finally {
 			if(git != null) git.close();
 		}
     }
     
+    /**
+     * This method fetches codebooks from baseX, LocalGit and RemoteGit.
+     * Populates the existence status of the codebook in those places.
+     * @return
+     */
+    public List<GitCodebook> getCodebookStatusInfo() throws CloneNotSupportedException,GitAPIException,IOException{
+    	List<GitCodebook> codebooks = new ArrayList<GitCodebook>();
+    	List<GitCodebook> codebooksInLocal = this.getCodebooksInLocalRepository();
+    	List<GitCodebook> codebooksInRemote = this.getCodebooksInRemoteRepository();
+    	List<GitCodebook> codebooksInBaseX = this.getCodebooksInBaseX();
+    
+    	if(codebooksInLocal.isEmpty()&&codebooksInRemote.isEmpty() && codebooksInBaseX.isEmpty()) {
+    		return codebooks;
+    	}
+    	// adds codebooks in baseX to codebook array
+    	for(GitCodebook codebook :codebooksInBaseX) {
+    		codebooks.add((GitCodebook)codebook.clone());
+    	}
+    	
+    	// updates codebook array setLocalGitExistanceStatus if codebook is in Local.
+    	// if codebook is not in local, it just adds to codebook array
+    	for(GitCodebook localCodebook :codebooksInLocal) {
+    		boolean exists = false;
+    		for(GitCodebook codebook :codebooks) {
+    			if(codebook.getCodebookName().equals(localCodebook.getCodebookName())) {
+    				exists = true;
+    				codebook.setLocalGitExistanceStatus(GitCodebook.STATUS_EXISTS);
+    			}
+    		}
+    		if(!exists) {
+    			codebooks.add((GitCodebook)localCodebook.clone());
+    		}
+    	}
+
+    	// updates codebook array setRemoteGitExistanceStatus if codebook is in Remote.
+    	// if codebook is not in Remote, it just adds to codebook array
+    	for(GitCodebook remoteCodebook :codebooksInRemote) {
+    		boolean exists = false;
+    		for(GitCodebook codebook :codebooks) {
+    			if(codebook.getCodebookName().equals(remoteCodebook.getCodebookName())) {
+    				exists = true;
+    				codebook.setRemoteGitExistanceStatus(GitCodebook.STATUS_EXISTS);
+    			}
+    		}
+    		if(!exists) {
+    			codebooks.add((GitCodebook)remoteCodebook.clone());
+    		}
+    	}
+    	setCodebookSynchInfo(codebooks);
+    	setRemoteCodebookValidityStatus(codebooks);
+    	return codebooks;
+    }
+
+    /**
+     * This method performs a diff operation between local git and remote branch.
+     * Status of the codebooks is updated.
+     * If the codebook is in remote but not in local, the codebook with status is added codebooks. 
+     * @param codebooks List of codebooks whose status is being updated
+     * @throws GitAPIException
+     * @throws InvalidRemoteException
+     * @throws IOException
+     * @throws TransportException
+     */
+    private void setCodebookSynchInfo(List<GitCodebook> codebooks) throws GitAPIException,InvalidRemoteException,IOException,TransportException{
+    	Git git = null;
+		try {
+			git = openRepo();
+       		git.fetch().
+   			setCredentialsProvider(new UsernamePasswordCredentialsProvider(getRemoteUser(),getRemotePass())).
+   			call();
+       		setCodebookInfo(git,codebooks);
+			Repository repo = git.getRepository();   
+			String remoteFetchHeadStart = "origin/"+this.getRemoteBranch()+"^{tree}";
+			ObjectId fetchHead = repo.resolve(remoteFetchHeadStart);
+			ObjectId head = repo.resolve("HEAD^{tree}");
+			ObjectReader reader = repo.newObjectReader();
+			CanonicalTreeParser oldTreeIter = new CanonicalTreeParser();
+			oldTreeIter.reset(reader, head);
+			CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
+			newTreeIter.reset(reader, fetchHead);
+			List<DiffEntry> diffs= git.diff()
+	            .setNewTree(newTreeIter)
+	            .setOldTree(oldTreeIter)
+	            .call();
+			for(DiffEntry entry : diffs) {
+				String changeType = entry.getChangeType().name();
+				
+				if(changeType.equalsIgnoreCase("MODIFY")) {
+					String codebookModifiedStatus = getModifiedCodebookStatus(git,entry.getNewPath().trim());
+					setCodebookStatus(codebooks,entry.getNewPath().trim(),codebookModifiedStatus);
+				}
+				else if(changeType.equalsIgnoreCase("ADD")) {
+					setCodebookStatus(codebooks,entry.getNewPath().trim(),GitCodebook.STATUS_LOCAL_NON_EXISTANT);
+				}
+				else if(changeType.equalsIgnoreCase("DELETE")) {
+					setCodebookStatus(codebooks,entry.getOldPath().trim(),GitCodebook.STATUS_REMOTE_NON_EXISTANT);
+				}
+			}
+	    	for(GitCodebook codebook:codebooks) {
+				if(codebook.getStatus().equals(GitCodebook.STATUS_UNKNOWN)) {
+	    			codebook.setStatus(GitCodebook.STATUS_UPTODATE);
+	    		}
+	    	}
+		}
+		finally {
+			if(git != null) git.close();
+		}
+	}
+
+    /**
+     * This method pulls the codebooks from remote into local.
+     * if local codebook doesn't exists in baseX injest codebook into baseX.
+     * if local codebook is behind, update baseX with latest pulled copy
+     * @throws GitAPIException
+     * @throws InvalidRemoteException
+     * @throws TransportException
+     * @throws IOException
+     */
+
+    public void pullFromRemoteAndSynchWithBaseX() throws CloneNotSupportedException,GitAPIException,InvalidRemoteException,TransportException,IOException  {
+		List<GitCodebook> codebooks = getCodebookStatusInfo();
+		pullFromRemote();
+		for(GitCodebook codebook:codebooks){
+			if(codebook.getStatus().equals(GitCodebook.STATUS_LOCAL_NON_EXISTANT)) {
+				addCodebookToBaseX(codebook.getCodebookBaseHandle(),codebook.getCodebookVersion(),false);
+			}else if(codebook.getStatus().equals(GitCodebook.STATUS_LOCAL_BEHIND)) {
+				updateBaseXCodebook(codebook.getCodebookBaseHandle(),codebook.getCodebookVersion());
+			}
+		}
+    }
+
+    /**
+     * This method replaces invalid remote codebook(s) with local codebook.
+     * Pulls the remote to local, deletes the local, pushes to remote. 
+     * Checks out the deleted copy and pushes the delete
+     * Checks out the deleted codebook , commits the codebook and finally pushes the codebook to remote
+     * @throws GitAPIException
+     * @throws IOException
+     */
+    
+    public void replaceRemoteCopyWithLocal() throws GitAPIException,IOException,CloneNotSupportedException{
+    	List<GitCodebook> codebooks = getCodebookStatusInfo();
+		for(GitCodebook codebook:codebooks) {
+			if(!codebook.getStatus().equalsIgnoreCase(GitCodebook.STATUS_INVALID_REMOTE)) continue;
+			this.pullFromRemote();
+	    	String commitMessage = this.deleteACodebook(codebook.getCodebookName());
+	    	pushToRemote();
+	    	List<RevCommit> revCommits = getCommitLog(codebook.getCodebookName());
+			for(int i=0; i<revCommits.size();i++) {
+				String message = revCommits.get(i).getFullMessage();
+				if(commitMessage.equals(message)) {
+					if((i+2)<=revCommits.size()) {
+						String commitId = revCommits.get(i+2).getId().getName();
+						checkoutDeletedCodebook(commitId, codebook.getCodebookName());
+						pushToRemote();
+					}
+					break;
+				}
+			}
+		}
+    }
+
+    /**
+     * This method checks out a deleted copy of the codebook as refered by the commit id.
+     * @param commitId
+     * @param codebookName
+     * @throws GitAPIException
+     * @throws IOException
+     * @throws NoFilepatternException
+     */
+    private void checkoutDeletedCodebook(String commitId,String codebookName) throws GitAPIException,IOException,NoFilepatternException{
+    	Git git = null;
+		try {
+			git = openRepo();
+			//Ref cr = 
+			git.checkout()
+					.setStartPoint(commitId)
+					.setName(this.getLocalBranch())
+					.addPath(codebookName)
+					.call();
+			//RevCommit rec =
+			git.commit().setMessage("Checking out a deleted copy").call();
+		}
+		finally {
+			if(git != null) git.close();
+		}
+    }
+
+    /**
+     * This method delete a codebook from local reposiory and commits. Returns commit message
+     * @param codebookName
+     * @return
+     * @throws GitAPIException
+     * @throws IOException
+     * @throws NoFilepatternException
+     */
+    private String deleteACodebook(String codebookName) throws GitAPIException,IOException,NoFilepatternException{
+    	Git git = null;
+    	String commitMessage = "";
+		try {
+			git = openRepo();
+			git.rm().addFilepattern(codebookName).call();
+			commitMessage = "Deleted codebook to replace local copy: " +codebookName +" at " + System.currentTimeMillis();
+			git.commit().setMessage(commitMessage).call();
+		}
+		finally {
+			if(git != null) git.close();
+		}
+		return commitMessage;
+    }
+    /**
+     * This method can be called when there conflict between local and remote version of codebooks.
+     * This method resolves the conflict by overriding local copy with remote copy if there is a conflict.
+     * Your copy of the codebook is preserved in the local repository.
+     * 
+     * This method first pulls all the remote codebooks. 
+     * Performs a checkout of remote copy to the stage.
+     * Commit the remote copy to complete the merge in favor of remote.
+     * 	
+     * After this method is executed...
+     * 	All the conflicted codebooks are resolved in favor of remote copies
+     * 	All the local codebooks that are behind remote are updated.
+     * @param preferRemote
+     * @throws IOException
+     * @throws GitAPIException
+     */
+    
+    public void merge() throws IOException,GitAPIException,CloneNotSupportedException{
+    	List<GitCodebook> codebooks = getCodebookStatusInfo();
+		pullFromRemote();
+		Git git = null;
+		try {
+			git = openRepo();
+			for(GitCodebook codebook:codebooks) {
+				if(codebook.getStatus().equals(GitCodebook.STATUS_CONFLICT)) {
+					git.checkout().setStage(Stage.THEIRS).addPath(codebook.getCodebookName()).call();
+					git.add().addFilepattern(codebook.getCodebookName()).call();
+					git.commit().setMessage("Merging a conflict by the remote copy as prefered copy:  " + codebook.getCodebookName()).call();
+					updateBaseXCodebook(codebook.getCodebookBaseHandle(),codebook.getCodebookVersion());
+				}
+			}	
+		}
+		finally {
+			if(git != null) git.close();
+		}
+    }
+
+    /**
+     * This method pull the remote codebooks into gitRemoteCopyDirectory
+     * Makes sure that the codebooks that are ahead of local copy are valid.
+     * @param codebooks
+     */
+
+    private void setRemoteCodebookValidityStatus(List<GitCodebook> codebooks) throws GitAPIException, IOException{
+    	pullFromRemoteIntoRemoteCopy();
+    	for(GitCodebook codebook:codebooks) {
+    		if(codebook.getStatus().equals(GitCodebook.STATUS_REMOTE_NON_EXISTANT)) continue;
+    		
+			String codebookCopy = getCodebook(codebook.getCodebookName(), true);
+			if(StringUtils.isEmpty(codebookCopy)) continue; 
+			InputStream is = new ByteArrayInputStream(codebookCopy.getBytes());
+			XMLHandle xh = null;
+			try {
+				xh = new XMLHandle(is,Config.getInstance().getSchemaURI());
+				if(!xh.isValid()) {
+					codebook.setStatus(GitCodebook.STATUS_INVALID_REMOTE);
+				}
+			}
+			catch(Exception ex) {
+				logger.error("Error Parsing codebook XML for codebook: " + codebook , ex);
+				codebook.setStatus(GitCodebook.STATUS_INVALID_REMOTE);
+			}
+    	}
+    }
+
+    /**
+	 * Pulls the codebooks from remote repository 
+	 * @throws GitAPIException 
+	 * @throws IOException 
+	 */
+	private void pullFromRemoteIntoRemoteCopy() throws GitAPIException, IOException{
+		if(!isGitEnabled()){
+			logger.debug("Version control is not enabled. Exiting.");
+		}
+		
+		long startTime = System.currentTimeMillis();
+		Git git = null;			
+		try{
+			git = openRepo(gitRemoteCopyDirectory);
+			git.pull()
+				.setRemoteBranchName(this.getRemoteBranch())
+				.setCredentialsProvider(new UsernamePasswordCredentialsProvider(this.getRemoteUser(),this.getRemotePass()))
+				.call();
+			long endTime = System.currentTimeMillis();
+			logger.debug("Remote pull finished in " + (endTime-startTime)/1000.0 + " seconds");
+		}finally{
+			if(git != null) git.close();
+		}	
+	}
+
+    /**
+     * This method updates a codebook in BaseX with local Git copy 
+     * @param baseHandle
+     * @param version
+     * @throws IOException
+     */
+    public void updateBaseXCodebook(String baseHandle,String version) throws IOException{
+		Config config = Config.getInstance();
+		String port = Integer.toString(config.getPort());
+		String user = getRemoteUser();
+		String baseURI= "http://localhost:"+port;
+    	String codebook = getCodebook(baseHandle+"."+version+".xml");
+    	InputStream in = IOUtils.toInputStream(codebook, "UTF-8");
+    	Fetch.uploadCodebook(baseURI,in,baseHandle,version,user);
+    }
+    
+    /**
+     * This method adds new codebook to baseX
+     * @param baseHandle
+     * @param version
+     * @throws IOException
+     */
+    public void addCodebookToBaseX(String baseHandle,String version, boolean masterCopy) throws IOException{
+		Config config = Config.getInstance();
+		String port = Integer.toString(config.getPort());
+		String user = getRemoteUser();
+		String baseURI= "http://localhost:"+port;
+    	String codebook = getCodebook(baseHandle+"."+version+".xml");
+    	InputStream in = IOUtils.toInputStream(codebook, "UTF-8");
+    	Fetch.uploadCodebook(baseURI,in,baseHandle,version,baseHandle,user,masterCopy);
+    }
+
+    /**
+	 * Pulls the codebooks from remote repository 
+	 * @throws GitAPIException 
+	 * @throws IOException 
+	 */
+	private void pullFromRemote() throws GitAPIException, IOException{
+		if(!isGitEnabled()){
+			logger.debug("Version control is not enabled. Exiting.");
+		}
+		
+		long startTime = System.currentTimeMillis();
+		logger.debug("Version control pull remote repository started");
+		Git git = null;			
+		try{
+			git = openRepo();
+			git.pull()
+				.setCredentialsProvider(new UsernamePasswordCredentialsProvider(this.getRemoteUser(),this.getRemotePass()))
+				.call();
+			long endTime = System.currentTimeMillis();
+			logger.debug("Version control push to remote repository ended, taking "+(endTime-startTime)+"ms");
+		}finally{
+			if(git != null) git.close();
+		}	
+	}
 	
-//Getters and setter methods		
+	/**
+	 * Populates information such as last commit time, message, author etc from remote and local commits 	
+	 * @param git
+	 * @param codebooks
+	 * @throws GitAPIException
+	 * @throws NoHeadException
+	 * @throws IOException
+	 */
+    private void setCodebookInfo(Git git,List<GitCodebook> codebooks) 
+    throws GitAPIException,NoHeadException,IOException {
+    	for(GitCodebook codebook:codebooks) {
+			ObjectId localHead = git.getRepository().resolve("HEAD");
+			Iterable<RevCommit> localLogs = git.log().add(localHead).addPath(codebook.getCodebookName()).setMaxCount(1).call();
+		    for( RevCommit revCommit : localLogs ) {
+		    	codebook.setLastLocalUpdateTime(revCommit.getCommitTime());
+		    	codebook.setLastLocalMessage(revCommit.getFullMessage());
+		    	codebook.setLastLocalAuthor(revCommit.getAuthorIdent().getName());
+		    	codebook.setLastLocalCommitHash(revCommit.getName());
+		    	break;
+		    }
+		    String remoteFetchHeadStart = "origin/"+this.getRemoteBranch();
+			ObjectId remoteHead = git.getRepository().resolve(remoteFetchHeadStart);
+			Iterable<RevCommit> remoteLogs = git.log().add(remoteHead).addPath(codebook.getCodebookName()).setMaxCount(1).call();
+		    for( RevCommit revCommit : remoteLogs ) {
+		    	codebook.setLastRemoteUpdateTime(revCommit.getCommitTime());
+		    	codebook.setLastRemoteMessage(revCommit.getFullMessage());
+		    	codebook.setLastRemoteAuthor(revCommit.getAuthorIdent().getName());
+		    	codebook.setLastRemoteCommitHash(revCommit.getName());
+		    	break;
+		    }
+    	}
+    }
+    
+    /**
+     * This method should be called when the diff command returns 'MODIFY' status on codebook to 
+     * find if the codebook on Local GIT is ahead, behind or in conflict with the remote GIT.
+     *    Local Codebook is ahead if the first Remote GIT  commit id is present in the local GIT but not the first. 
+	 *    Local Codebook is behind if first Local GIT commit id is present in the  Remote GIT but not first
+	 *    Local Codebook is in  Conflict with remote GIT if non of the above
+     * 
+     * @param git
+     * @param codebookName
+     * @return	Returns one of the three codebook statuses 	GitCodebook.STATUS_LOCAL_AHEAD,GitCodebook.STATUS_LOCAL_BEHIND or GitCodebook.STATUS_CONFLICT
+     * @throws GitAPIException
+     * @throws NoHeadException
+     * @throws IOException
+     */
+    private String getModifiedCodebookStatus(Git git,String codebookName) throws GitAPIException, NoHeadException,IOException{
+    	String codebookStatus = GitCodebook.STATUS_CONFLICT;
+		ObjectId localHead = git.getRepository().resolve("HEAD");
+		Iterable<RevCommit> localLogs = git.log().add(localHead).addPath(codebookName).call();
+		String remoteRepoStart = "origin/"+this.getRemoteBranch();
+		ObjectId remoteHead = git.getRepository().resolve(remoteRepoStart);
+		Iterable<RevCommit> remoteLogs = git.log().add(remoteHead).addPath(codebookName).call();
+		
+    	boolean localAhead = false;
+    	String firstRemoteCommitId="";
+	    for( RevCommit revCommit : remoteLogs ) {
+	    	firstRemoteCommitId = revCommit.getId().getName();
+	    	break;
+	    }
+	    int commitCount=0;
+	    boolean commitFoundInLocal=false;
+	    for( RevCommit revCommit : localLogs ) {
+	    	commitCount++;
+	    	if(firstRemoteCommitId.equals(revCommit.getId().getName())) {
+	    		commitFoundInLocal=true;
+	    		break;
+	    	}
+	    }
+	    if(commitFoundInLocal&&commitCount>1) {
+	    	localAhead=true;
+	    	codebookStatus = GitCodebook.STATUS_LOCAL_AHEAD;
+	    }
+	    
+	    if(!localAhead) {
+			localLogs = git.log().add(localHead).addPath(codebookName).call();
+			remoteLogs = git.log().add(remoteHead).addPath(codebookName).call();
+
+	    	String firstLocalCommitId="";
+		    for( RevCommit revCommit : localLogs ) {
+		    	firstLocalCommitId = revCommit.getId().getName();
+		    	break;
+		    }
+	
+		    commitCount=0;
+		    boolean commitFoundInRemote=false;
+		    for( RevCommit revCommit : remoteLogs ) {
+		    	commitCount++;
+		    	if(firstLocalCommitId.equals(revCommit.getId().getName())) {
+		    		commitFoundInRemote=true;
+		    		break;
+		    	}
+		    }
+		    if(commitFoundInRemote&&commitCount>1) {
+		    	codebookStatus = GitCodebook.STATUS_LOCAL_BEHIND;
+		    }
+	    }
+    	return codebookStatus;
+    }
+    
+
+
+    /**
+     * This is a utility method that updates status of the codebook in the list.
+     * If the codebook is not in the list, new is added with status of GitCodebook.STATUS_LOCAL_NON_EXISTANT
+     * @param codebooks
+     * @param codebookName
+     * @param status
+     */
+    private static void setCodebookStatus(List<GitCodebook> codebooks, String codebookName, String status) {
+    	//TODO: Not sure what this boolean is for - not being used by anything
+    	//boolean statusSet = false;
+    	for(GitCodebook codebook:codebooks) {
+    		if(codebook.getCodebookName().equals(codebookName)) {
+    			codebook.setStatus(status);
+    			//statusSet = true;
+    		}
+    	}
+    }   
+
+    /**
+     * This is a utility method that returns passed file name is codebook or not.
+     * A file with an extension .xml is considered possible codebook
+     * codebook name should be in the format of ssb.v1.xml or ssb.1.xml for ssb version 1 
+     * @param fileName
+     * @return
+     */
+    private static boolean isCodebook(String fileName) {
+    	boolean codebook=false;
+    	if(!fileName.endsWith(".xml")) { 
+    		codebook = false;
+    	}else{
+    		String codebookNameNoExt  = fileName.substring(0,(fileName.length()-4));
+    		String splits[] = codebookNameNoExt.split("\\.");
+    		if(splits.length == 2) {
+    			codebook = true;
+    		}
+    	}
+    	return codebook;
+    }
+
+    /**
+     * This method return list of available code books in the local repository.
+     * This method does not perform commit operation before fetching the codebooks.
+     * All the codebooks will have a status of unknown since diff operation with remote 
+     * is not performed yet
+     * @return List of codebooks that are  committed.  
+     * @throws IOException
+     */
+    public List<GitCodebook> getCodebooksInLocalRepository() throws IOException{
+    	List<GitCodebook> codebooks = new ArrayList<GitCodebook>();
+		Git git = null;		
+		TreeWalk treeWalk = null;
+		try {
+			git = openRepo();
+	    	Repository repository = git.getRepository();
+	        Ref head = repository.getRef("HEAD");
+	        RevWalk walk = new RevWalk(repository);
+	        // if walk is null, there are no code books in local repository.
+	        if(head.getObjectId() != null) {  
+		        RevCommit commit = walk.parseCommit(head.getObjectId());
+		        RevTree tree = commit.getTree();
+		        treeWalk = new TreeWalk(repository);
+		        treeWalk.addTree(tree);
+		        treeWalk.setRecursive(false);
+		        while (treeWalk.next()) {
+		        	if(isCodebook(treeWalk.getNameString())) {
+		        		GitCodebook codebook = new GitCodebook();
+		        		codebook.setCodebookName(treeWalk.getNameString());
+		        		codebook.setStatus(GitCodebook.STATUS_UNKNOWN);
+		        		codebook.setLocalGitExistanceStatus(GitCodebook.STATUS_EXISTS);
+		        		codebooks.add(codebook);
+		        	}
+		        }
+			}
+		}
+		finally {
+			if(git != null) git.close();
+			if(treeWalk != null) treeWalk.release();
+		}
+        return codebooks;
+    }
+
+    /**
+     * This method fetches codebooks in the remote repository. It performs a fetch operation before looking
+     * for the codebooks, then it gets the list of codebooks from that fetch head.
+     * @return List of codebooks in the remote repository
+     * @throws IOException
+     * @throws TransportException
+     * @throws InvalidRemoteException
+     * @throws GitAPIException
+     */
+    public List<GitCodebook> getCodebooksInRemoteRepository() throws IOException,TransportException,InvalidRemoteException,GitAPIException{
+    	List<GitCodebook> codebooks = new ArrayList<GitCodebook>();
+		Git git = null;
+		TreeWalk treeWalk = null;
+		try {
+			git = openRepo();
+	    	Repository repository = git.getRepository();
+	    	//FetchResult fr = 
+       		git.fetch()
+       		.setCredentialsProvider(new UsernamePasswordCredentialsProvider(getRemoteUser(),getRemotePass()))
+       		.call();
+       		
+            RevWalk walk = new RevWalk(repository);
+            ObjectId objectId = git.getRepository().resolve("origin/"+this.getLocalBranch());
+            if(objectId ==null) return codebooks; // empty remote
+            RevCommit commit = walk.parseCommit(objectId);
+            RevTree tree = commit.getTree();
+            treeWalk = new TreeWalk(repository);
+            treeWalk.addTree(tree);
+            treeWalk.setRecursive(true);
+            while (treeWalk.next()) {
+            	if(isCodebook(treeWalk.getNameString())) {
+	        		GitCodebook codebook = new GitCodebook();
+	        		codebook.setCodebookName(treeWalk.getNameString());
+	        		codebook.setStatus(GitCodebook.STATUS_UNKNOWN);
+	        		codebook.setRemoteGitExistanceStatus(GitCodebook.STATUS_EXISTS);
+	        		codebooks.add(codebook);
+            	}
+            }
+		}finally {
+			if(git != null) git.close();
+			if(treeWalk != null) treeWalk.release();
+		}
+		return codebooks;
+    }
+
+    /**
+     * This method returns codebooks in the BaseX 
+     * @return
+     */
+    private List<GitCodebook> getCodebooksInBaseX() {
+    	List<GitCodebook> codebooks = new ArrayList<GitCodebook>();
+		Config config = Config.getInstance();
+		String port = Integer.toString(config.getPort());
+		String appName = this.webAppName;
+		if(context != null) {
+			appName = context.getContextPath();
+		}
+		String baseURI= "http://localhost:"+port+"/"+appName+"/rest/";
+		Collection<String[]> codebooksInBaseX = new ArrayList<String[]>();
+		try {
+			codebooksInBaseX = Fetch.getCodebooks(baseURI).values();
+			for(String[] codebook:codebooksInBaseX) {
+				GitCodebook cb= new GitCodebook();
+				String codebookName = codebook[0]+"."+codebook[1]+".xml";
+				cb.setCodebookName(codebookName);
+				cb.setStatus(GitCodebook.STATUS_UNKNOWN);
+				cb.setBaseXExistanceStatus(GitCodebook.STATUS_EXISTS);
+				codebooks.add(cb);
+			}
+		}
+		catch(Exception ex) {
+			logger.error("Version control class could not find any codebooks in BaseX " + ex);
+		}
+		return codebooks;
+    }
+
+    //Getters and setter methods		
 	public String getRemoteRepoURL() {
 		return remoteRepoURL;
 	}
@@ -852,3 +1579,53 @@ public class VersionControl {
 		this.numberOfCommitsToPushRemote = numberOfCommitsToPushRemote;
 	}
 }
+
+/**
+ * This method looks for codebook in BaseX. Sets baseX status of codebook 
+ * @param codebooks
+ * @param codebookName
+ * @return
+ */
+/* vrk4
+private void setCodebookBaseXStatus(Collection<String[]> codebooksInBaseX, GitCodebook repoCodebook) {
+	boolean contains = false;
+	
+	for(String[] codebook : codebooksInBaseX){
+		String fileName = codebook[0]+"."+codebook[1]+".xml";
+		if(repoCodebook.getCodebookName().equalsIgnoreCase(fileName)) {
+			contains =true;
+			repoCodebook.setBaseXStatus(GitCodebook.STATUS_EXIST_IN_BASEX);
+			break;
+		}
+	}
+	if(!contains) {
+		repoCodebook.setBaseXStatus(GitCodebook.STATUS_DOES_NOT_EXIST_IN_BASEX);
+	}
+}
+*/
+
+/**
+ * This method loops through codebooks in baseX and updates the status inBaseX in GitCodebook's list
+ * @param codebooks
+ */
+/* vrk4
+private void checkBaseXForCodebooksRepository(List<GitCodebook> codebooks) {
+	Config config = Config.getInstance();
+	String port = Integer.toString(config.getPort());
+	String appName = this.webAppName;
+	if(context != null) {
+		appName = context.getContextPath();
+	}
+	String baseURI= "http://localhost:"+port+"/"+appName+"/rest/";
+	Collection<String[]> codebooksInBaseX = new ArrayList<String[]>();
+	try {
+		codebooksInBaseX = Fetch.getCodebooks(baseURI).values();
+	}
+	catch(Exception ex) {
+		logger.error("It looks like baseX does not have any coebooks. " + ex);
+	}
+	for(GitCodebook codebook:codebooks) {
+		setCodebookBaseXStatus(codebooksInBaseX,codebook);
+	}
+}
+*/

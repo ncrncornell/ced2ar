@@ -42,11 +42,17 @@ public class Var extends ServerResource{
 	 */
 	@Get("xml|csv|json")
 	public Representation represent(Variant variant) {	
+		String codebookDatabase = "CED2AR";
 		String codebookId = (String) getRequestAttributes().get("codebookId");
 
 		if (codebookId == null || codebookId.length() == 0) {
 			String message = " \"" + codebookId + "\" is an invalid codebookId";
 			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, message);
+		}
+		
+		if(!Utilities.codebookExists(codebookId)){
+			String message = " \"" + codebookId + "\" is an invalid codebookId";
+			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND,message);	
 		}
 		
 		codebookId = codebookId.toLowerCase();
@@ -67,9 +73,23 @@ public class Var extends ServerResource{
 			isPartial = partial.toLowerCase().equals("true") ? true : false;
 		}catch(NullPointerException e){}
 		
+		//Determines if request if for master copy of codebook
+		try{
+			@SuppressWarnings("rawtypes")
+			Series requestHeaders = (Series) getRequest().getAttributes().get("org.restlet.http.headers");
+			String m = requestHeaders.getFirstValue("master");
+			if(m.toLowerCase().equals("true")){
+				if(!Utilities.codebookExists(codebookId,"CED2ARMaster")){
+					String message = " \"" + codebookId + "\" was not found in the master branch";
+					throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND,message);	
+				}
+				codebookDatabase = "CED2ARMaster";
+			}
+		}catch(NullPointerException e){}
+		
+		String xquery = " let $codebook := collection('"+codebookDatabase+"/"+codebookId+"')/codeBook ";
+		
 		//Content Negotiation 
-		String xquery = " let $codebook := collection('CED2AR/"+codebookId+"')/codeBook ";
-
 		if(MediaType.TEXT_CSV.equals(variant.getMediaType())){
 			xquery += "return " + 
 			"for $var in $codebook/dataDscr/var " +
@@ -88,7 +108,7 @@ public class Var extends ServerResource{
 			"let $f := for $file in $codebook/fileDscr "+
 			"for $id in tokenize(data($v/@files),' ') where $id =data($file/@ID) "+
 			"return $file "+
-			"return  <codeBook  handle='"+codebookId+"' xmlns:xhtml=\"http://www.w3.org/1999/xhtml\"> "+
+			"return  <codeBook handle='"+codebookId+"' xmlns:xhtml=\"http://www.w3.org/1999/xhtml\"> "+
 			"{$codebook/docDscr/citation/titlStmt/titl}<groups>{$g}</groups><files>{$f}</files>{$v}</codeBook>";
 		}else{
 			xquery += "return " + 

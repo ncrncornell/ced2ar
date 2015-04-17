@@ -3,25 +3,43 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <t:main>
-	<h2>Commits</h2>
-	<c:choose>
-		<c:when test="${type eq 'var'}">
-			<p class="lb2">Commits found in the current branch related to the variable <b>${var}</b> in <b>${title}</b>:</p>
-		</c:when>
-		<c:otherwise>
-			<p class="lb2">Commits found in the current branch related to <b>${title}</b>:</p>
-		</c:otherwise>
-	</c:choose>
+	<h2>Codebook Changes</h2>
+	<div id="details">
 	<c:choose>
 		<c:when test="${not empty versions}">
-			<c:forEach var="version" items="${versions}">	
-				<p>
-					<a href="${gitURL}/commits/${version[0]}" target="_blank">${version[1]}</a>	
-				</p>
-			</c:forEach>
+			<table class="table3">
+				<tr>
+					<th>Date Changed</th>
+					<th>Commit Message</th>
+					<th>User</th>
+					<th>Origin</th>
+				</tr>
+				<c:forEach var="version" items="${versions}">	
+					<tr>
+						<td>
+							${version[1]}
+						</td>
+						<td>
+							<a class="iLinkR" href="${gitURL}/commits/${version[0]}" title="View Changes" target="_blank">
+								View commit<i class="fa fa-external-link"></i>
+							</a>
+						</td>
+						<td>
+							${version[2]}
+						</td>
+						<td>
+							<c:choose>
+								<c:when test="${fn:trim(version[3]) eq 'true'}"><em>Local Change</em></c:when>
+								<c:otherwise><em>Remote Change</em></c:otherwise>
+							</c:choose>
+						</td>
+					</tr>
+				</c:forEach>
+			</table>
 		</c:when>
 		<c:otherwise>
-			<p><em><i class="fa fa-exclamation-triangle largeIcon"></i> No commits found</em></p>
+					<p><em><i class="fa fa-exclamation-triangle largeIcon"></i> No variable commits found</em></p>
 		</c:otherwise>
 	</c:choose>
+	</div>
 </t:main>

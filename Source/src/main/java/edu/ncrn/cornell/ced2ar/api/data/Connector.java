@@ -13,6 +13,7 @@ import org.apache.commons.httpclient.URIException;
 import org.apache.commons.httpclient.util.URIUtil;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
+import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -308,6 +309,7 @@ public class Connector{
 	 */
 	public int getResponseCode(){
 		if(response!= null) return response.getStatusLine().getStatusCode();
+		
 		return -1;
 	}
 	
@@ -316,7 +318,6 @@ public class Connector{
 	 * @return String the HTTTP response
 	 */
 	public String execute(){
-		
 		/*This is a work around to set an authenication header when running in local mode 
 		 *or else request to /rest get denied */
 		Config config = Config.getInstance();
@@ -349,7 +350,7 @@ public class Connector{
         }catch(IOException e){
         	e.printStackTrace();
         }finally{
-        	try {
+        	try{
 				if(bd != null) bd.close();
 				if(ent != null)EntityUtils.consume(ent);	
 			} catch (IOException e) {
@@ -358,6 +359,8 @@ public class Connector{
         }
 		if(sb == null) return null;
 		else return sb.toString();
+		
+		
 	}
 	
 	/**

@@ -250,6 +250,18 @@ public class BaseX  {
 	}
 	
 	/**
+	 * Adds codebook to master
+	 * @param fullHandle
+	 * @param contents
+	 */
+	public static void putM(String fullHandle, String contents){
+		if(!QueryUtil.hasVersionIndex2(fullHandle)){ 
+			httpGetWriter("rest/CED2ARMaster/?command=","add TO "+fullHandle+" <xml/>"); 
+		}
+		httpPut("rest/CED2ARMaster/",fullHandle, contents);
+	}
+	
+	/**
 	 * Replaces or writes new file to repo with a specified prefix
 	 * @param fileName the name of the file to add
 	 * @param contents the contents of the file

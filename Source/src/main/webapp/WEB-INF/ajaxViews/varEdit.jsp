@@ -14,7 +14,7 @@
 	</c:otherwise>
 </c:choose>
 <div id="loadCoverInner" class="editControlB no Select ${lciw}">
-	<form id="editForm" action="${handle}/edit" method="POST">
+	<form id="editForm" action="${handle}/edit" method="POST" class="lb2">
 		<a id="editDiscard" href="#" class="closeWindow" title="Discard Changes">×</a>
 		<h2>${title}</h2>	
 		<a href="#" title="Save changes" id="editSave"
@@ -41,6 +41,7 @@
 						<script src="${baseURI}/scripts/tinymce/tinymce.min.js"></script>
 						<script type="text/javascript">
 							$("#editSave").css("display","none");
+							
 							tinymce.init({		
 							    selector: "textarea",
 							    menubar : false,
@@ -49,19 +50,16 @@
 							    plugins: "paste save link code",
 							    target_list: [{title: 'None', value: ''}],
 							    paste_as_text: true,
-							    toolbar: "save | undo redo | link | bullist | italic | code",
+							    toolbar: "save | undo redo | link | bullist | italic | code | git",
 							    valid_elements :"a[href|target=_blank],strong/b,em,div,br,p,li,ul",
 							    save_onsavecallback: function(){
 							    	$("textarea [name=newText]").html(this.getContent());
 									$("#editSave").click();
 							    }
 							});
+							
 						</script>
-						<c:set var="newTxtHeight" value="${((fn:length(curVal)/120))}" />
-						<c:if test="${newTxtHeight lt 6}">
-							<c:set var="newTxtHeight" value="6" />
-						</c:if>
-						<textarea name="newValue" style="height:${newTxtHeight}em">${curVal}</textarea>
+						<textarea name="newValue" style="height:17.5em">${curVal}</textarea>
 					</c:when>
 					<c:otherwise>
 						<input type="text" name="newValue" class="newTxtPlain" value="${curVal}" />
@@ -75,8 +73,21 @@
 				See <a href='${baseURI}/docs/faq#q3' target='_blank'>FAQ</a> for details. <br />	
 			</p>
 		</c:if>
+		<input type="hidden" name="masterValue" value="${masterVal}" /> 
+		<input type="hidden" name="currentValue" value="${curVal}" /> 
 		<input type="hidden" name="field" value="${field}" /> 
 		<input type="hidden" name="index" value="${index}" /> 
 		<input type="hidden" name="append" value="${append}" /> 
-	</form>
+	</form>	
+	<script type="text/javascript">
+		if($("input[name='masterValue']").val()){
+			runDiff(); 
+		}
+	</script>
+	<c:if test="${showMaster}">
+		<h4>Changes from Official Documentation</h4>
+		<div id="outputDiff" class="diffView">
+			<em>No master copy exists</em>
+		</div>
+	</c:if>
 </div>

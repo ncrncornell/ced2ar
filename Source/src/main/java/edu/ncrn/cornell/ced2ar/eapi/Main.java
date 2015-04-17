@@ -9,9 +9,11 @@ import edu.ncrn.cornell.ced2ar.eapi.endpoints.BaseXDBManager;
 import edu.ncrn.cornell.ced2ar.eapi.endpoints.BaseXPasswordManager;
 import edu.ncrn.cornell.ced2ar.eapi.endpoints.Bugreport;
 import edu.ncrn.cornell.ced2ar.eapi.endpoints.Codebook;
-import edu.ncrn.cornell.ced2ar.eapi.endpoints.CodebookSettings;
+import edu.ncrn.cornell.ced2ar.eapi.endpoints.CodebookSettings; 
 import edu.ncrn.cornell.ced2ar.eapi.endpoints.EditCover;
+import edu.ncrn.cornell.ced2ar.eapi.endpoints.EditCoverMulti;
 import edu.ncrn.cornell.ced2ar.eapi.endpoints.EditVar;
+import edu.ncrn.cornell.ced2ar.eapi.endpoints.EditVarMulti;
 import edu.ncrn.cornell.ced2ar.eapi.endpoints.ProvEdge;
 import edu.ncrn.cornell.ced2ar.eapi.endpoints.ProvNode;
 import edu.ncrn.cornell.ced2ar.eapi.endpoints.VarGrp;
@@ -45,15 +47,19 @@ public class Main extends Application {
 	    mainRouter.attach("/codebooks/{baseHandle}/{version}/accessvars/", AccessVars.class);    
 	    mainRouter.attach("/codebooks/{baseHandle}/{version}/edit", EditCover.class);
 	    mainRouter.attach("/codebooks/{baseHandle}/{version}/edit/", EditCover.class);
+	    mainRouter.attach("/codebooks/{baseHandle}/{version}/editMulti", EditCoverMulti.class);
+	    mainRouter.attach("/codebooks/{baseHandle}/{version}/editMulti/", EditCoverMulti.class);
 	    mainRouter.attach("/codebooks/{baseHandle}/{version}/settings", CodebookSettings.class);
 	    mainRouter.attach("/codebooks/{baseHandle}/{version}/settings/", CodebookSettings.class);    
 	    mainRouter.attach("/codebooks/{baseHandle}/{version}/vars/{var}/edit", EditVar.class);
 	    mainRouter.attach("/codebooks/{baseHandle}/{version}/vars/{var}/edit/", EditVar.class);
+	    mainRouter.attach("/codebooks/{baseHandle}/{version}/vars/{var}/editMulti", EditVarMulti.class);
+	    mainRouter.attach("/codebooks/{baseHandle}/{version}/vars/{var}/editMulti/", EditVarMulti.class);
 	    mainRouter.attach("/codebooks/{baseHandle}/{version}/vargrp/{id}", VarGrp.class);
 	    mainRouter.attach("codebooks/{baseHandle}/{version}/vargrp/{id}/", VarGrp.class);
 	    mainRouter.attach("/codebooks/{baseHandle}/{version}/vargrp/{id}/vars", VarGrpVars.class);
 	    mainRouter.attach("codebooks/{baseHandle}/{version}/vargrp/{id}/vars/", VarGrpVars.class);
-	    
+
 	    mainRouter.attach("/changebasexpassword", BaseXPasswordManager.class);
 	    mainRouter.attach("/updatebasexdb", BaseXDBManager.class);
 	    

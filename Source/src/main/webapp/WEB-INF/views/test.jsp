@@ -1,0 +1,19 @@
+<%@ page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="t" tagdir="/WEB-INF/tags" %>
+<c:set var="js" scope='request'>diff/diff_match_patch diff/diffTest</c:set>
+<t:main>
+	<h2>Old Text</h2>
+	<textarea id="originalText" style="width: 95%; padding:1em;" rows="12">
+		This variable was taken from a hierarchy of SSA sources instead of the respondent-provided value in the SIPP. Date of birth was selected from the first non-missing value in the following files: (i) SSA's Master Benefits Record (MBR) file, (ii) SSA's Supplemental Security Record (SSR) file, and (iii) the Census Bureau's Person Characteristic File (PCF) whose main input is the SSA Numident file. Thus, this variable is administrative and sometimes differs from the birth date reported in the SIPP survey itself. When missing due to the lack of a validated SSN for the SIPP respondent, date of birth was imputed using date of birth from the Census-internal version of the SIPP as a predictor variable. We chose the administrative source for two reasons. First, the administrative birth date was more consistent with the MBR and DER data and provided more accurate ages for first OASDI benefit receipt and first W-2 or self-employment earnings. Second, the differences between the administrative birth date and the birth date reported in the survey helped to increase the difficulty of re-identifying a record in the original SIPP public use data using information from a record in the synthetic data, thus improving the confidentiality protections. This variable is coded as a SAS date variable. This format gives the number of days between the date of birth and January 1, 1960. An individual born on January 1, 1959 would have birthdate=-365 and an individual born on January 1, 1961 would have birthdate=365.
+	</textarea>
+	<h2>New Text</h2>
+	<textarea id="newText" style="width: 95%; padding:1em;" rows="12">
+		This variable was taken from a hierarchy of SSA sources instead of the respondent-provided value in the SIPP. Date of birth was selected from the first non-missing value in the following files: (i) SSA's Master Benefits Record (MBR) file, (ii) the Census Bureau's Person Characteristic File (PCF) whose main input is the SSA Numident file, and (iii) SSA's Supplemental Security Record (SSR) file. Thus, this variable is administrative and sometimes differs from the birth date reported in the SIPP survey itself. When missing due to the lack of a validated SSN for the SIPP respondent, date of birth was imputed using date of birth from the Census-internal version of the SIPP. We chose the administrative source for two reasons. First, the administrative birth date was more often consistent with the other administrative data (benefits and earnings). For example, when age was calculated using the administrative birth date, there were fewer individuals who appeared to retire before age 62. Second, the differences between the administrative birth date and the birth date reported in the survey helped to increase the difficulty of re-identifying a record in the original SIPP public use data from a record in the synthetic data, thus improving the confidentiality protections. This variable is coded as a SAS date variable. This format gives the number of days between the date of birth and January 1, 1960. An individual born on January 1, 1959 would have birthdate=-365 and an individual born on January 1, 1961 would have birthdate=365.
+	</textarea>
+	<h2>Diff</h2>
+	<div id="outputText" style="background-color: white;border:1px solid #ccc;margin-bottom:1em;padding:1em;">
+		<em>Run to generate a diff</em>
+	</div>
+	<button class="btn" id="diffTest">Run</button>
+</t:main>

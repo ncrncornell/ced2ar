@@ -8,6 +8,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.XML;
 
+import edu.ncrn.cornell.ced2ar.api.data.BaseX;
+
 /**
  *A set of utility classes to be referenced statically
  * 
@@ -60,4 +62,29 @@ public class Utilities {
 		}	
 		return json;
 	}
+	
+	/**
+	 * Checks to see if handle exists
+	 * @return
+	 */
+	public static boolean codebookExists(String h){
+		return codebookExists(h,"CED2AR");
+	}
+	
+	/**
+	 * Checks to see if handle exists
+	 * @return
+	 */
+	public static boolean codebookExists(String h,String database){
+		String xquery = "for $c in collection('"+database+"') return fn:base-uri($c)";
+		String[] handles = BaseX.getXML(xquery, false).split(" ");
+		for(String handle : handles){
+			handle = handle.replace(database+"/", "").trim();
+			if(handle.equals(h)){ 
+				return true;
+			}
+		}
+		return false;
+	}
+	
 }

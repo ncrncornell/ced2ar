@@ -1,15 +1,18 @@
-.editIcon,.editIcon2{color:#B5B5B5;padding:0.25em 0.5em;border-radius:4px;}
-.editIcon{float:right;border:1px solid #ccc;margin-right:0.25em;font-size:1.5em;}
+.editIcon,.editIcon2,.editIcon3{color:#B5B5B5;padding:0.25em 0.5em;border-radius:4px;}
+.editIcon:hover, .editIcon2:hover, .delIcon:hover, .editIcon3:hover{color:#f3f3f3;background-color:#0093d0;border:1px solid #0093d0;text-decoration:none;}
+.editIcon,.editIcon3{border:1px solid #ccc;margin-right:0.25em;font-size:1.5em;}
+.editIcon{float:right;}
 .editIcon2{border:1px solid transparent;margin:auto 0.125em auto 0.125em;display:inline-block;font-size:16pt !important;}
+.editIcon3{display:inline-block;margin:auto auto .5em;}
 .editIconText i, .editIconText2 i{vertical-align:middle;}
 .editIconText em, .editIconText2 em{font-size:11pt !important;padding-left:.75em;}
-.editIcon:hover, .editIcon2:hover, .delIcon:hover{color:#f3f3f3;background-color:#0093d0;border:1px solid #0093d0;text-decoration:none;}
 .editI{display:inline;margin-left:.25em;}
 .editControl3{float:left;margin-bottom:1em;}
 textarea[name=newValue]{max-width:100%;min-width:100%;padding:.25em;max-height:27.5em;}
-.newTxtPlain{min-width:75%;padding:.25em .5em;border:1px solid #ccc;border-radius:4px;height:2.4em;}
+.newTxtPlain, .newTxtPlain2{min-width:75%;padding:.25em .5em;border:1px solid #ccc;height:2.4em;}
+.newTxtPlain{border-radius:4px;}
 .loadShow{position:fixed;display:block;margin:auto;width:100%;background:rgba(0, 0, 0, .75);z-index:3;}
-#loadCoverInner2{background-color:white;padding:1em 2em 2em;margin-top:3%;box-shadow:0px 15px 55px rgba(0, 0, 0, .5);border-radius:4px;max-height:40em;}
+#loadCoverInner2{background-color:white;padding:1em 2em 2em;margin-top:3%;box-shadow:0px 15px 55px rgba(0, 0, 0, .5)editControl4;border-radius:4px;max-height:40em;}
 #loadCoverInner{padding:1em 2em 2em;}
 #loadCoverInner2{padding:0;}
 #loadCoverInner2b{padding:1em 2em 2em;}

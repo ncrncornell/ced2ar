@@ -29,6 +29,7 @@ public class CodebookConstructor extends ServerResource {
 	public String codebookId;
 	public String xquery;
 	
+	
 	/**
 	 * Retrieves XML content for a codebook
 	 * @param variant Variant specifies what type of media will be returned, XML or Json
@@ -36,10 +37,16 @@ public class CodebookConstructor extends ServerResource {
 	 * @return Representation */
 	@Get("xml|json")
 	public Representation represent(Variant variant) {
-		if (codebookId == null || codebookId.length() == 0) {
+		if(codebookId == null || codebookId.length() == 0) {
 			message = " \"" + codebookId + "\" is an invalid codebookId";
 			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, message);
 		}
+		
+		if(!Utilities.codebookExists(codebookId)){
+			String message = " \"" + codebookId + "\" does not exist";
+			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND,message);
+		}
+		
 		Representation codebook = null;
 		if (MediaType.TEXT_XML.equals(variant.getMediaType()) || MediaType.APPLICATION_XML.equals(variant.getMediaType())) {
 			String result = BaseX.getXML(xquery);

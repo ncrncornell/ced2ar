@@ -33,11 +33,7 @@
 					    }
 					});
 				</script>
-				<c:set var="newTxtHeight" value="${((fn:length(curVal)/120))}" />
-				<c:if test="${newTxtHeight lt 6}">
-					<c:set var="newTxtHeight" value="6" />
-				</c:if>
-				<textarea name="newValue" style="height:${newTxtHeight}em">${curVal}</textarea>
+				<textarea name="newValue" style="height:17.5em">${curVal}</textarea>
 			</c:when>
 			<c:otherwise>
 				<input type="text" name="newValue" class="newTxtPlain" value="${curVal}" />

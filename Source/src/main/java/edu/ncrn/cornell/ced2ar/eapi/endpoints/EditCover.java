@@ -128,6 +128,8 @@ public class EditCover extends ServerResource{
 		  	}
 	  	}
 	  
+		System.out.println(value);
+		
 	  	//List of acceptable elements or attributes to edit
 		Hashtable<String,String[]> validFields = new Hashtable<String,String[]>();
 		
@@ -214,14 +216,14 @@ public class EditCover extends ServerResource{
 		if(delete){
 			XMLHandle xh = new XMLHandle(BaseX.get(handle),Config.getInstance().getSchemaURI());
 			xh.deleteNode("/codeBook"+path, true);
-			BaseX.put(handle, xh.docToString().replaceAll("&lt;", "<").replaceAll("&gt;", ">"));
+			BaseX.put(handle, xh.docToString().replaceAll("(&lt;)([^-\\s]+?)(&gt;)", "<$2>"));
 		}else if(doesAppend || value.contains("<") || value.contains(">")){
 			XMLHandle xh = new XMLHandle(BaseX.get(handle),Config.getInstance().getSchemaURI());
 			xh.addReplace("/codeBook"+path, value, doesAppend, true, false, replaceChildren);
-			BaseX.put(handle, xh.docToString().replaceAll("&lt;", "<").replaceAll("&gt;", ">"));
+			BaseX.put(handle, xh.docToString().replaceAll("(&lt;)([^-\\s]+?)(&gt;)", "<$2>"));
 		}else{
 			//Can save item by making xquery replace statement
-			value = value.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
+			value = value.replaceAll("(&lt;)([^-\\s]+?)(&gt;)", "<$2>");
 			String xquery = "let $path := collection('CED2AR/"+handle+"')/codeBook"+path+
 			" return replace value of node $path with '"+value+"'";
 			logger.debug("Writing cover edit to BaseX " + xquery);

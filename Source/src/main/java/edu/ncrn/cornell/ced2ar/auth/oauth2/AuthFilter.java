@@ -28,6 +28,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import org.springframework.security.oauth2.common.exceptions.InvalidRequestException;
 import org.springframework.util.StringUtils;
 
 import edu.ncrn.cornell.ced2ar.api.data.Config;
@@ -126,19 +127,26 @@ public class AuthFilter extends OAuth2ClientAuthenticationProcessingFilter {
 				return null;
 			}
 		}else{
-			logger.debug("There is authorization code is present in the request. Making the authentication request with authorization Code.");
-			ResponseEntity<Object> forEntity  = restTemplate.getForEntity(tokenURL,Object.class);
-			logger.debug("User is successfully authenticated by the OAUTH2 provider.  " + forEntity);
-			@SuppressWarnings("unchecked")
-			Map<String,String> map = (Map<String,String>)forEntity.getBody();
-			String email = (String) map.get("email");
-			AuthToken authToken = getAuthToken(email);
-			authToken.setAuthenticated(false);
-			Authentication authentication = getAuthenticationManager().authenticate(authToken);
-			//Authentication Object is set in security Context
-			context.setAuthentication(authentication);  
-			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-			return authentication;
+			try{
+				logger.debug("There is authorization code is present in the request. Making the authentication request with authorization Code.");
+				ResponseEntity<Object> forEntity  = restTemplate.getForEntity(tokenURL,Object.class);//Exception Cause
+				logger.debug("User is successfully authenticated by the OAUTH2 provider.  " + forEntity);
+				@SuppressWarnings("unchecked")
+				Map<String,String> map = (Map<String,String>)forEntity.getBody();
+				String email = (String) map.get("email");
+				AuthToken authToken = getAuthToken(email);
+				authToken.setAuthenticated(false);
+				Authentication authentication = getAuthenticationManager().authenticate(authToken);
+				//Authentication Object is set in security Context
+				context.setAuthentication(authentication);  
+				//Authentication auth = SecurityContextHolder.getContext().getAuthentication();//TODO: Not sure what this was actually doing, never used
+				return authentication;
+			}catch(InvalidRequestException e){
+				//Thrown when open.access == true on first logon
+				logger.error(tokenURL);
+				logger.error(e.getMessage(),e);
+			}
+			return null;
 		}
 	}
 	

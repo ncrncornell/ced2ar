@@ -10,6 +10,9 @@
 		<xsl:param name="schemaDoc"/>
 		<xsl:param name="size"/>
 		<p>
+			<xsl:attribute name="id">
+				<xsl:value-of select="translate($title, ' ','')"/> 
+			</xsl:attribute>
 			<xsl:attribute name="class">
 				<xsl:choose>
 					<xsl:when test="$size eq '1'">staticHeader hs3</xsl:when>
@@ -38,16 +41,38 @@
 	    <xsl:param name="index"/>
 	    <xsl:param name="delete"/>	
 	    <xsl:param name="append"/>	
-	    <a title="Edit field" class="editIcon2">
-	    	<xsl:attribute name="href">edit?f=<xsl:value-of select="$fieldName"/>&amp;i=<xsl:value-of select="$index"/>&amp;a=<xsl:value-of select="$append"/></xsl:attribute>
-	    	<i class="fa fa-pencil"></i>
-		</a>
-		<xsl:if test="$delete">
-			<a title="Delete field" class="editIcon2">
-				<xsl:attribute name="href">delete?f=<xsl:value-of select="$fieldName"/>&amp;i=<xsl:value-of select="$index"/></xsl:attribute>
-				<i class="fa fa-trash"></i>
+	    <span class="editButtonControls">
+		    <a title="Edit field" class="editIcon2">
+		    	<xsl:attribute name="href">edit?f=<xsl:value-of select="$fieldName"/>&amp;i=<xsl:value-of select="$index"/>&amp;a=<xsl:value-of select="$append"/></xsl:attribute>
+		    	<i class="fa fa-pencil"></i>
 			</a>
-		</xsl:if>
+			<xsl:if test="$delete">
+				<a title="Delete field" class="editIcon2">
+					<xsl:attribute name="href">delete?f=<xsl:value-of select="$fieldName"/>&amp;i=<xsl:value-of select="$index"/></xsl:attribute>
+					<i class="fa fa-trash"></i>
+				</a>
+			</xsl:if>
+		</span>
+	</xsl:function>
+	
+	<!-- Edit and delete buttons for multi fields -->
+	<xsl:function name="cdr:fieldControlsMulti">
+		<xsl:param name="fieldName"/>
+	    <xsl:param name="index"/>
+	    <xsl:param name="delete"/>	
+	    <xsl:param name="append"/>	
+	    <span class="editButtonControls">
+		    <a title="Edit field" class="editIcon2">
+		    	<xsl:attribute name="href">editMulti?f=<xsl:value-of select="$fieldName"/>&amp;i=<xsl:value-of select="$index"/>&amp;a=<xsl:value-of select="$append"/></xsl:attribute>
+		    	<i class="fa fa-pencil"></i>
+			</a>
+			<xsl:if test="$delete">
+				<a title="Delete field" class="editIcon2">
+					<xsl:attribute name="href">delete?f=<xsl:value-of select="$fieldName"/>&amp;i=<xsl:value-of select="$index"/></xsl:attribute>
+					<i class="fa fa-trash"></i>
+				</a>
+			</xsl:if>
+		</span>
 	</xsl:function>
 	
 	<!-- Field values -->
@@ -91,6 +116,10 @@
 					<xsl:copy-of select="cdr:fieldControls($fieldName,$index,$delete,'false')" />
 				</a>
 			</xsl:when>
+			<xsl:when test="$wrapper eq 'multi'">
+				<xsl:value-of select="$value" />
+				<xsl:copy-of select="cdr:fieldControlsMulti($fieldName,$index,$delete,'false')" />
+			</xsl:when>
 			<xsl:otherwise>
 				<xsl:value-of select="$value" />
 				<xsl:copy-of select="cdr:fieldControls($fieldName,$index,$delete,'false')" />
@@ -111,6 +140,9 @@
 					<xsl:when test="$size eq '1'">staticHeader hs3</xsl:when>
 					<xsl:otherwise>staticHeader</xsl:otherwise>
 				</xsl:choose>
+			</xsl:attribute>
+			<xsl:attribute name="id">
+				<xsl:value-of select="translate($title, ' ','')"/> 
 			</xsl:attribute>
 			<xsl:value-of select="$title"/>
 			<xsl:choose>
@@ -168,7 +200,7 @@
 					</xsl:choose>
 					<xsl:copy-of select="cdr:schemaDoc('version')"/>
 				</p>
-				<p class="value4">
+				<p id="DocumentDate" class="value4">
 					Document Date:
 					<xsl:value-of select="codeBook/docDscr/citation/prodStmt/prodDate" />
 					<a title="Edit field" class="editIcon2">
@@ -180,26 +212,26 @@
 						<i class="fa fa-info-circle"></i>
 					</a>
 				</p>	
-				<p class="value4">
+				<p id="DocumentProducer" class="value4">
 					Codebook prepared by:
 					<xsl:for-each select="codeBook/docDscr/citation/prodStmt/producer">
-						<xsl:copy-of select="cdr:field(current(),'','docProducer',position(),false())" />
+						<xsl:copy-of select="cdr:field(current(),'multi','docProducer',position(),false())" />
 					</xsl:for-each>
 					<xsl:copy-of select="cdr:fieldAdd('docProducer','','Add producer',count(codeBook/docDscr/citation/prodStmt/producer)+1)" />
-					<xsl:copy-of select="cdr:schemaDoc('Producer')" />
+					<xsl:copy-of select="cdr:schemaDoc('producer')" />
 				</p>
-				<p class="value4">
+				<p id="Study Producer" class="value4">
 					Data prepared by:
 					<xsl:for-each select="codeBook/stdyDscr/citation/prodStmt/producer">
-						<xsl:copy-of select="cdr:field(current(),'','stdyProducer',position(),false())" />
+						<xsl:copy-of select="cdr:field(current(),'multi','stdyProducer',position(),false())" />
 					</xsl:for-each>
 					<xsl:copy-of select="cdr:fieldAdd('stdyProducer','','Add producer',count(codeBook/stdyDscr/citation/prodStmt/producer)+1)" />
-					<xsl:copy-of select="cdr:schemaDoc('Producer')" />
+					<xsl:copy-of select="cdr:schemaDoc('producer')" />
 				</p>	
 			</div>
 		
 			<!-- Data Distributed by: -->
-			<p class="staticHeader2">
+			<p class="staticHeader2" id="Distributor">
 				Data Distributed by:
 				<xsl:copy-of select="cdr:schemaDoc('distrbtr')" />
 			</p>
@@ -228,11 +260,11 @@
    			<xsl:copy-of select="cdr:schemaDoc('biblCit')" />
    		</p>
    		<div class="valueInline value2">
-   			<em>Please cite this codebook as:</em><br />
+   			<em id="CodebookCitation">Please cite this codebook as:</em><br />
 			<xsl:copy-of select="cdr:field(/codeBook/docDscr/citation/biblCit/node(),'rich','docCit',1,false())" />
 		</div>
 		<div class="valueInline value2">
-   			<em>Please cite this dataset as:</em><br />
+   			<em id="DataCitation">Please cite this dataset as:</em><br />
 			<xsl:copy-of select="cdr:field(/codeBook/stdyDscr/citation/biblCit/node(),'rich','stdyCit',1,false())" />
 		</div>
 		
@@ -363,16 +395,16 @@
 	<xsl:copy-of select="cdr:fieldTitle('Related Studies','relStdy','1')" />
 	<div class="value2">
 		<ol>
-			<xsl:for-each select="codeBook/stdyDscr/othrStdyMat/relMat">
-				<xsl:copy-of select="cdr:field(current()/node(),'li','relMat',position(),true())" />
+			<xsl:for-each select="codeBook/stdyDscr/othrStdyMat/relStdy">
+				<xsl:copy-of select="cdr:field(current()/node(),'li','relStdy',position(),true())" />
 			</xsl:for-each>
 		</ol>
 		<xsl:copy-of select="cdr:fieldAdd('relStdy','Add Study','Add field',count(codeBook/stdyDscr/othrStdyMat/relStdy)+1)" />
 	</div>	
 	
 	<!-- Document Derivation -->
-	<div class="valueInline">
-	<p><em>This document was derived from&#160;:</em></p>
+	<div class="valueInline" id="BibliographicCitation">
+	<p>This document was derived from:&#160;</p>
 		<xsl:copy-of select="cdr:field(codeBook/docDscr/docSrc/biblCit/node(),'rich','docSrcBib',1,false())" />
 		<xsl:copy-of select="cdr:schemaDoc('biblCit')" />&#160;
 	</div>

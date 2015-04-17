@@ -50,10 +50,15 @@ public class VarGrp extends ServerResource {
 		String codebookId = ((String) getRequestAttributes().get("codebookId")).toLowerCase();
 		String varGrpID = (String) getRequestAttributes().get("varGrpID");
 		
-		if (codebookId == null || codebookId.length() == 0) {
+		if(codebookId == null || codebookId.length() == 0) {
 			String message = " \"" + codebookId + "\" is an invalid codebookId";
 			logger.warning("Error retrieving variable representation: " + message);
 			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, message);
+		}
+		
+		if(!Utilities.codebookExists(codebookId)){
+			String message = " \"" + codebookId + "\" is an invalid codebookId";
+			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND,message);	
 		}
 		
 		if (varGrpID == null || varGrpID.length() == 0) {

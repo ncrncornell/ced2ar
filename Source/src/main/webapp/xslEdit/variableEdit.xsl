@@ -108,6 +108,11 @@
 					<xsl:if test="/codeBook/var/concept != ''">
 						<xsl:value-of select="/codeBook/var/concept" />
 					</xsl:if>
+					<a title="Edit field" class="editIcon2">
+						<xsl:attribute name="href">
+		    				<xsl:value-of select="$varname" />/editMulti?f=concept&amp;i=1</xsl:attribute>
+						<i class="fa fa-pencil"></i>
+					</a>
 				</td>
 			</tr>
 			<tr>
@@ -116,6 +121,17 @@
 					<xsl:value-of select="/codeBook/var/varFormat/@type"></xsl:value-of>
 				</td>
 			</tr>
+			<!--   This is a placeholder, please comment out on production -->
+			<!-- 
+			<tr>
+				<td class="staticHeader">Vocabulary</td>
+				<td class="value">
+					<a class="editIcon2	editIconText" title="Add Tags" href="#">
+						<i class="fa fa-tag"></i><em>Add Tags</em>
+					</a>				
+				</td>
+			</tr>
+			 -->
 		</table>
 			<p class="lb2">
 			<span class="staticHeader">Question Text</span>
@@ -210,6 +226,12 @@
 									</xsl:when>
 									<xsl:when test="@type eq 'stdev'">
 										Standard deviation
+									</xsl:when>
+									<xsl:when test="@type eq 'medn'">
+										Median
+									</xsl:when>
+									<xsl:when test="@type eq 'mode'">
+										Mode
 									</xsl:when>
 								</xsl:choose>
 							</td>

@@ -10,6 +10,6 @@
 5. Upload the BaseX.war file: github.com/ncrncornell/ced2ar/tree/master/BaseXTemplate
 6. Open the ced2ar-web.war archive with archive tool. (7Zip, winzip, etc. should be able to open it)
 7. Extract the configuration file  /WEB-INF/classes/ced2ar-web-config.properties
-8. Edit this file using a text editor. This set isn't required, however, we suggest that you update the default passwords.
+8. Edit this file using a text editor. This set isn't required, however, we suggest that you update the default passwords. See: https://github.com/ncrncornell/ced2ar/wiki/The-CE2DAR-Configuration-File
 9. Replace the default configuration file in the ced2ar-web.war archive with the edited copy
 10. Upload the ced2ar-web file via the Tomcat 7 manager

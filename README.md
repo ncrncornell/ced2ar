@@ -15,9 +15,12 @@ CED2AR uses Maven for build automation. Any IDE with Maven support can compile b
 
 After building, CED2AR should produce a WAR archive in the target folder.
 
-##Installing a Binary
+##Installing a Server Binary
 To install a precompiled server binary please see:
 https://github.com/ncrncornell/ced2ar/tree/master/Binaries/Server
 
+##Installing a Desktop Binary
+To run the desktop version, please see:
+https://github.com/ncrncornell/ced2ar/tree/master/Binaries/Local
 
 **Copyright Cornell University 2012-2015**

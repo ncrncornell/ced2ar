@@ -20,4 +20,4 @@ To install a precompiled server binary please see:
 https://github.com/ncrncornell/ced2ar/tree/master/Binaries/Server
 
 
-Copyright Cornell University 2012-2015
+**Copyright Cornell University 2012-2015**

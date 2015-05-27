@@ -11,6 +11,6 @@
 6. Download the ced2ar-web.war file from this directory (https://github.com/ncrncornell/ced2ar/edit/master/Binaries/Server/)
 7. Open the ced2ar-web.war archive with archive tool. (7Zip, winzip, etc. should be able to open it)
 8. Extract the configuration file  /WEB-INF/classes/ced2ar-web-config.properties
-9. Edit this file using a text editor. This set isn't required, however, we suggest that you update the default passwords. See: https://github.com/ncrncornell/ced2ar/wiki/The-CED2AR-Configuration-File
+9. Edit this file using a text editor. We suggest that you update the default passwords. See: https://github.com/ncrncornell/ced2ar/wiki/The-CED2AR-Configuration-File
 10. Replace the default configuration file in the ced2ar-web.war archive with the edited copy
 11. Upload the ced2ar-web file via the Tomcat 7 manager

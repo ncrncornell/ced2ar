@@ -1,6 +1,6 @@
 CED2AR uses Maven for build automation. Any IDE with Maven support can compile builds. The development team recommends Eclipse for Java EE, which comes with maven plugins for the newer versions.
 
-##Building the Source Code:
+##Building the Source Code
 
 1. Clone the CED2AR source code to your local environment. 
 2. Using Eclipse, import the existing Maven project. 

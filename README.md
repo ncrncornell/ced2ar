@@ -16,3 +16,6 @@ Build Steps:
 After building, CED2AR should produce a WAR archive in the target folder.
 
 Copyright Cornell University 2012-2015
+
+To install a precompiled server binary please see:
+https://github.com/ncrncornell/ced2ar/tree/master/Binaries/Server

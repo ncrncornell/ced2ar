@@ -1,0 +1,1 @@
+$(document).ready(function(){if("true"===$("#meta_demo").val()){var t="hint-editing",a="<div class='alert alert-info "+t+"'><button type='button' class='close' data-dismiss='alert'>×</button><p>You can edit metadata! Click the <i class='fa fa-fa fa-sign-in'></i> to try it out.</p></div>";popup(a,t)}});

@@ -15,21 +15,22 @@
 
 	<!-- Main web app -->
 	<bean id="config" class="edu.ncrn.cornell.ced2ar.api.data.Config">
+		<property name="configInitialized" value="${configInitialized}" />
 		<property name="baseXDB" value="${baseXDB}" />
 		<property name="baseXReaderHash" value="${baseXReaderHash}" />
 		<property name="baseXWriterHash" value="${baseXWriterHash}" />
-		<property name="baseXAdminHash" value="${eAPI}" />
+		<property name="baseXAdminHash" value="${baseXAdminHash}" />
+
+		<!-- Neo4j -->
+		<property name="neo4jEndpoint" value="${neo4jEndpoint}" />
+		<property name="neo4jHash" value="${neo4jHash}" />
+	
+		<!-- Bug report -->
+		<property name="bugReportEnable" value="${bugReportEnable}" />
 
 		<property name="timeout" value="${timeout}" />
 		<property name="restricted" value="${restricted}" />
 		<property name="port" value="${port}" />
-		<property name="eAPI" value="${eAPI}" />
-
-		<!-- Bug report -->
-		<property name="bugReportEmail" value="${bugReportEmail}" />
-		<property name="bugReportSender" value="${bugReportSender}" />
-		<property name="bugReportPwd" value="${bugReportPwd}" />
-		<property name="bugReportEnable" value="${bugReportEnable}" />
 
 		<property name="devFeatureProv" value="${devFeatureProv}" />
 		<property name="devFeatureGoogleAnalytics" value="${devFeatureGoogleAnalytics}" />
@@ -49,6 +50,12 @@
 		
 		<!-- Authentication -->
 		<property name="authenticationType" value="${authenticationType}" />
+		<!-- Authorization Storage -->
+		<property name="authorizationStorage" value="${authorizationStorage}" />
+
+		<!-- Crowdsourcing -->
+		<property name="remoteURL" value="${remote.ced2ar.url}" />
+		<property name="crowdSourcingRole" value="${crowdsourcing.role}" />
 		<property name="openAccess" value="${openAccess}" />
 
 	</bean>
@@ -67,13 +74,7 @@
 
 	<!-- Git version control -->
 	<bean id="versionControl" class="edu.ncrn.cornell.ced2ar.eapi.VersionControl">
-		<property name="remoteRepoURL" value="${remoteRepoURL}" />
-		<property name="remoteBranch" value="${remoteBranch}" />
-		<property name="remoteUser" value="${remoteUser}" />
-		<property name="remotePass" value="${remotePass}" />
-		<property name="localBranch" value="${localBranch}" />
 		<property name="gitEnabled" value="${gitEnabled}" />
-		<property name="numberOfCommitsToPushRemote" value="${numberOfCommitsToPushRemote}" />
 	</bean>
 
 	<!-- PDF Generation -->
@@ -81,32 +82,6 @@
 		lazy-init="false">
 		<property name="pdfEnabled" value="${pdfEnabled}" />
 	</bean>
-
-	<!-- Identity Management Beans -->
-	<!-- <bean id="userDao" class="edu.ncrn.cornell.ced2ar.security.idmgmt.dao.impl.BaseXUserDaoImpl" 
-		lazy-init="false"/> <bean id="roleDao" class="edu.ncrn.cornell.ced2ar.security.idmgmt.dao.impl.BaseXRoleDaoImpl" 
-		lazy-init="false"/> <bean id="userRoleDao" class="edu.ncrn.cornell.ced2ar.security.idmgmt.dao.impl.BaseXUserRoleDaoImpl" 
-		lazy-init="false"/> <bean id="permissionDao" class="edu.ncrn.cornell.ced2ar.security.idmgmt.dao.impl.BaseXPermissionDaoImpl" 
-		lazy-init="false"/> <bean id="rolePermissionDao" class="edu.ncrn.cornell.ced2ar.security.idmgmt.dao.impl.BaseXRolePermissionDaoImpl" 
-		lazy-init="false"/> -->
-
-
-	<bean id="userDao"
-		class="edu.ncrn.cornell.ced2ar.security.idmgmt.dao.impl.PropertiesUserDaoImpl"
-		lazy-init="false" />
-	<bean id="roleDao"
-		class="edu.ncrn.cornell.ced2ar.security.idmgmt.dao.impl.PropertiesRoleDaoImpl"
-		lazy-init="false" />
-	<bean id="userRoleDao"
-		class="edu.ncrn.cornell.ced2ar.security.idmgmt.dao.impl.PropertiesUserRoleDaoImpl"
-		lazy-init="false" />
-	<bean id="permissionDao"
-		class="edu.ncrn.cornell.ced2ar.security.idmgmt.dao.impl.PropertiesPermissionDaoImpl"
-		lazy-init="false" />
-	<bean id="rolePermissionDao"
-		class="edu.ncrn.cornell.ced2ar.security.idmgmt.dao.impl.PropertiesRolePermissionDaoImpl"
-		lazy-init="false" />
-
 
 	<bean id="userService"
 		class="edu.ncrn.cornell.ced2ar.security.idmgmt.service.impl.UserServiceImpl"

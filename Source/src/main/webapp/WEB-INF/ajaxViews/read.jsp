@@ -22,27 +22,26 @@
 		<c:set var="nextV" value="${pageNumber +1}" />
 		<c:choose>
 			<c:when test="${prevV <= 0 }">
-				<span class="btn-group"> <span class="btn disabled ">
+				<span > <span class="btn disabled ">
 						Previous Variable </span> <a class="btn readBtnActive"
 					id="buttonPageNext" href="read?q=${fn:trim(query)}&p=${nextV}">
 						Next Variable </a>
 				</span>
 			</c:when>
 			<c:when test="${nextV > count}">
-				<span class="btn-group"> <a id="buttonPagePrev"
-					class="btn readBtnActive"
-					href="read?q=${fn:trim(query)}&p=${prevV}"> Previous Variable </a>
-					<span class="btn disabled"> Next Variable </span>
+				<span > 
+					<a id="buttonPagePrev" class="btn readBtnActive"href="read?q=${fn:trim(query)}&p=${prevV}"> Previous Variable </a>
+					<span class="btn disabled">Next Variable</span>
 				</span>
 			</c:when>
 			<c:when test="count = 0">
-				<span class="btn-group"> <span class="btn disabled">
+				<span > <span class="btn disabled">
 						Previous Variable </span> <span class="btn disabled"> Next
 						Variable </span>
 				</span>
 			</c:when>
 			<c:otherwise>
-				<span class="btn-group"> <a class="btn readBtnActive"
+				<span > <a class="btn readBtnActive"
 					id="buttonPagePrev" href="read?q=${fn:trim(query)}&p=${prevV}">
 						Previous Variable </a> <a class="btn readBtnActive"
 					id="buttonPageNext" href="read?q=${fn:trim(query)}&p=${nextV}">

@@ -77,7 +77,7 @@ public class Search {
 		@RequestParam(value = "d-1341904-s", defaultValue = "") String sortCol, //field to sort by 
 		@RequestParam(value = "d-1341904-o", defaultValue = "") String sortDir, //direction to sort by
 		@RequestParam(value = "s", defaultValue = "") String show, //page number
-		HttpSession session, HttpServletRequest request,HttpServletResponse response, Model model) {
+		HttpSession session, HttpServletRequest request,HttpServletResponse response, Model model) throws Exception {
     	
 		model.addAttribute("type", "search");
 			response.setHeader("Cache-Control","no-cache,no-store,must-revalidate");
@@ -89,7 +89,8 @@ public class Search {
 		 	
 		 	//Ensures one of the search parameters was filled out
 		 	if(notNull){
-		 		Builder build = new Builder(pageNumber, show, sortCol, sortDir);	 		
+		 		Builder build = new Builder(pageNumber, show, sortCol, sortDir);	
+		 		
 		 		String apiURI = loader.getPath() + "/rest/search?return=variables&where=";
 
 				String filter = "";
@@ -104,6 +105,8 @@ public class Search {
 				
 				boolean isAll = q.equals("*") && n.equals("") && l.equals("") 
 				&& f.equals("") && c.equals("") && t.equals("");
+				
+				
 			
 				if(isAll){
 					queryResponse = "*";

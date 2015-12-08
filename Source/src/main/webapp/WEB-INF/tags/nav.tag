@@ -2,7 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags"%>
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-inverse">
 	<div class="navbar-collapse">
 		<ul class="nav navbar-nav">
 			<li><a href="${baseURI}/search">Search Variables</a></li>

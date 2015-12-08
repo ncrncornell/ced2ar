@@ -47,8 +47,11 @@ public class VersionConfigurer {
 	
 	/**
 	 * Resets session data after codebook list is modified
+	 * 
 	 */
 	public void clearCodebookCache(Model model){
+		logger.debug("Start");
+		long start =System.currentTimeMillis();
 		String baseURI = loader.getPath() + "/rest/";
 		session.removeAttribute("fL");
 		session.removeAttribute("filter");
@@ -60,6 +63,9 @@ public class VersionConfigurer {
 		loader.refreshCodebooks(baseURI);	
 		TreeMap<String, String[]> codebooks = loader.getCodebooks(baseURI);
 		model.addAttribute("codebooks", codebooks);
+		long end =System.currentTimeMillis();
+		logger.debug("End Time in milliseconds: " + (end -start));
+		
 	}
 
 	/**
@@ -71,20 +77,74 @@ public class VersionConfigurer {
 	 */
 	@RequestMapping(value = "/edit/gitStatus", method = RequestMethod.GET)
 	 public ModelAndView showCodebookVersionStatus(HttpServletRequest request,HttpServletResponse response, Model model){
+		logger.debug("Start ");
 		VersionControl versionControl = VersionControl.getInstance();
 		List<GitCodebook> codebooks = null;
 		try {
-			codebooks = versionControl.getCodebookStatusInfo();
+			long start =System.currentTimeMillis();
+			codebooks = versionControl.getCodebookStatusInfoE();
+			//clearCodebookCache(model); 
+			long end  =System.currentTimeMillis();			
+			logger.debug("End Time in millis " + (end -start));
 		} catch (Exception ex ) {
 			logger.error("There is an error processing the request: "+ ex.getMessage(),ex);
 			ex.printStackTrace();
 		}
-		model.addAttribute("subTitl","Git Status");
+		model.addAttribute("subTitl","Version Control Status");
 		model.addAttribute("pageWidth", 1);
 		return new ModelAndView("/WEB-INF/editViews/gitStatus.jsp","codebooks",codebooks);
 	}
 	
- 
+	/**
+	 * Adds a codebook to BaseX and sets session with appropriate message
+	 * @param request
+	 * @param response
+	 * @return String that redirects to gitStataus Page
+	 */
+	@RequestMapping(value = "/edit/ingestintobasex", method = RequestMethod.POST)
+	 public String ingestCodebook(HttpServletRequest request,HttpServletResponse response,Model model){
+		VersionControl versionControl = VersionControl.getInstance();
+		int returnValue = 0;
+		String codebook = request.getParameter("codebook");
+		String version = request.getParameter("version");
+		try {
+			if(StringUtils.isNotEmpty(codebook) && StringUtils.isNotEmpty(version)) {
+				returnValue = versionControl.addCodebookToBaseX(codebook,version,false);
+				clearCodebookCache(model);
+			}
+		}
+		catch(Exception ex) {
+			logger.error("There is an error processing the request: "+ ex.getMessage(),ex);
+		}
+		if(returnValue == 200) 
+			session.setAttribute("info_splash","Codebook " +codebook + " added to BaseX");
+		else 
+			session.setAttribute("info_splash","There is an error uploading the Codebook  "+ codebook + " into BaseX.  Codebook may be invalid.");
+		
+		return "redirect:/edit/gitStatus";
+	}
+
+	/**
+	 * Performs a push to remote action   
+	 * @param request
+	 * @param respons
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/edit/commitpending", method = RequestMethod.POST)
+	 public String commitPendingChanges(HttpServletRequest request,HttpServletResponse response) {
+		try {
+			VersionControl versionControl = VersionControl.getInstance();
+			versionControl.commitPendingChanges();
+			session.setAttribute("info_splash","Changes are commited to local git.");
+		} catch (Exception ex ) {
+			logger.error("There is an error processing the request: "+ ex.getMessage(),ex);
+			session.setAttribute("info_splash","There is an error in committing to local git. " + ex.getMessage());
+		}
+		return "redirect:/edit/gitStatus";
+	}
+
+	
 	/**
 	 * Performs a push to remote action   
 	 * @param request
@@ -93,14 +153,16 @@ public class VersionConfigurer {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/edit/pushtoremote", method = RequestMethod.POST)
-	 public void pushToRemote(HttpServletRequest request,HttpServletResponse response) {
+	 public String pushToRemote(HttpServletRequest request,HttpServletResponse response) {
 		try {
 			VersionControl versionControl = VersionControl.getInstance();
 			versionControl.pushToRemote();
+			session.setAttribute("info_splash","Codebooks from local git are pushed to remote");
 		} catch (Exception ex ) {
 			logger.error("There is an error processing the request: "+ ex.getMessage(),ex);
-			ex.printStackTrace();
+			session.setAttribute("info_splash","There is an error in pushing codebooks to remote git. " + ex.getMessage());
 		}
+		return "redirect:/edit/gitStatus";
 	}
 	
 	/**
@@ -111,15 +173,16 @@ public class VersionConfigurer {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/edit/pullfromremote", method = RequestMethod.POST)
-	 public void pullFromRemote(HttpServletRequest request,HttpServletResponse response ,Model model){
+	 public String pullFromRemote(HttpServletRequest request,HttpServletResponse response ,Model model){
 		try {
 			VersionControl versionControl = VersionControl.getInstance();
 			versionControl.pullFromRemoteAndSynchWithBaseX();
-		}
-		catch (Exception ex ) {
+			session.setAttribute("info_splash","Remote codebooks are pulled into locat git");
+		} catch (Exception ex ) {
 			logger.error("There is an error processing the request: "+ ex.getMessage(),ex);
-			ex.printStackTrace();
+			session.setAttribute("info_splash","There is an error in pulling remote codebooks into local git. Remote Codebook may be invalid. " + ex.getMessage());
 		}
+		return "redirect:/edit/gitStatus";
 	}
 
 	/**
@@ -129,16 +192,17 @@ public class VersionConfigurer {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/edit/merge", method = RequestMethod.POST)
-	 public void mergePreferingRemote(HttpServletRequest request,HttpServletResponse respons) {
+	@RequestMapping(value = "/edit/mergeInFavorOfRemote", method = RequestMethod.POST)
+	 public String mergePreferingRemote(HttpServletRequest request,HttpServletResponse respons) {
 		try {
 			VersionControl versionControl = VersionControl.getInstance();
 			versionControl.merge();
-		}
-		catch (Exception ex ) {
+			session.setAttribute("info_splash","Merge Prefering Remote changes done.");
+		} catch (Exception ex ) {
 			logger.error("There is an error processing the request: "+ ex.getMessage(),ex);
-			ex.printStackTrace();
+			session.setAttribute("info_splash","There is an error in Merging. " + ex.getMessage());
 		}
+		return "redirect:/edit/gitStatus";
 	}
 
 	/**
@@ -149,37 +213,16 @@ public class VersionConfigurer {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/edit/removeRemote", method = RequestMethod.POST)
-	 public void removeRemote(HttpServletRequest request,HttpServletResponse response){
+	 public String removeRemote(HttpServletRequest request,HttpServletResponse response){
 		try {
 			VersionControl versionControl = VersionControl.getInstance();
 			versionControl.replaceRemoteCopyWithLocal();
-		}
-		catch (Exception ex ) {
+			session.setAttribute("info_splash","Removed remote codebook and added local.");
+		} catch (Exception ex ) {
 			logger.error("There is an error processing the request: "+ ex.getMessage(),ex);
-			ex.printStackTrace();
+			session.setAttribute("info_splash","There is an error in removing remote. " + ex.getMessage());
 		}
+		return "redirect:/edit/gitStatus";
 	}
 	
-	/**
-	 * Adds a codebook to BaseX
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "/edit/ingestintobasex", method = RequestMethod.POST)
-	 public void ingestCodebook(HttpServletRequest request,HttpServletResponse response,Model model){
-		VersionControl versionControl = VersionControl.getInstance();
-		try{
-			String codebook = request.getParameter("codebook");
-			String version = request.getParameter("version");
-			if(StringUtils.isNotEmpty(codebook) && StringUtils.isNotEmpty(version))
-			versionControl.addCodebookToBaseX(codebook,version,false);
-			clearCodebookCache(model);
-		}catch(IOException ex){
-			logger.error("There is an error processing the request: "+ ex.getMessage(),ex);
-			ex.printStackTrace();
-		}
-	
-	}
 }

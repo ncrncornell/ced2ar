@@ -18,10 +18,11 @@
 				<script type="text/javascript">
 					$("#editSave").css("display","none");
 					tinymce.init({						
-					    selector: "textarea",
+					    selector: "textarea[name='newValue']",
 					    menubar : false,
 					    content_css : "${baseURI}/styles/tinymce.css",
 					    oninit : "setPlainText",
+					    browser_spellcheck : true,
 					    paste_as_text: true,
 					    plugins: "paste save link code",
 					    target_list: [{title: 'None', value: ''}],
@@ -34,17 +35,31 @@
 					});
 				</script>
 				<textarea name="newValue" style="height:17.5em">${curVal}</textarea>
+				
 			</c:when>
 			<c:otherwise>
 				<input type="text" name="newValue" class="newTxtPlain" value="${curVal}" />
 			</c:otherwise>
 		</c:choose>		
+		<p class="hidden editDoc conflictItem">
+			Please review the following changes before overwriting them.
+			If you wish to discard your edits, simply close the editor.
+		</p>
+		<div class="hidden conflictItem" id="conflictDiff"></div>
+		
 		<c:if test="${editorType.equals('0')}">
 			<p class="editDoc">
 				This field supports ASCII math
 				See <a href='${baseURI}/docs/faq#q3' target='_blank'>FAQ</a> for details. <br />	
 			</p>
 		</c:if>
+		<c:if test="${pendingChanges gt 0}">
+			<p class="editDoc">
+				<i class="fa fa-exclamation-triangle fa-lg"></i>
+				Another user is currently editing this field
+			</p>
+		</c:if>
+	
 		<input type="hidden" name="field" value="${field}" />
 		<input type="hidden" name="index" value="${index}" /> 
 		<input type="hidden" name="append" value="${append}" /> 

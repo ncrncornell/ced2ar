@@ -1,0 +1,90 @@
+<flow xmlns="http://www.springframework.org/schema/webflow"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.springframework.org/schema/webflow
+				http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<var name="configProperties" class="edu.ncrn.cornell.ced2ar.init.ConfigProperties"/>
+	
+	<!--  Start View.  Ask user if there exists a saved config file-->
+	<view-state id="initFlowStart" view="/WEB-INF/init/haveSavedConfig.jsp" model="configProperties">
+		<transition on="uploadSavedConfig" to="uploadSavedConfig"/>
+		<transition on="doCheckBaseXUsingDeployedConfig" to="doCheckBaseXUsingDeployedConfig" />
+	</view-state>
+
+	<view-state id="uploadSavedConfig" view="/WEB-INF/init/uploadSavedConfig.jsp" model="configProperties">
+		<transition on="doUploadSavedConfig" to="doUploadSavedConfig"  validate="true"/>
+		<transition on="back" to="initFlowStart" validate="false"/>
+	</view-state>
+	<action-state id="doUploadSavedConfig"  >
+		<evaluate expression="configMultiAction.doUploadSavedConfig(configProperties,requestParameters.multipartFileUpload,flowRequestContext)"/>
+		<transition on="success" to="doCheckBaseXUsingSavedConfig" />
+		<transition on="error" to="uploadSavedConfig" />
+	</action-state>
+	<action-state id="doCheckBaseXUsingSavedConfig"  >
+		<evaluate expression="configMultiAction.doCheckBaseXUsingSavedConfig(configProperties,flowRequestContext)"/>
+		<transition on="success" to="doCheckBaseXPasswords" />
+		<transition on="error" to="baseXConfirm" />
+	</action-state>
+
+	<!-- 
+		This action checks  connection to basex using values from deployed properties file.
+		on success moves to password validation
+		on error prompts user to enter baseX url.
+	-->
+	<action-state id="doCheckBaseXUsingDeployedConfig"  >
+		<evaluate expression="configMultiAction.doCheckBaseXUsingDeployedConfig(configProperties,flowRequestContext)"/>
+		<transition on="success" to="doCheckBaseXPasswords" />
+		<transition on="error" to="baseXConfirm" />
+	</action-state>
+
+	<view-state id="baseXConfirm" view="/WEB-INF/init/baseXConfirm.jsp" model="configProperties">
+		<transition on="next" to="doCheckBaseXUsingUserEnteredValue" validate = "true"/>
+		<transition on="prev" to="initFlowStart" validate ="false" />
+	</view-state>
+
+	<action-state id="doCheckBaseXUsingUserEnteredValue"  >
+		<evaluate expression="configMultiAction.doCheckBaseXUsingUserEnteredValue(configProperties,flowRequestContext)"/>
+		<transition on="success" to="doCheckBaseXPasswords" />
+		<transition on="error" to="baseXConfirm" />
+	</action-state>
+	
+	<action-state id="doCheckBaseXPasswords"  >
+		<evaluate expression="configMultiAction.doCheckBaseXPasswords(configProperties,flowRequestContext)"/>
+		<transition on="success" to="changePasswords" />
+		<transition on="error" to="enterPasswords" />
+	</action-state>
+	
+	<view-state id="enterPasswords" view="/WEB-INF/init/enterPasswords.jsp" model="configProperties">
+		<transition on="next" to="doCheckBaseXPasswordsUsingUserEnteredValues" validate = "true"/>
+		<transition on="prev" to="initFlowStart" validate ="false" />
+	</view-state>
+	<action-state id="doCheckBaseXPasswordsUsingUserEnteredValues"  >
+		<evaluate expression="configMultiAction.doCheckBaseXPasswordsUsingUserEnteredValues(configProperties,flowRequestContext)"/>
+		<transition on="success" to="changePasswords" />
+		<transition on="error" to="enterPasswords" />
+	</action-state>
+	
+	<view-state id="changePasswords" view="/WEB-INF/init/changePasswords.jsp" model="configProperties">
+		<transition on="next" to="doChangePasswords" validate = "true"/>
+		<transition on="prev" to="baseXConfirm" validate ="false" />
+	</view-state>
+
+	<action-state id="doChangePasswords"  >
+		<evaluate expression="configMultiAction.doChangePasswords(configProperties,flowRequestContext)"/>
+		<transition on="success" to="ced2arProperties" />
+		<transition on="error" to="changePasswords" />
+	</action-state>
+
+	<view-state id="ced2arProperties" view="/WEB-INF/init/ced2arProperties.jsp" model="configProperties">
+		<transition on="prev" to="changePasswords" validate = "false"/>
+		<transition on="next" to="doUpdateCed2arProperties" validate ="true" />
+	</view-state>
+	
+	<action-state id="doUpdateCed2arProperties"  >
+		<evaluate expression="configMultiAction.doUpdateCed2arProperties(configProperties,flowRequestContext)"/>
+		<transition on="success" to="endInitFlow" />
+		<transition on="error" to="ced2arProperties" />
+	</action-state>
+
+	<end-state id="endInitFlow" view="/WEB-INF/init/endInitFlow.jsp"/>
+</flow>	

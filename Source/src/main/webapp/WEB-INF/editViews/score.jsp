@@ -13,7 +13,7 @@
 			<h3>Variables</h3>	
 			<c:choose>
 				<c:when test="${varTotalScore gt 0}">
-					<div class="lb2"s>
+					<div class="lb2">
 						<p>
 							<fmt:formatNumber type="number" minFractionDigits="1" maxFractionDigits="1" 
 							value="${lablScore * 100}" />% of variables have labels
@@ -50,7 +50,8 @@
 									<em>Variables without significant full descriptions</em>
 								</p>
 								<c:forEach items="${txtMissing}" var="var">
-									-&nbsp;<a href="${baseURI}/edit/codebooks/${basehandle}/v/${version}/vars/${var}">${var}</a>
+									<a href="${baseURI}/edit/codebooks/${basehandle}/v/${version}/vars/${var.key}">${var.key} (${var.value} chars)</a>
+									<br />
 								</c:forEach>
 							</div>
 							</span>
@@ -80,8 +81,10 @@
 						</c:if>
 					</div>
 					<div class="lb2">
-						<fmt:formatNumber type="number" minFractionDigits="1" maxFractionDigits="1" 
-						value="${sumStatScore * 100}" />% of variables have summary statistics
+						<p>
+							<fmt:formatNumber type="number" minFractionDigits="1" maxFractionDigits="1" 
+							value="${sumStatScore * 100}" />% of variables have summary statistics
+						</p>
 						<c:if test="${sumStatScore gt 0 && sumStatScore lt 1}">
 							<span class="truncPre printRemove">
 								<em>Variables without summary statistics</em>

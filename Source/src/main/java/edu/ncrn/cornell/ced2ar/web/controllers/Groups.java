@@ -64,7 +64,6 @@ public class Groups {
 		return "/WEB-INF/views/groups.jsp";
 	}
 	
-	//TODO: add links to edit page
 	/**
 	 * Displays all variable groups for a codebook
 	 * @param handle
@@ -157,8 +156,6 @@ public class Groups {
 		return groups(handle,model,session,print);
 	}
 	
-	
-	//TODO: add links to edit page
 	/**
 	 * Shows a specific variable group
 	 * @param groupID - id of group

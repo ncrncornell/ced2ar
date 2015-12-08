@@ -1,11 +1,5 @@
 package edu.ncrn.cornell.ced2ar.api.data;
 
-import java.util.ArrayList;
-
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-
-import edu.ncrn.cornell.ced2ar.sql.dao.VariableNoteDAO;
-import edu.ncrn.cornell.ced2ar.sql.models.VariableNote;
 
 /**
  **For misc functions not to be included in the final build
@@ -19,23 +13,7 @@ import edu.ncrn.cornell.ced2ar.sql.models.VariableNote;
  *@author NCRN Project Team 
  */
 public class Test {
-	public static void main(String[] args)
-	{
-		ClassPathXmlApplicationContext context = null;
-		try{
-			context = new ClassPathXmlApplicationContext("ced2ar-db-beans.xml");
-			VariableNoteDAO  v = (VariableNoteDAO) context.getBean("variableNoteDAO");
-			ArrayList<VariableNote> notes = v.getNotesForVar("", "cnss2013");
-	        for(VariableNote note : notes){
-	        	System.out.println(
-        			note.getCodebookID() + " " +
-					note.getName() + " " +
-					note.getID() + " " +
-					note.getValue()
-	        	);
-	        }
-		}finally{
-			context.close(); 
-		}
-    }
+	public static void main(String[] args){
+		
+    }		
 }

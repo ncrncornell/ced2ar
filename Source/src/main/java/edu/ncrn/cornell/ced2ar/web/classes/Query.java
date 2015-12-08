@@ -76,7 +76,7 @@ public class Query {
 		s = this.clean(s);
 		String args = "";
 		//Checks if query has alphanumeric characters
-		if(s.replaceAll("[^A-Za-z0-9]", "").length() != 0){
+		if(s.replaceAll("[^A-Za-z0-9-]", "").length() != 0){
 			if(PARSED != null && !PARSED.equals("")){
 				args+=",";
 			}
@@ -106,7 +106,7 @@ public class Query {
 						term = term.replaceAll("-", "");
 					}
 					//term should only contain alphanumeric characters or stars at this point
-					term = term.replaceAll("[^A-Za-z0-9*_ ]", "");
+					term = term.replaceAll("[^A-Za-z0-9-*_ ]", "");
 					
 					//If term not added yet
 					if(!used.contains(term)){

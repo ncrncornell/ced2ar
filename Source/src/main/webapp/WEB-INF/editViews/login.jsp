@@ -6,11 +6,19 @@
 <t:error>
 	<h1>Login to Continue</h1>
 	<p>Please choose an authentication method</p>
-	<c:url var="openIDLoginUrl" value="/login/openid" />
-	<form name="googleLoginForm" method="post" action="./google_oauth2_login">
-	   <button id="googleBtn" type="submit">
-	      <span class="icon"></span>
-	      <span class="buttonText">Google</span>
-	   </button>
-	</form>
+	<c:if test="${config.googleOauth2Supported eq true}">
+		<form class="loginForm" name="googleLoginForm" method="post" action="./google_oauth2_login">
+		   <button id="googleBtn" type="submit">
+		      <span class="icon"></span>
+		      <span class="buttonText">Google</span>
+		   </button>
+		</form>
+	</c:if>
+	<c:if test="${config.orcidOauth2Supported eq true}">
+		<form class="loginForm" name="orcidLoginForm" method="post" action="./orcid_oauth2_login">
+		   <button id="orcidBtn" type="submit">
+		      <span class="buttonText">ORCID</span>
+		   </button>
+		</form>
+	</c:if>	
 </t:error>

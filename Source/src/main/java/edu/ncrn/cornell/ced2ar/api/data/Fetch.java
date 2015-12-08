@@ -3,13 +3,15 @@ package edu.ncrn.cornell.ced2ar.api.data;
 import org.apache.log4j.Logger;
 
 import edu.ncrn.cornell.ced2ar.api.data.Connector.RequestType;
+import edu.ncrn.cornell.ced2ar.api.rest.queries.CodebookData;
 
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.WeakHashMap;
 
 /**
  *Handles URI retrieval for API access
@@ -21,6 +23,8 @@ import java.util.TreeMap;
  *@author Cornell Labor Dynamics Institute
  *@author NCRN Project Team 
  */
+
+//TODO: Slowly phase out this class
 public class Fetch {
 	
 	private static final Logger logger = Logger.getLogger(Fetch.class);
@@ -100,8 +104,7 @@ public class Fetch {
 			c.close();
 		}
 	}
-	
-	
+		
 //Specific methods
 	/**
 	 *Allows for static reference of retrieving XML from CED2AR API with count header
@@ -119,7 +122,7 @@ public class Fetch {
 	 * @return String[] the data in short XML form, paired with the count header
 	 */
 	public static String[] getShortXML(String uri){
-		Hashtable<String,String> headers = new Hashtable<String,String>();
+		WeakHashMap<String,String> headers = new WeakHashMap<String,String>();
 		headers.put("partial-text", "true");
 		return getXML(uri,headers);
 	}
@@ -130,7 +133,7 @@ public class Fetch {
 	 * @return
 	 */
 	public static String[] getMasterXML(String uri){
-		Hashtable<String,String> headers = new Hashtable<String,String>();
+		WeakHashMap<String,String> headers = new WeakHashMap<String,String>();
 		headers.put("partial-text", "true");
 		headers.put("master", "true");
 		return getXML(uri,headers);
@@ -142,7 +145,7 @@ public class Fetch {
 	 * @param uri String the location to request content from
 	 * @return String[] the data in short XML form, paired with the count header
 	 */
-	public static String[] getXML(String uri, Hashtable<String,String> headers){
+	public static String[] getXML(String uri, WeakHashMap<String,String> headers){
 		Connector c  = null;
 		try{
 			c = new Connector(uri);
@@ -222,10 +225,6 @@ public class Fetch {
 		}		
 	}
 	
-
-	
-	
-	
 	/**
 	 *Gets a list of all codebooks by handle, fullname and shortname 
 	 *Returns a csv format
@@ -233,59 +232,41 @@ public class Fetch {
 	 * @return ArrayList<String[]> the data returned as a list with handle, fullname and shortname of each codebook
 	 */
 	public static TreeMap<String,String[]> getCodebooks(String baseURI){
-		Connector con = null;
+		CodebookData codebookData = new CodebookData();
+		TreeMap<String,String[]> out = new TreeMap<String,String[]>();
+		String data = codebookData.getCodebooks("versions").trim();
+		String[] codeBooks = data.split(";");	
 		try{
-			TreeMap<String,String[]> out = new TreeMap<String,String[]>();
-			String uri =  baseURI + "codebooks";
-			con = new Connector(uri);
-			con.buildRequest(RequestType.GET);
-			con.setHeader("id-type", "versions");
-			String data = con.execute().trim();
-			String[] codeBooks = data.split(";");	
-			try{
-				for(String codeBook:codeBooks){
-					logger.debug("found codebook "+ codeBook);
-					String[] c = codeBook.split(",");	
-					out.put(c[0].trim()+c[1], new String[] {c[0].trim(),c[1],c[2],c[3],c[4]});		
-				}
-			}catch(ArrayIndexOutOfBoundsException e){
-					logger.error("No codebooks found in BaseXDB");
-					return null;
+			for(String codeBook:codeBooks){
+				logger.debug("found codebook "+ codeBook);
+				String[] c = codeBook.split(",");	
+				out.put(c[0].trim()+c[1], new String[] {c[0].trim(),c[1],c[2],c[3],c[4]});		
 			}
-		return out;
-		}finally{
-			con.close();
+		}catch(ArrayIndexOutOfBoundsException e){
+				logger.error("No codebooks found in BaseXDB");
+				return null;
 		}
+		return out;	
 	}
 	
 	/**
 	 * Gets a list of all codebooks with access levels
 	 * @return the list of codebooks
 	 */
-	public static Hashtable<String,String[]> getCodebooksAccs(String baseURI){
-		Connector con = null;
-		try{
-			Hashtable<String,String[]> out = new Hashtable<String, String[]>();
-			String uri =  baseURI + "codebooks";
-			con = new Connector(uri);
-			con.buildRequest(RequestType.GET);
-			con.setHeader("id-type", "access");
-			String data = con.execute().trim();
-			if(con.getResponseCode() >= 400){
-				return null;
-			}
-			String[] codeBooks = data.split(";");	
-			for(String codeBook:codeBooks){
-				String[] c = codeBook.replaceAll("\\s+","").split(",");
-				out.put(c[0], Arrays.copyOfRange(c, 1, c.length));
-			}
-			return out;
-		}finally{
-			con.close();
+	public static HashMap<String,String[]> getCodebooksAccs(String baseURI){
+		HashMap<String,String[]> out = new HashMap<String, String[]>();
+		CodebookData codebookData = new CodebookData();
+		String data = codebookData.getCodebooks("access").trim();
+		String[] codeBooks = data.split(";");	
+		for(String codeBook:codeBooks){
+			String[] c = codeBook.replaceAll("\\s+","").split(",");
+			out.put(c[0], Arrays.copyOfRange(c, 1, c.length));
 		}
+		return out;
 	}		
 	
 //Editing Functions
+	
 	/**
 	 * Updates an existing codebook
 	 * @param baseURI root directory
@@ -293,40 +274,14 @@ public class Fetch {
 	 * @param fullName the full name of the codebook
 	 * @param shortName the short name of the codebook
 	 */
-	public static String uploadCodebook(String host, InputStream file, String baseHandle, String version, String user){
+	//TODO: Not sure if this works test later
+	public static String uploadCodebook(String host, InputStream inputStream, String baseHandle, String version, 
+	String user, boolean isMaster){
 		Connector con = null;
 		try{
 			con = new Connector(host,0,"/codebooks/"+baseHandle+"/"+version);
 			con.buildRequest(RequestType.POST);
-			con.setPostFile(file, "file");
-			con.setPostFormContent("user", user);
-			String message = con.execute();
-			if(con.getResponseCode() >= 400){
-				con.close();
-				return message;
-			}
-			return "";	
-		}finally{
-			con.close();
-		}		
-	}
-	
-	/**
-	 * Uploads a new codebook
-	 * @param host
-	 * @param file
-	 * @param baseHandle
-	 * @param version
-	 * @param label
-	 * @return
-	 */
-	public static String uploadCodebook(String host, InputStream file, String baseHandle, String version, String label, String user, boolean isMaster){
-		Connector con = null;
-		try{
-			con = new Connector(host,0,"/codebooks/"+baseHandle+"/"+version);
-			con.buildRequest(RequestType.POST);
-			con.setPostFile(file, "file");
-			con.setPostFormContent("label", label);
+			con.setPostFile(inputStream, "file");
 			con.setPostFormContent("user", user);
 			if(isMaster) con.setPostFormContent("master", "true");
 			String message = con.execute();
@@ -340,276 +295,6 @@ public class Fetch {
 		}		
 	}
 	
-	
-	/**
-	 * Removes a codebook
-	 * @param host
-	 * @param baseHandle
-	 * @param version
-	 * @return
-	 */
-	public static String deleteCodebook(String host, String baseHandle, String version){
-		Connector con = null;
-		try{
-			con = new Connector(host,0,"/codebooks/"+baseHandle+"/"+version);	
-			con.buildRequest(RequestType.DELETE);
-			con.setPostFormContent("version", version);
-			String message = con.execute();
-			if(con.getResponseCode() >= 400){
-				return message;
-			}
-			return "";	
-		}finally{
-			con.close();
-		}		
-	}
-	
-	/**
-	 * Edits the title page
-	 * @param handle the codebook to edit
-	 * @param field the field being edited
-	 * @param value the new value for the field
-	 * @param append whether we append a new element or overwrite an existing one
-	 * @param index index specifying the location of the element
-	 * @return the response code from the request
-	 */
-	public static int editTitlePage(String host, String baseHandle, String version, 
-	String field, String value, String append, int index, String user){
-		Connector c = null;
-		try{
-			c = new Connector(host,0,"/codebooks/"+baseHandle+"/"+version+"/edit");
-			c.buildRequest(RequestType.POST);
-			c.setPostFormContent("field", field);
-			c.setPostFormContent("value", value);
-			c.setPostFormContent("append", append);
-			c.setPostFormContent("user", user);
-			if(index != 0){
-				c.setPostFormContent("index", Integer.toString(index));
-			}
-			c.execute();
-			int code = c.getResponseCode();
-			return code;
-		}finally{
-			c.close();
-		}
-	}
-	
-	
-	/**
-	 *Edits several fields on a titlepage at once
-	 * @param host
-	 * @param baseHandle
-	 * @param version
-	 * @param var
-	 * @param paths
-	 * @param values
-	 * @param user
-	 * @return
-	 */
-	public static int editCoverMulti(String host, String baseHandle, String version,
-	String[] paths, String[] values, String append, String user){
-		Connector c = null;
-		try{
-			c =	new Connector(host,0,"/codebooks/"+baseHandle+"/"+version+"/editMulti");
-			c.buildRequest(RequestType.POST);
-			
-			for(String path : paths){ 
-				c.setPostFormContent("paths", path);
-			}
-			for(String value : values){ 
-				c.setPostFormContent("values", value);
-			};
-			
-			c.setPostFormContent("user", user);
-			c.setPostFormContent("append", append);
-			c.execute();
-			int code = c.getResponseCode();
-			return code;
-		}finally{
-			c.close();
-		}
-	}
-	
-	/**
-	 * Deletes field from titlepage
-	 * @param host
-	 * @param baseHandle
-	 * @param version
-	 * @param field
-	 * @param index
-	 * @param user
-	 * @return
-	 */
-	public static int deleteTitleField(String host, String baseHandle, String version, 
-	String field, int index, String user){
-		Connector c = null;
-		try{
-			c = new Connector(host,0,"/codebooks/"+baseHandle+"/"+version+"/edit");
-			c.buildRequest(RequestType.POST);
-			c.setPostFormContent("field", field);
-			c.setPostFormContent("delete", "true");
-			c.setPostFormContent("user", user);
-			if(index != 0){
-				c.setPostFormContent("index", Integer.toString(index));
-			}
-			c.execute();
-			int code = c.getResponseCode();
-			return code;
-		}finally{
-			c.close();
-		}
-	}
-	
-	/**
-	 * Edits a variable - uses apache HTTP client
-	 * @param handle the codebook containing the variable
-	 * @param var the variable to edit
-	 * @param field the field being edited
-	 * @param value the new value for the field
-	 * @param append whether we append a new element or overwrite an existing one
-	 * @param delete whether we are deleting the element or not
-	 * @param ip the ip that made the request
-	 * @param index1 first index specifying the location of the element
-	 * @param index2 second index specifying the location of the element
-	 * @return the response code from the request
-	 */
-	public static int editVar(String host, String baseHandle, String version, String var, 
-	String field, String value, String append, String delete, String ip, String index1, String index2, String user){
-		Connector c = null;
-		try{
-			c =	new Connector(host,0,"/codebooks/"+baseHandle+"/"+version+"/vars/"+var+"/edit");
-			c.buildRequest(RequestType.POST);
-			c.setPostFormContent("field", field);
-			c.setPostFormContent("value", value);
-			c.setPostFormContent("append", append);
-			c.setPostFormContent("delete", delete);
-			c.setPostFormContent("user", user);
-			c.setPostFormContent("ip", ip);
-			if(!index1.equals("")){
-		    	c.setPostFormContent("index",index1);
-			    if(!index2.equals("")){
-			    	c.setPostFormContent("index2",index2);
-			    }
-		    }  
-			c.execute();
-			int code = c.getResponseCode();
-			return code;
-		}finally{
-			c.close();
-		}
-	}
-	
-	/**
-	 *Edits several fields in a variable at once 
-	 * @param host
-	 * @param baseHandle
-	 * @param version
-	 * @param var
-	 * @param paths
-	 * @param values
-	 * @param user
-	 * @return
-	 */
-	public static int editVarMulti(String host, String baseHandle, String version, String var,
-	String[] paths, String[] values, String append, String user){
-		Connector c = null;
-		try{
-			c =	new Connector(host,0,"/codebooks/"+baseHandle+"/"+version+"/vars/"+var+"/editMulti");
-			c.buildRequest(RequestType.POST);
-			
-			for(String path : paths){ 
-				c.setPostFormContent("paths", path);
-			}
-			for(String value : values){ 
-				c.setPostFormContent("values", value);
-			};
-			
-			c.setPostFormContent("user", user);
-			c.setPostFormContent("append", append);
-			c.execute();
-			int code = c.getResponseCode();
-			return code;
-		}finally{
-			c.close();
-		}
-	}
-	
-	/**
-	 * Adds or edits a variable group
-	 * @param handle
-	 * @param id
-	 * @param name
-	 * @param label
-	 * @param desc
-	 */
-	public static int groupEdit(String host, String baseHandle, String version, 
-	String id, String name, String label, String desc){
-		Connector c = null;
-		try{
-			c =	new Connector(host,0,"/codebooks/"+baseHandle+"/"+version+"/vargrp/"+id.trim());
-			c.buildRequest(RequestType.POST);
-			c.setPostFormContent("name", name);
-			c.setPostFormContent("labl", label);
-			c.setPostFormContent("txt", desc);
-			
-			c.execute();
-			int code = c.getResponseCode();
-			return code;
-		}finally{
-			c.close();
-		}
-	}
-	
-	/**
-	 * Adds or removes a variable from a group
-	 * @param host
-	 * @param baseHandle
-	 * @param version
-	 * @param id
-	 * @param var
-	 * @param adding
-	 * @return
-	 */
-	public static int groupVarChange(String host, String baseHandle, String version, 
-		String id, String var, boolean adding){
-		Connector c = null;
-		try{
-			c =	new Connector(host,0,"/codebooks/"+baseHandle+"/"+version+"/vargrp/"+id.trim()+"/vars");
-			c.buildRequest(RequestType.POST);
-			if(!adding){
-				c.setPostFormContent("delete", "true");
-			}
-			c.setPostFormContent("vars", var);
-			c.execute();
-			int code = c.getResponseCode();
-			return code;
-		}finally{
-			c.close();
-		}
-	}
-	
-	
-	/**
-	 * Sets default version for a codebook
-	 * @param host
-	 * @param baseHandle
-	 * @param version
-	 * @return
-	 */
-	public static int setDefaultCodebook(String host, String baseHandle,String version){
-		Connector c = null;
-		try{
-			c =	new Connector(host,0,"/codebooks/"+baseHandle+"/"+version+"/settings");
-			c.buildRequest(RequestType.POST);
-			c.setPostFormContent("use", "default");
-			c.execute();
-			int code = c.getResponseCode();
-			return code;
-		}finally{
-			c.close();
-		}
-	}
-	
 	/**
 	 * Updates a users password in BaseX
 	 * @param host String baseURI for 
@@ -619,6 +304,8 @@ public class Fetch {
 	 * @param newPassword String new password to use
 	 * @return
 	 */
+	//TODO:This is outdated
+	@Deprecated
 	public static String changePassword(String host,String baseXURI, String oldCredentials, String uid,String newPassword){
 		Connector c = null;
 		try{
@@ -646,6 +333,8 @@ public class Fetch {
 	 * @param writerCredentials
 	 * @return
 	 */
+	//TODO:This is outdated
+	@Deprecated
 	public static String changeBaseXDB(String host,String baseXURI, String adminCredentials, String readerCredentials,String writerCredentials){
 		Connector c = null;
 		try{
@@ -662,31 +351,6 @@ public class Fetch {
 			c.close();
 		}
 	}	
-
-	/**
-	 * Edits the access levels of multiple variable at once
-	 * @param host
-	 * @param baseHandle
-	 * @param version
-	 * @param access
-	 * @param vars
-	 * @return
-	 */
-	public static int accessVars(String host, String baseHandle, String version, String access, String vars, String all){
-		Connector c = null;
-		try{
-			c = new Connector(host,0,"/codebooks/"+baseHandle+"/"+version+"/accessvars");
-			c.buildRequest(RequestType.POST);
-			c.setPostFormContent("access", access);
-			c.setPostFormContent("all", all);
-			c.setPostFormContent("vars", vars);
-			c.execute();
-			int code = c.getResponseCode();
-			return code;
-		}finally{
-			c.close();
-		}
-	}
 	
 	/**
 	 * Edits a prov edit
@@ -696,6 +360,7 @@ public class Fetch {
 	 * @param type
 	 * @return
 	 */
+	@Deprecated
 	public static int provEdge(String host, String id, String object, String subject, String type, String uniqueEdge){
 		Connector c = null;
 		try{
@@ -713,6 +378,7 @@ public class Fetch {
 		}
 	}
 	
+	@Deprecated
 	public static int provEdgeDelete(String host, String object, String subject, String type){
 		Connector c = null;
 		try{
@@ -730,6 +396,18 @@ public class Fetch {
 		}
 	}
 	
+	/**
+	 * Creates or edits a prov node
+	 * @param host
+	 * @param objectID
+	 * @param type
+	 * @param label
+	 * @param uri
+	 * @param newNode
+	 * @param date
+	 * @return
+	 */
+	@Deprecated
 	public static int provNode(String host, String objectID, String type, 
 	String label, String uri, String newNode, String date){
 		Connector c = null;
@@ -741,6 +419,26 @@ public class Fetch {
 			c.setPostFormContent("newNode", newNode);
 			c.setPostFormContent("nodeType", type);
 			c.setPostFormContent("date", date);
+			c.execute();
+			int code = c.getResponseCode();
+			return code;
+		}finally{
+			c.close();
+		}
+	}
+	
+	/**
+	 * Deletes a prov node
+	 * @param host
+	 * @param objectID
+	 * @return
+	 */
+	@Deprecated
+	public static int deleteProvNode(String host, String objectID){
+		Connector c = null;
+		try{
+			c = new Connector(host,0,"/prov/nodes/"+objectID);
+			c.buildRequest(RequestType.DELETE);
 			c.execute();
 			int code = c.getResponseCode();
 			return code;

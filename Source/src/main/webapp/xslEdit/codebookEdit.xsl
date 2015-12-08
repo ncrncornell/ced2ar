@@ -116,6 +116,9 @@
 					<xsl:copy-of select="cdr:fieldControls($fieldName,$index,$delete,'false')" />
 				</a>
 			</xsl:when>
+			<xsl:when test="$wrapper eq 'blank'">
+				<xsl:copy-of select="cdr:fieldControls($fieldName,$index,$delete,'false')" />
+			</xsl:when>
 			<xsl:when test="$wrapper eq 'multi'">
 				<xsl:value-of select="$value" />
 				<xsl:copy-of select="cdr:fieldControlsMulti($fieldName,$index,$delete,'false')" />
@@ -298,10 +301,12 @@
 						</xsl:otherwise>
 					</xsl:choose>
 					&#160;(<xsl:value-of select="fileTxt/fileType" />)
+					<xsl:copy-of select="cdr:field(current()/@URI,'blank','fileDscrURL',position(),false())" />
 				</p>
+				
 			</xsl:for-each>
 			<xsl:if test="count(codeBook/fileDscr) eq 0">
-				<p>Sorry, no file information is avalible for this codebook.</p>
+				<p>Sorry, no file information is available for this codebook.</p>
 			</xsl:if>
 		</div>
 		
@@ -363,7 +368,7 @@
 	<div class="value2">
 		<ol>
 			<xsl:for-each select="codeBook/stdyDscr/method/dataColl/sources/dataSrc">
-				<xsl:copy-of select="cdr:field(current()/node(),'li','relMat',position(),true())" />
+				<xsl:copy-of select="cdr:field(current()/node(),'li','sources',position(),true())" />
 			</xsl:for-each>
 		</ol>
 		<xsl:copy-of select="cdr:fieldAdd('sources','Add Source','Add field',count(codeBook/stdyDscr/method/dataColl/sources/dataSrc)+1)" />

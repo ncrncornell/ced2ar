@@ -2,24 +2,26 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags" %>
-<c:set var="css" scope='request'>edit.min</c:set>
-<c:set var="js" scope='request'>edit.min</c:set>
+<c:set var="css" scope='request'>edit diff</c:set>
+<c:set var="js" scope='request'>edit diff/diff_match_patch diff/diff2 hints/popups hints/crowdsourceWarning</c:set>
 <t:main>
 	<c:if test="${not empty codebook}">		
 			<a href="${baseURI}/rest/codebooks/${handle}" class="printButton" target="_blank" 
-			title="Download raw XML" download="${codebookTitl}.xml">
+			title="Download raw XML" aria-label="Download raw XML" download="${codebookTitl}.xml">
 				<i class="fa fa-code"></i>
 			</a>
-			<a href="${baseURI}/edit/codebooks/${baseHandle}/v/${version}/release" class="printButton" title="Release codebook">
+			<a href="${baseURI}/edit/codebooks/${baseHandle}/v/${version}/release" class="printButton" 
+			title="Release codebook" aria-label="Release codebook">
 				<i class="fa fa-unlock"></i>
 			</a>
 			<c:if test="${git}">
-				<a href="${baseURI}/codebooks/${baseHandle}/v/${version}/versions" 
-				class="printButton" title="View versions">
+				<a href="${baseURI}/codebooks/${baseHandle}/v/${version}/versions2" 
+				class="printButton" title="View versions" aria-label="View versions">
 					<i class="fa fa-git"></i>
 				</a>
 			</c:if>
-			<a href="${baseURI}/codebooks/${baseHandle}/v/${version}/" class="printButton" title="Back to viewing mode">
+			<a href="${baseURI}/codebooks/${baseHandle}/v/${version}/" class="printButton"
+			 title="Back to viewing mode" aria-label="Back to viewing mode">
 				<i class="fa fa-file-text-o"></i>
 			</a>
 			<div id="details">				

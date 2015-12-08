@@ -218,8 +218,29 @@ public class GitCodebook implements Serializable,Cloneable {
 	public Object clone() throws CloneNotSupportedException {
 		return super.clone();
 	}
+	
+	
+	
+	
+	
 	@Override
 	public String toString() {
+		return "GitCodebook [codebookName=" + codebookName
+				+ ", lastLocalUpdateTime=" + lastLocalUpdateTime
+				+ ", lastRemoteUpdateTime=" + lastRemoteUpdateTime
+				+ ", lastLocalCommitHash=" + lastLocalCommitHash
+				+ ", lastRemoteCommitHash=" + lastRemoteCommitHash
+				+ ", lastLocalMessage=" + lastLocalMessage
+				+ ", lastRemoteMessage=" + lastRemoteMessage
+				+ ", lastLocalAuthor=" + lastLocalAuthor
+				+ ", lastRemoteAuthor=" + lastRemoteAuthor + ", status="
+				+ status + ", baseXExistanceStatus=" + baseXExistanceStatus
+				+ ", localGitExistanceStatus=" + localGitExistanceStatus
+				+ ", remoteGitExistanceStatus=" + remoteGitExistanceStatus
+				+ "]";
+	}
+
+	public String toStrings() {
 		return "GitCodebook [codebookName=" + codebookName + ", status="
 				+ status + ", lastLocalUpdateTime=" + lastLocalUpdateTime
 				+ ", lastRemoteUpdateTime=" + getFormattedLastRemoteUpdateTime()

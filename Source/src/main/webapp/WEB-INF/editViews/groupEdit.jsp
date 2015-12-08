@@ -3,22 +3,24 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="display" uri="http://displaytag.sf.net"%>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags"%>
-<c:set var="css" scope='request'>access edit.min</c:set>
-<c:set var="js" scope='request'>vargroupAddVars edit.min</c:set>
+<c:set var="css" scope='request'>access edit</c:set>
+<c:set var="js" scope='request'>vargroupAddVars edit</c:set>
 <t:main>
 	<h2>Editing ${groupName}</h2>
+	<p><em>Group Description</em></p>
 	<p class="lb2">
 		${groupDesc}
 		<a title="Edit field" class="editIcon2" href="${groupID}/edit?f=txt">
 			<i class="fa fa-pencil"></i>
 		</a>
 	</p>
-	<p class="lb"><em>Hint: Check or uncheck variables to add or remove from this group</em></p>
+	<p id="varAddFeedback" class="lb2">&nbsp;</p>
+	
 	<c:choose>	
 			<c:when test="${not empty data}">
 				<display:table name="${data}" id="results" requestURI="${type}"
 					sort="external" partialList="false" size="${count}" pagesize="${count}">
-					<display:column class="cc">	
+					<display:column class="cc" title="">	
 						<label>				
 							<c:choose>
 								<c:when test="${results[3] eq true}">

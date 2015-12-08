@@ -46,6 +46,39 @@
 					</td>
 				</tr>
 			</table>
+			
+			<!-- Full Description -->
+			<xsl:if test="txt != ''">
+				<p>
+					<span class="staticHeader">Full Description </span>
+				</p>
+				<div class="value2">
+					<xsl:copy-of select="txt/node()" />
+				</div>
+			</xsl:if>
+
+			<!-- Variable Values -->
+			<xsl:if test="catgry/*">
+				<p class="toggleHeader">
+					Values (
+					<xsl:value-of select="count(catgry)" />
+					total)
+				</p>
+				<div class="toggleContent">
+					<table class="table2">
+						<xsl:for-each select="catgry">
+							<tr>
+								<td class="headerSmall">
+									<xsl:value-of select="catValu"></xsl:value-of>
+								</td>
+								<td>
+									<xsl:value-of select="labl" />
+								</td>
+							</tr>
+						</xsl:for-each>
+					</table>
+				</div>
+			</xsl:if>
 
 			<!-- Summary Statistics -->
 			<xsl:if test="count(sumStat) gt 0">
@@ -129,39 +162,6 @@
 						</xsl:choose>
 					</xsl:for-each>
 				</p>
-			</xsl:if>
-
-			<!-- Full Description -->
-			<xsl:if test="txt != ''">
-				<p>
-					<span class="staticHeader">Full Description </span>
-				</p>
-				<div class="value2">
-					<xsl:copy-of select="txt/node()" />
-				</div>
-			</xsl:if>
-
-			<!-- Variable Values -->
-			<xsl:if test="catgry/*">
-				<p class="toggleHeader">
-					Values (
-					<xsl:value-of select="count(catgry)" />
-					total)
-				</p>
-				<div class="toggleContent">
-					<table class="table2">
-						<xsl:for-each select="catgry">
-							<tr>
-								<td class="headerSmall">
-									<xsl:value-of select="catValu"></xsl:value-of>
-								</td>
-								<td>
-									<xsl:value-of select="labl" />
-								</td>
-							</tr>
-						</xsl:for-each>
-					</table>
-				</div>
 			</xsl:if>
 			
 			<!-- CodeBook Instruction -->

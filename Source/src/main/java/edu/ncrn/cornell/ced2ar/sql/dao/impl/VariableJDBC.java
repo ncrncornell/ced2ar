@@ -23,7 +23,8 @@ public class VariableJDBC implements VariableDAO{
 	 *Adds variable to database
 	 */
 	public void insert(Variable varaible){
-		String sql = "INSERT INTO Variables (name, codebookID, label, originalName, startPos, endPos) VALUES (?, ?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO Variables (name, codebookID, label, originalName, startPos, endPos, type) "
+		+"VALUES (?, ?, ?, ?, ?, ?, ?)";
 		Connection conn = null;
  
 		try{
@@ -35,6 +36,7 @@ public class VariableJDBC implements VariableDAO{
 			ps.setString(4, varaible.getOriginalName());
 			ps.setInt(5, varaible.getStartPos());
 			ps.setInt(6, varaible.getEndPos());
+			ps.setString(7, varaible.getType());
 			ps.executeUpdate();
 			ps.close();
 		}catch(SQLException e){
@@ -73,6 +75,7 @@ public class VariableJDBC implements VariableDAO{
 				v.setOriginalName(rs.getString("name"));
 				v.setStartPos(rs.getInt("startPos"));
 				v.setEndPos(rs.getInt("endPos"));
+				v.setType(rs.getString("type"));
 			}
 			rs.close();
 			statement.close();
@@ -116,6 +119,7 @@ public class VariableJDBC implements VariableDAO{
 				v.setOriginalName(rs.getString("originalName"));
 				v.setStartPos(rs.getInt("startPos"));
 				v.setEndPos(rs.getInt("endPos"));
+				v.setType(rs.getString("type"));
 				varList.add(v);
 			}
 			rs.close();

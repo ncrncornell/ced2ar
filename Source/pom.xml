@@ -5,8 +5,8 @@
 	<groupId>edu.nrcn.ced2ar.web</groupId>
 	<artifactId>ced2ar-web</artifactId>
 	<packaging>war</packaging>
-	<version>2.6</version>
-	<name>CED2AR 2.6</name>
+	<version>2.7</version>
+	<name>CED2AR</name>
 	<url>http://maven.apache.org</url>
 	<!-- Profiles properties are read from /profiles/* -->
 	<profiles>
@@ -33,47 +33,58 @@
 	</profiles>
 	<properties>
 		<maven.build.timestamp.format>yyMMdd_HHmm</maven.build.timestamp.format>
+		<spring.version>4.1.7.RELEASE</spring.version>
+		<spring.openid.version>4.1.6.RELEASE</spring.openid.version>
 		<buildNumber>${maven.build.timestamp}</buildNumber>
-		<spring.openid.version>3.2.5.RELEASE</spring.openid.version>
+		<endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <timestamp>${maven.build.timestamp}</timestamp>
+        <maven.build.timestamp.format>MMMM d, yyyy 'at' HH:mm:ss</maven.build.timestamp.format>
 	</properties>
 	<dependencies>
 		<!-- Spring Dependencies -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
-			<version>4.1.1.RELEASE</version>
+			<version>${spring.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
-			<version>4.1.1.RELEASE</version>
+			<version>${spring.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
-			<version>4.1.1.RELEASE</version>
+			<version>4.1.5.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
-			<version>4.1.1.RELEASE</version>
+			<version>${spring.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-aspects</artifactId>
-			<version>4.1.1.RELEASE</version>
+			<version>4.1.5.RELEASE</version>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+			<version>4.1.5.RELEASE</version>
+		</dependency>
+		
 
 		<!-- Spring Security -->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-core</artifactId>
-			<version>3.2.5.RELEASE</version>
+			<version>3.2.6.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-web</artifactId>
-			<version>3.2.5.RELEASE</version>
+			<version>3.2.6.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
@@ -83,14 +94,14 @@
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-taglibs</artifactId>
-			<version>3.2.5.RELEASE</version>
+			<version>3.2.6.RELEASE</version>
 		</dependency>
 
 		<!-- Open ID -->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-openid</artifactId>
-			<version>3.2.5.RELEASE</version>
+			<version>3.2.6.RELEASE</version>
 		</dependency>
 
 		<!-- OAuth2 -->
@@ -122,40 +133,42 @@
 			<version>2.3.4</version>
 		</dependency>
 
-		<!-- Restlet -->
-		<dependency>
-			<groupId>org.restlet.jee</groupId>
-			<artifactId>org.restlet</artifactId>
-			<version>2.1.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.restlet.jee</groupId>
-			<artifactId>org.restlet.ext.gwt</artifactId>
-			<version>2.1.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.restlet.jee</groupId>
-			<artifactId>org.restlet.ext.fileupload</artifactId>
-			<version>2.1.2</version>
-		</dependency>
-
 		<!-- Frontend Dependencies -->
 		<dependency>
 			<groupId>jstl</groupId>
 			<artifactId>jstl</artifactId>
 			<version>1.2</version>
 		</dependency>
+
 		<dependency>
 			<groupId>displaytag</groupId>
 			<artifactId>displaytag</artifactId>
 			<version>1.2</version>
+			<exclusions>
+		      <exclusion> 
+			      <groupId>org.slf4j</groupId>
+			      <artifactId>slf4j-log4j12</artifactId>
+		      </exclusion>
+		      <exclusion> 
+			      <groupId>log4j</groupId>
+			      <artifactId>log4j</artifactId>
+		      </exclusion>
+		      <exclusion> 
+			      <groupId>org.slf4j</groupId>
+				  <artifactId>jcl104-over-slf4j</artifactId>
+		      </exclusion>		
+		      <exclusion> 
+			  		<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-log4j12</artifactId>   
+		      </exclusion>		
+		    </exclusions> 
 		</dependency>
-
+		
 		<!-- XML Dependencies -->
 		<dependency>
 			<groupId>net.sf.saxon</groupId>
 			<artifactId>Saxon-HE</artifactId>
-			<version>9.6.0-1</version>
+			<version>9.6.0-5</version>
 		</dependency>
 		<dependency>
 			<groupId>xalan</groupId>
@@ -172,8 +185,15 @@
 			<artifactId>xsom</artifactId>
 			<version>20100725</version>
 		</dependency>
+		<dependency>
+			<groupId>xmlunit</groupId>
+			<artifactId>xmlunit</artifactId>
+			<version>1.6</version>
+		</dependency>		
 
 		<!-- IO Dependencies -->
+		<!-- Need to remove with version 4 of jgit due to multiple bindings -->
+		 
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
@@ -231,12 +251,27 @@
 		</dependency>
 
 		<!-- Version Control -->
+		<!-- Testing version 4 -->
+		<!--
 		<dependency>
 			<groupId>org.eclipse.jgit</groupId>
 			<artifactId>org.eclipse.jgit</artifactId>
-			<version>3.4.1.201406201815-r</version>
+			<version>3.6.1.201501031845-r</version>
+		</dependency>
+			-->
+		<dependency>
+			<groupId>org.eclipse.jgit</groupId>
+			<artifactId>org.eclipse.jgit</artifactId>
+			<version>4.0.2.201509141540-r</version>
 		</dependency>
 
+		<!-- Spring Webflow -->
+		<dependency>
+        	<groupId>org.springframework.webflow</groupId>
+	       	<artifactId>spring-webflow</artifactId>
+    	    <version>2.4.0.RELEASE</version>
+    	</dependency>
+    	
 		<!-- HTML cleaner -->
 		<dependency>
 			<groupId>org.jsoup</groupId>
@@ -261,13 +296,20 @@
 			<version>2.1.7</version>
 		</dependency>
 
-		<!-- Database -->
+		<!-- BaseX -->
 		<dependency>
 			<groupId>org.basex</groupId>
 			<artifactId>basex</artifactId>
-			<version>8.0</version>
+			<version>8.1</version>
 		</dependency>
-
+		
+		<!-- MySQL -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.35</version>
+		</dependency>
+	
 		<!-- Misc -->
 		<dependency>
 			<groupId>junit</groupId>
@@ -306,7 +348,6 @@
 			<artifactId>standard</artifactId>
 			<version>1.1.2</version>
 		</dependency>
-
 	</dependencies>
 	<repositories>
 		<repository>
@@ -314,25 +355,85 @@
 			<name>BaseX Maven Repository</name>
 			<url>http://files.basex.org/maven</url>
 		</repository>
-		<repository>
-			<id>maven-restlet</id>
-			<name>Public online Restlet repository</name>
-			<url>http://maven.restlet.org</url>
-		</repository>
 	</repositories>
 	<build>
 		<finalName>ced2ar-web</finalName>
 		<plugins>
+			<!--  
+			<plugin>
+			    <groupId>org.lesscss</groupId>
+			    <artifactId>lesscss-maven-plugin</artifactId>
+			    <version>1.7.0.1.1</version>
+			    <configuration>
+			        <sourceDirectory>${project.basedir}/src/main/webapp/less</sourceDirectory>
+			        <outputDirectory>${project.build.directory}/${project.build.finalName}/css</outputDirectory>
+			        <compress>true</compress>
+			        <includes>
+			            <include>main.less</include>
+			        </includes>
+			    </configuration>
+			    <executions>
+			        <execution>
+			            <goals>
+			                <goal>compile</goal>
+			            </goals>
+			        </execution>
+			    </executions>
+			</plugin>
+			-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.2</version>
 				<configuration>
+					<excludes>
+						<exclude>${basedir}/src/main/webapp/less/**</exclude>
+						<exclude>${basedir}/node_modules/**</exclude>
+					</excludes>
 					<source>1.7</source>
-					<target>1.7</target>
+					<target>1.7</target>   
 				</configuration>
 			</plugin>
-		</plugins>
+			<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>      
+                    <webResources>                        
+                        <resource>                        
+                            <directory>${basedir}/src/main/webapp/WEB-INF</directory>
+                            <filtering>true</filtering>
+                            <targetPath>WEB-INF</targetPath>
+                            <includes>
+                                <include>**/web.xml</include>				
+                            </includes>
+                        </resource>
+                    </webResources>                      
+                </configuration>
+            </plugin>  
+            <plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<version>2.1</version>
+				<executions>
+					<execution>
+					    <id>tomcat-run</id>
+					    <goals>
+							<goal>exec-war-only</goal>
+					    </goals>
+					    <phase>package</phase>
+					    <configuration>
+						<path>/ced2ar-web</path>
+						<enableNaming>false</enableNaming>
+						<finalName>ced2ar-local.jar</finalName>
+						<charset>utf-8</charset>
+						<source>1.8</source>
+						<target>1.8</target>
+					    </configuration>
+					</execution>
+				</executions>
+			</plugin>
+         </plugins>
 	</build>
 	<organization>
 		<name>Cornell University</name>

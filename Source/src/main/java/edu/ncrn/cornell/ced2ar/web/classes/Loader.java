@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import edu.ncrn.cornell.ced2ar.api.data.BaseX;
 import edu.ncrn.cornell.ced2ar.api.data.Config;
 import edu.ncrn.cornell.ced2ar.api.data.Fetch;
+import edu.ncrn.cornell.ced2ar.api.rest.queries.CodebookData;
 
 /**
  *Class to initialize variables upon startup
@@ -62,6 +63,12 @@ public class Loader implements InitializingBean{
 		if(config.getDevFeatureEditing()){
 			context.setAttribute("editing", true);	
 		}
+		
+		//Tests if prov should be enabled
+		if(config.getDevFeatureProv()){
+			context.setAttribute("prov", true);	
+		}
+		
 		
 		//Tests if git should be enabled
 		if(config.isGitEnabled()){
@@ -170,6 +177,7 @@ public class Loader implements InitializingBean{
 			context.setAttribute("codebooks", codebooks);
 			if(config.getDevFeatureProv()){
 				//TODO: Add Switch to disable
+				//TODO: Why is this even being called?
 				//loadProvCodebooks(codebooks);
 			}
 		}catch(NullPointerException e){}

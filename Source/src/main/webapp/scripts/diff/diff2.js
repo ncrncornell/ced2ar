@@ -1,0 +1,1 @@
+function runDiff(f,i){if(null!==f&&null!==i&&""!==f.trim()&&f!==i){dmp.Diff_Timeout=1,dmp.Diff_EditCost=10;var d=dmp.diff_main(f,i);dmp.diff_cleanupEfficiency(d);var n=dmp.diff_prettyHtml(d);return n}}$(document).ready(function(){dmp=new diff_match_patch});

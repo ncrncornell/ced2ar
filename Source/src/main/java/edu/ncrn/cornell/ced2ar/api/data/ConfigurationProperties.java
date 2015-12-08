@@ -1,5 +1,7 @@
 package edu.ncrn.cornell.ced2ar.api.data;
 
+import java.io.InputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -9,6 +11,7 @@ import java.util.Map;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.util.StringUtils;
 
 /**
  * This class handles updating and reading property=value pairs 
@@ -21,13 +24,24 @@ import org.springframework.core.io.ClassPathResource;
  *@author Cornell Labor Dynamics Institute
  *@author NCRN Project Team 
  */
-public class ConfigurationProperties{
+public class ConfigurationProperties implements Serializable{
+	
+	private static final long serialVersionUID = 8590552171445043286L;
 	private PropertiesConfiguration  properties;
 	
 	public ConfigurationProperties(){
 		try{
 			ClassPathResource cpr = new ClassPathResource("ced2ar-web-config.properties");
 			properties = new PropertiesConfiguration(cpr.getFile());
+		}catch(Exception ex){
+			throw new RuntimeException("Fatal Error.  Unable to read properties. " ,ex );
+		}
+	}
+	
+	public ConfigurationProperties(InputStream is){
+		try{
+			properties = new PropertiesConfiguration();
+			properties.load(is);
 		}catch(Exception ex){
 			throw new RuntimeException("Fatal Error.  Unable to read properties. " ,ex );
 		}
@@ -49,7 +63,25 @@ public class ConfigurationProperties{
     	decodePasswords(propertiesMap);
     	return propertiesMap;	
 	}
-	
+
+	/**
+	 * This method returns String representation of properties file.
+	 * @return
+	 */
+	public String getProperties(){
+    	StringBuffer sb = new StringBuffer("");
+    	List<String> keys = getKeys();
+    	
+    	for(String key:keys){
+    		String value =getValue(key);
+    		if(StringUtils.isEmpty(value))
+    			sb.append(key+"=\n");
+    		else
+    			sb.append(key+"="+value+"\n");
+    	}
+    	return sb.toString();	
+	}
+
 	/**
 	 * @param propertiesMap 
 	 * The passwords are Decoded. (Passwords are in base64 encoded in the properties file)
@@ -65,8 +97,21 @@ public class ConfigurationProperties{
     	propertiesMap.put("baseXAdminHash",new String(Base64.decodeBase64(pwd2)));
     	propertiesMap.put("bugReportPwd",new String(Base64.decodeBase64(bugReporterPwd)));
     }
-
-	/**
+    /**
+     * Encodes password to base64 encoding.
+     * @param password
+     * @return
+     */
+    public String encodePassword(String password){
+    	String encodedPassword 	=  new String(Base64.encodeBase64((password).getBytes()));
+    	return encodedPassword;
+    }
+    
+    public String decodeHash(String encodedStr){
+    	return new String(Base64.decodeBase64(encodedStr));
+    }
+    
+    /**
 	 * Method getKeys.
 	 * @return List<String> list of keys
 	 */

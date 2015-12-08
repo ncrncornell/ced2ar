@@ -14,7 +14,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-
+import org.apache.log4j.Logger;
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -54,9 +54,10 @@ import com.sun.xml.xsom.XSTerm;
 import com.sun.xml.xsom.parser.XSOMParser;
 
 import edu.ncrn.cornell.ced2ar.api.data.Config;
-import edu.ncrn.cornell.ced2ar.eapi.prov.model.Activity;
-import edu.ncrn.cornell.ced2ar.eapi.prov.model.Agent;
-import edu.ncrn.cornell.ced2ar.eapi.prov.model.Entity;
+import edu.ncrn.cornell.ced2ar.eapi.prov.oldmodel.Activity;
+import edu.ncrn.cornell.ced2ar.eapi.prov.oldmodel.Agent;
+import edu.ncrn.cornell.ced2ar.eapi.prov.oldmodel.Edge;
+import edu.ncrn.cornell.ced2ar.eapi.prov.oldmodel.Entity;
 
 /**
  * Class dealing with XML interaction
@@ -70,7 +71,7 @@ import edu.ncrn.cornell.ced2ar.eapi.prov.model.Entity;
  *@author NCRN Project Team 
  */
 public class XMLHandle {
-	
+	private static final Logger logger = Logger.getLogger(XMLHandle.class);
 	private InputStream _xmlStream = null;
 	private String _schemaURI = null;
 	private XSOMParser _schemaParser = null;
@@ -98,8 +99,10 @@ public class XMLHandle {
 	 */
 	public XMLHandle(String xmlContent, String sURI){
 		_xmlStream = new ByteArrayInputStream(xmlContent.getBytes());
-		_schemaURI= sURI;
+		
+	    _schemaURI= sURI;
 		_schemaParser = getParser();
+	    
 		_doc = loadDoc();
 	}
 	
@@ -328,7 +331,7 @@ public class XMLHandle {
 	 * @param isRecursive if ancestors of target element do not exist, will create. Cannot use //in xpath  when true
 	 * If false, and appends need to be made, will throw error. 
 	 * @param updateAll  if true, we apply the change to every node that the xpath matches, if false we only change the first one.
-	 * @param replaceChildren TODO
+	 * @param replaceChildren TODO: Write description of this param
 	 */
 	public void addReplace(String xpathString, String value, boolean doesAppend, 
 	boolean isRecursive, boolean updateAll, boolean replaceChildren){
@@ -338,7 +341,7 @@ public class XMLHandle {
 				
 		//Check xpath is in form we can handle
 		if(!checkXpath(xpathString)){
-			System.out.println("cannot handle " + xpathString);
+			//System.out.println("cannot handle " + xpathString);
 			error = "xpath does not match accepted xpath regexes!";
 			return;
 		}
@@ -459,8 +462,7 @@ public class XMLHandle {
 			}
 			//if more formats are necessary, add more else if statements here.
 			else{
-				System.out.println("Input xpath does not match any of the accepted formats.");
-				System.out.println(target);
+				logger.error("Input xpath does not match any of the accepted formats -" + target);
 				return;
 			}
 			return;
@@ -485,7 +487,7 @@ public class XMLHandle {
 	 * @param xpathString the location of the node(s)
 	 * @return the NodeList of nodes specified by xpathString if there is any
 	 */
-	private NodeList getNodeList(String xpathString){
+	public NodeList getNodeList(String xpathString){
 		NodeList nodes = null;
 		XPathFactory factory = XPathFactory.newInstance();
         XPath xpath = factory.newXPath();
@@ -551,6 +553,21 @@ public class XMLHandle {
 	}
 	
 	/**
+	 *	Adds prov:document node at the xPath specified. 
+	 * @param xPath
+	 */
+	public void addProvDocumentNode(String xPath){
+		NodeList nodes = getNodeList(xPath);		
+		if(nodes == null || nodes.getLength() < 1) return;
+		Node parent = nodes.item(0);
+		Element newNode = _doc.createElement(ProvGenerator.NODE_PROV_ROOT);
+		parent.appendChild(newNode);		
+	}
+	
+
+	
+	
+	/**
 	 * adds a node with children to the xml document
 	 * @param xpathStringP The xpath for the parent of the node to be added
 	 * @param target the node to be added
@@ -584,6 +601,139 @@ public class XMLHandle {
 			}
 			i++;
 		}while(updateAll && i < nodes.getLength());
+	}
+
+	/*
+	 *     <xs:complexType name="Generation">
+        <xs:sequence>
+            <xs:element name="entity" type="prov:IDRef"/>
+            <xs:element name="activity" type="prov:IDRef" minOccurs="0"/>
+            <xs:element name="time" type="xs:dateTime" minOccurs="0"/>
+            <!-- prov attributes -->
+            <xs:element ref="prov:label" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="prov:location" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="prov:role" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="prov:type" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+
+		  <prov:entity prov:ref="exc:composition1"/>
+	      <prov:activity prov:ref="exc:compose1"/>
+
+
+	
+
+	 */
+	/**
+	 * This method inserts relationship nodes in the the codebook.
+	 * @param xPath XPath where the new relationship node going to be inserted.
+	 * @param edge Relationship Object
+	 */
+	public void addRelationshipNode(String xPath, Edge edge){
+		if(StringUtils.isEmpty(edge.getEdgeType())) return;
+		NodeList nodes = getNodeList(xPath);		
+		if(nodes == null || nodes.getLength() < 1) return;
+		Node parent = nodes.item(0);
+
+		if(edge.getEdgeType().equalsIgnoreCase(Edge.RELATIONSHIP_WAS_DERIVED_FROM) ) {
+			/*
+			 * 	Example of wasDerivedFrom node
+			       <prov:wasDerivedFrom>
+      					<prov:generatedEntity prov:ref="dataset2"/>
+      					<prov:usedEntity prov:ref="dataset1"/>
+    				</prov:wasDerivedFrom>
+			 */
+			Element newNode = _doc.createElement(Edge.NODE_WAS_DERIVED_FROM);
+			Element generatedEntityNode = _doc.createElement(Edge.NODE_GENERATED_ENTITY);
+			generatedEntityNode.setAttribute(Edge.ATTRIBUTE_PROV_REF,edge.getSource());
+			Element usedEntityNode = _doc.createElement(edge.NODE_USED_ENTITY);
+			usedEntityNode.setAttribute(Edge.ATTRIBUTE_PROV_REF,edge.getTarget());
+			newNode.appendChild(generatedEntityNode);
+			newNode.appendChild(usedEntityNode);
+			parent.appendChild(newNode);
+		}
+		else if(edge.getEdgeType().equalsIgnoreCase(Edge.RELATIONSHIP_WAS_GENERATED_BY) || edge.getEdgeType().equalsIgnoreCase(Edge.RELATIONSHIP_CREATED)){
+			/*
+			 * Example of wasGeneratedBy node
+			    <prov:wasGeneratedBy>
+			      <prov:entity prov:ref="exc:composition1"/>
+			      <prov:activity prov:ref="exc:compose1"/>
+			    </prov:wasGeneratedBy>
+			*/
+			Element newNode = _doc.createElement(Edge.NODE_WAS_GENERATED_BY);
+			Element entityNode = _doc.createElement(Entity.NODE_PROV_ENTITY);
+			entityNode.setAttribute(Edge.ATTRIBUTE_PROV_REF,edge.getSource());
+			Element activityNode = _doc.createElement(Activity.NODE_PROV_ACTIVITY);
+			activityNode.setAttribute(Edge.ATTRIBUTE_PROV_REF,edge.getTarget());
+			newNode.appendChild(entityNode);
+			newNode.appendChild(activityNode);
+			parent.appendChild(newNode);
+		}
+		else if(edge.getEdgeType().equalsIgnoreCase(Edge.RELATIONSHIP_WAS_ATTRIBUTED_TO) ){
+			/*
+			 * Example of wasAttributedTo node
+			  	    <prov:wasAttributedTo>
+	      				<prov:entity prov:ref="exc:chart1"/>
+	      				<prov:agent prov:ref="exc:derek"/>
+	    			</prov:wasAttributedTo>
+ 			 */
+			Element newNode = _doc.createElement(Edge.NODE_WAS_ATTRIBUTED_TO);
+			Element entityNode = _doc.createElement(Entity.NODE_PROV_ENTITY);
+			entityNode.setAttribute(Edge.ATTRIBUTE_PROV_REF,edge.getSource());
+			Element agentNode = _doc.createElement(Agent.NODE_PROV_AGENT);
+			agentNode.setAttribute(Edge.ATTRIBUTE_PROV_REF,edge.getSource());
+			newNode.appendChild(entityNode);
+			newNode.appendChild(agentNode);
+			parent.appendChild(newNode);
+		}
+		else if(edge.getEdgeType().equalsIgnoreCase(Edge.RELATIONSHIP_ACT_ON_BEHALF_OF) ){
+			/*
+			 * Example of wasAttributedTo node
+			    <prov:actedOnBehalfOf>
+			      <prov:delegate prov:ref="exc:derek"/>
+			      <prov:responsible prov:ref="exc:chartgen"/>
+			    </prov:actedOnBehalfOf>
+ 			 */
+			Element newNode = _doc.createElement(Edge.NODE_ACT_ON_BEHALF_OF);
+			Element delegateNode = _doc.createElement(Edge.NODE_DELEGATE);
+			delegateNode.setAttribute(Edge.ATTRIBUTE_PROV_REF,edge.getSource());
+			Element responsibleNode = _doc.createElement(Edge.NODE_RESPONSIBLE);
+			responsibleNode.setAttribute(Edge.ATTRIBUTE_PROV_REF,edge.getSource());
+			newNode.appendChild(delegateNode);
+			newNode.appendChild(responsibleNode);
+			parent.appendChild(newNode);
+		}
+		else if(edge.getEdgeType().equalsIgnoreCase(Edge.RELATIONSHIP_WAS_INFORMED_BY) ){
+			Element newNode = _doc.createElement(Edge.NODE_WAS_INFORMED_BY);
+			Element informedNode = _doc.createElement(Edge.NODE_INFORMED);
+			informedNode.setAttribute(Edge.ATTRIBUTE_PROV_REF,edge.getSource());
+			Element informantNode = _doc.createElement(Edge.NODE_INFORMANT);
+			informantNode.setAttribute(Edge.ATTRIBUTE_PROV_REF,edge.getSource());
+			newNode.appendChild(informedNode);
+			newNode.appendChild(informantNode);
+			parent.appendChild(newNode);
+		}
+		else if(edge.getEdgeType().equalsIgnoreCase(Edge.RELATIONSHIP_WAS_ASSOCIATED_WITH) ){
+			Element newNode = _doc.createElement(Edge.NODE_WAS_ASSOCIATED_WITH);
+			Element activityNode = _doc.createElement(Activity.NODE_PROV_ACTIVITY);
+			activityNode.setAttribute(Edge.ATTRIBUTE_PROV_REF,edge.getSource());
+			Element agentNode = _doc.createElement(Agent.NODE_PROV_AGENT);
+			agentNode.setAttribute(Edge.ATTRIBUTE_PROV_REF,edge.getSource());
+			newNode.appendChild(activityNode);
+			newNode.appendChild(agentNode);
+			parent.appendChild(newNode);
+		}
+		else if(edge.getEdgeType().equalsIgnoreCase(Edge.RELATIONSHIP_WAS_USED) || edge.getEdgeType().equalsIgnoreCase(Edge.RELATIONSHIP_USED_BY)){
+			Element newNode = _doc.createElement(Edge.NODE_WAS_USED);
+			Element activityNode = _doc.createElement(Activity.NODE_PROV_ACTIVITY);
+			activityNode.setAttribute(Edge.ATTRIBUTE_PROV_REF,edge.getSource());
+			Element entityNode = _doc.createElement(Entity.NODE_PROV_ENTITY);
+			entityNode.setAttribute(Edge.ATTRIBUTE_PROV_REF,edge.getSource());
+			newNode.appendChild(activityNode);
+			newNode.appendChild(entityNode);
+			parent.appendChild(newNode);
+		}
+
 	}
 	
 	/**
@@ -728,7 +878,6 @@ public class XMLHandle {
 			newNode.setTextContent(value);
 			Node nextSibling = getNextSibling(xpathP+"/"+target);
 			if(error != null){
-				System.out.println(error);
 				error = null;
 				return;
 			}else if(nextSibling == null){
@@ -1092,23 +1241,54 @@ public class XMLHandle {
 				repoXML = xmlStrOut.toString();
 				
 				//Add switch if restricted to use local versions
+				//codebook.setAttribute("xmlns", "ddi:codebook:2_5");
 				codebook.setAttribute("xmlns:dc", "http://purl.org/dc/terms/");
 				codebook.setAttribute("xmlns:dcmitype", "http://purl.org/dc/dcmitype/");
 				codebook.setAttribute("xmlns:fn", "http://www.w3.org/2005/xpath-functions");
 				codebook.setAttribute("xmlns:ns0", "http://purl.org/dc/elements/1.1/");
-				codebook.setAttribute("xmlns:saxon", "http://xml.apache.org/xslt");
+				codebook.setAttribute("xmlns:saxon", "http://xml.apache.org/xslt"); 
 				codebook.setAttribute("xmlns:xhtml", "http://www.w3.org/1999/xhtml");
 				codebook.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
-				codebook.setAttribute("xsi:schemaLocation", "ddi:codebook:2_5 http://www.ncrn.cornell.edu/docs/ddi/2.5.NCRN/schemas/codebook.xsd");
-			
+				codebook.setAttribute("xsi:schemaLocation", "ddi:codebook:2_5 http://www.ncrn.cornell.edu/docs/ddi/2.5.NCRN.P/schemas/codebook.xsd");
+				codebook.setAttribute("xmlns:prov", "http://www.w3.org/ns/prov");
+				codebook.setAttribute("xmlns:ex", "http://example.com/ns/ex#");
+				codebook.setAttribute("xmlns:foaf", "http://xmlns.com/foaf/0.1/");
+				codebook.setAttribute("xmlns:tr", "http://example.com/ns/tr#");
+				codebook.setAttribute("xmlns:ced2ar", "http://ced2ar.org/ns/core#");
+				codebook.setAttribute("xmlns:RePEc", "https://ideas.repec.org/#");
+				codebook.setAttribute("xmlns:repeca", "https://ideas.repec.org/e/#");
+				codebook.setAttribute("xmlns:xsd", "http://www.w3.org/2001/XMLSchema");
+				codebook.setAttribute("xmlns:act", "http://ced2ar.org/ns/activities#");
+				
 				//This is a work around. 
 				//Adding the xmlns attr on codebook also adds a blank xmlns to the immediate children			
 				format = new OutputFormat(_doc); 
 				xmlStrOut = new StringWriter();    
 				serializer   = new XMLSerializer (xmlStrOut,format);
 				serializer.serialize(_doc);
+				
 				xmlToTest = xmlStrOut.toString().replaceFirst("<codeBook", "<codeBook xmlns=\"ddi:codebook:2_5\"");
-			
+			// if there is prov, add namespaces for validation
+				xmlToTest =  xmlToTest.replaceFirst("<prov:document", "<prov:document "+
+	                    " xmlns:dc=\"http://purl.org/dc/terms/\""+
+	                    " xmlns:ex=\"http://example.com/ns/ex#\""+
+	                    " xmlns:prov=\"http://www.w3.org/ns/prov#\""+
+	                    " xmlns:foaf=\"http://xmlns.com/foaf/0.1/\""+
+	                    " xmlns:tr=\"http://example.com/ns/tr#\""+
+	                    " xmlns:xhtml=\"http://www.w3.org/1999/xhtml\""+
+	                    " xmlns:dcmitype=\"http://purl.org/dc/dcmitype/\""+
+	                    " xmlns:saxon=\"http://xml.apache.org/xslt\""+
+	                    " xmlns:ced2ar=\"http://ced2ar.org/ns/core#\""+
+	                    " xmlns:file=\"http://ced2ar.org/ns/file#\""+
+	                    " xmlns:type=\"http://ced2ar.org/ns/type#\""+
+	                    " xmlns:RePEc=\"https://ideas.repec.org/#\""+
+	                    " xmlns:repeca=\"https://ideas.repec.org/e/#\""+
+	                    " xmlns:ns0=\"http://purl.org/dc/elements/1.1/\""+
+	                    " xmlns:exn=\"http://ced2ar.org/ns/external#\""+
+	                    " xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\""+
+	                    " xmlns:act=\"http://ced2ar.org/ns/activities#\""+
+	                    " xmlns:fn=\"http://www.w3.org/2005/xpath-functions\""+
+	                    " xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"");
 			//for comments or bug reports we don't need more attributes
 			}else{				
 				OutputFormat format = new OutputFormat(_doc);
@@ -1140,6 +1320,7 @@ public class XMLHandle {
 		}
 		
 	    Source xmlFile = new StreamSource(new java.io.StringReader(xmlToTest));
+	    //System.out.println(xmlToTest.substring(0,xmlToTest.length()/2));
 	    try {
 		    SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 		    Schema schema = schemaFactory.newSchema(schemaFile);
@@ -1157,6 +1338,8 @@ public class XMLHandle {
 	    }
     	return true;
     } 	
+	
+
 	
 	/**
 	 * Removes restricted metadata for release
@@ -1201,15 +1384,24 @@ public class XMLHandle {
 		
 		//Add Namespace info
 		if(namespace){
+			codebook.setAttribute("xmlns", "ddi:codebook:2_5");
 			codebook.setAttribute("xmlns:dc", "http://purl.org/dc/terms/");
 			codebook.setAttribute("xmlns:dcmitype", "http://purl.org/dc/dcmitype/");
 			codebook.setAttribute("xmlns:fn", "http://www.w3.org/2005/xpath-functions");
 			codebook.setAttribute("xmlns:ns0", "http://purl.org/dc/elements/1.1/");
-			codebook.setAttribute("xmlns:saxon", "http://xml.apache.org/xslt");
+			codebook.setAttribute("xmlns:saxon", "http://xml.apache.org/xslt"); 
 			codebook.setAttribute("xmlns:xhtml", "http://www.w3.org/1999/xhtml");
 			codebook.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
-			codebook.setAttribute("xmlns", "ddi:codebook:2_5");
-			codebook.setAttribute("xsi:schemaLocation", "ddi:codebook:2_5 http://www.ncrn.cornell.edu/docs/ddi/2.5.NCRN/schemas/codebook.xsd");
+			codebook.setAttribute("xsi:schemaLocation", "ddi:codebook:2_5 http://www.ncrn.cornell.edu/docs/ddi/2.5.NCRN.P/schemas/codebook.xsd");
+			codebook.setAttribute("xmlns:prov", "http://www.w3.org/ns/prov");
+			codebook.setAttribute("xmlns:ex", "http://example.com/ns/ex#");
+			codebook.setAttribute("xmlns:foaf", "http://xmlns.com/foaf/0.1/");
+			codebook.setAttribute("xmlns:tr", "http://example.com/ns/tr#");
+			codebook.setAttribute("xmlns:ced2ar", "http://ced2ar.org/ns/core#");
+			codebook.setAttribute("xmlns:RePEc", "https://ideas.repec.org/#");
+			codebook.setAttribute("xmlns:repeca", "https://ideas.repec.org/e/#");
+			codebook.setAttribute("xmlns:xsd", "http://www.w3.org/2001/XMLSchema");
+			codebook.setAttribute("xmlns:act", "http://ced2ar.org/ns/activities#");
 		}
 		
 		//Removes whitespace left behind
@@ -1273,7 +1465,17 @@ public class XMLHandle {
 		codebook.setAttribute("xmlns:saxon", "http://xml.apache.org/xslt"); 
 		codebook.setAttribute("xmlns:xhtml", "http://www.w3.org/1999/xhtml");
 		codebook.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
-		codebook.setAttribute("xsi:schemaLocation", "ddi:codebook:2_5 http://www.ncrn.cornell.edu/docs/ddi/2.5.NCRN/schemas/codebook.xsd");
+		codebook.setAttribute("xsi:schemaLocation", "ddi:codebook:2_5 http://www.ncrn.cornell.edu/docs/ddi/2.5.NCRN.P/schemas/codebook.xsd");
+		codebook.setAttribute("xmlns:prov", "http://www.w3.org/ns/prov");
+		codebook.setAttribute("xmlns:ex", "http://example.com/ns/ex#");
+		codebook.setAttribute("xmlns:foaf", "http://xmlns.com/foaf/0.1/");
+		codebook.setAttribute("xmlns:tr", "http://example.com/ns/tr#");
+		codebook.setAttribute("xmlns:ced2ar", "http://ced2ar.org/ns/core#");
+		codebook.setAttribute("xmlns:RePEc", "https://ideas.repec.org/#");
+		codebook.setAttribute("xmlns:repeca", "https://ideas.repec.org/e/#");
+		codebook.setAttribute("xmlns:xsd", "http://www.w3.org/2001/XMLSchema");
+		codebook.setAttribute("xmlns:act", "http://ced2ar.org/ns/activities#");
+		
 	}
 	
 	/**

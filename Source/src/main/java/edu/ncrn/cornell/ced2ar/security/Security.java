@@ -7,6 +7,8 @@ import org.basex.util.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -24,6 +26,21 @@ import org.springframework.security.web.access.intercept.FilterSecurityIntercept
 import edu.ncrn.cornell.ced2ar.api.data.Config;
 import edu.ncrn.cornell.ced2ar.auth.Service;
 import edu.ncrn.cornell.ced2ar.auth.oauth2.AuthProvider;
+import edu.ncrn.cornell.ced2ar.security.idmgmt.dao.PermissionDao;
+import edu.ncrn.cornell.ced2ar.security.idmgmt.dao.RoleDao;
+import edu.ncrn.cornell.ced2ar.security.idmgmt.dao.RolePermissionDao;
+import edu.ncrn.cornell.ced2ar.security.idmgmt.dao.UserDao;
+import edu.ncrn.cornell.ced2ar.security.idmgmt.dao.UserRoleDao;
+import edu.ncrn.cornell.ced2ar.security.idmgmt.dao.impl.BaseXPermissionDaoImpl;
+import edu.ncrn.cornell.ced2ar.security.idmgmt.dao.impl.BaseXRoleDaoImpl;
+import edu.ncrn.cornell.ced2ar.security.idmgmt.dao.impl.BaseXRolePermissionDaoImpl;
+import edu.ncrn.cornell.ced2ar.security.idmgmt.dao.impl.BaseXUserDaoImpl;
+import edu.ncrn.cornell.ced2ar.security.idmgmt.dao.impl.BaseXUserRoleDaoImpl;
+import edu.ncrn.cornell.ced2ar.security.idmgmt.dao.impl.PropertiesPermissionDaoImpl;
+import edu.ncrn.cornell.ced2ar.security.idmgmt.dao.impl.PropertiesRoleDaoImpl;
+import edu.ncrn.cornell.ced2ar.security.idmgmt.dao.impl.PropertiesRolePermissionDaoImpl;
+import edu.ncrn.cornell.ced2ar.security.idmgmt.dao.impl.PropertiesUserDaoImpl;
+import edu.ncrn.cornell.ced2ar.security.idmgmt.dao.impl.PropertiesUserRoleDaoImpl;
 
 /**
  * This class configures the Security of CED2AR.  Configuration includes Authentication Provider, 
@@ -36,27 +53,36 @@ import edu.ncrn.cornell.ced2ar.auth.oauth2.AuthProvider;
  * @author NCRN Project Team 
  *
  */
+@PropertySource(value = { "classpath:ced2ar-web-config.properties" })
 @Configuration
 @EnableWebMvcSecurity
 @EnableGlobalAuthentication
 @EnableOAuth2Client
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 public class Security extends WebSecurityConfigurerAdapter {
+	
+	Config config = Config.getInstance();
+	
+	@Autowired
+	Environment env;
+	
 	@Autowired
 	private ServletContext context;	
 	
 	@Autowired
-	OAuth2ClientAuthenticationProcessingFilter oAuth2ClientAuthenticationProcessingFilter;
+	private OAuth2ClientAuthenticationProcessingFilter googleOAuth2ClientAuthenticationProcessingFilter;
+	
+	@Autowired
+	private OAuth2ClientAuthenticationProcessingFilter orcidOAuth2ClientAuthenticationProcessingFilter;
 	
 	@Autowired
 	OAuth2ClientContextFilter oAuth2ClientContextFilter;
 	
 	@Autowired
 	AuthProvider authProvider;
-	
-    @Autowired
+
+	@Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-    	Config config = Config.getInstance();
     	ShaPasswordEncoder shaE = new ShaPasswordEncoder();
     	if(context.getAttribute("mainHash") == null){
     		String password = "";
@@ -100,10 +126,14 @@ public class Security extends WebSecurityConfigurerAdapter {
     	}else{
     		if(config.isAuthenticationTypeOpenId())
     			configureOpenIdAuthentication(http);
-    		else if(config.isAuthenticationTypeOauth2())
-    			configureOAuth2Authentication(http);
-    		else 
+    		else if(config.isAuthenticationTypeOauth2()){
+    			if(config.isGoogleOauth2Supported())
+    				configureGoogleOAuth2Authentication(http);
+    			if(config.isOrcidOauth2Supported())
+    				configureOrcidOAuth2Authentication(http);
+    		}else{ 
     			configureDefaultAuthentication(http);
+    		}
     	}
 	}
 
@@ -113,40 +143,67 @@ public class Security extends WebSecurityConfigurerAdapter {
      * googleOAuth2Filter generates UserRedirectException exception which is handled by  oAuth2ClientContextFilter.
 	 * oAuth2ClientContextFilter then generates a post request to populate Authentication Object.
 	 */
-    private void configureOAuth2Authentication(HttpSecurity http) throws Exception {
-		http.authorizeRequests()
-		//TODO: add args for select specific paths
-		/*
-		.antMatchers("/search").access("hasRole('ROLE_ADMIN')")
-		.antMatchers("/search/**").access("hasRole('ROLE_ADMIN')")
-		.antMatchers("/codebooks").access("hasRole('ROLE_ADMIN')")
-		.antMatchers("/codebooks/**").access("hasRole('ROLE_ADMIN')")
-		.antMatchers("/groups").access("hasRole('ROLE_ADMIN')")
-		.antMatchers("/groups/**").access("hasRole('ROLE_ADMIN')")
-		.antMatchers("/all").access("hasRole('ROLE_ADMIN')")
-		.antMatchers("/all/**").access("hasRole('ROLE_ADMIN')")
-		.antMatchers("/browse").access("hasRole('ROLE_ADMIN')")
-		.antMatchers("/browse/**").access("hasRole('ROLE_ADMIN')")
-		*/
-		.antMatchers("/config").access("hasRole('ROLE_ADMIN')")
- 		.antMatchers("/edit").access("hasRole('ROLE_ADMIN')")
- 		.antMatchers("/edit/codebooks").access("hasRole('ROLE_ADMIN')")
- 		.antMatchers("/edit/**").access("hasRole('ROLE_USER')")
- 		.antMatchers("/monitoring/**").access("hasRole('ROLE_ADMIN')")
- 		.antMatchers("/google_oauth2_login").anonymous()
- 		.antMatchers("/login").anonymous()
- 		.and()
-		.formLogin()
-		.loginPage("/login")
-		.loginProcessingUrl("/login")
-		.defaultSuccessUrl("/")
+    private void configureGoogleOAuth2Authentication(HttpSecurity http) throws Exception {
+		
+			http.authorizeRequests()
+			.antMatchers("/config").access("hasRole('ROLE_ADMIN')")
+	 		.antMatchers("/edit").access("hasRole('ROLE_ADMIN')")
+	 		.antMatchers("/edit/codebooks").access("hasRole('ROLE_ADMIN')")
+	 		.antMatchers("/monitoring/**").access("hasRole('ROLE_ADMIN')")		
+	 		.antMatchers("/google_oauth2_login").anonymous()
+	 		.antMatchers("/login").anonymous() 		
+	 		.antMatchers("/edit/**").access("hasRole('ROLE_USER')")
+
+			//TODO: add args for select specific paths, this is for the ces-dev server
+	 		
+	 		/*
+	 		.antMatchers("/search").access("hasRole('ROLE_ADMIN')")
+			.antMatchers("/search/**").access("hasRole('ROLE_ADMIN')")
+			.antMatchers("/codebooks").access("hasRole('ROLE_ADMIN')")
+			.antMatchers("/codebooks/**").access("hasRole('ROLE_ADMIN')")
+			.antMatchers("/groups").access("hasRole('ROLE_ADMIN')")
+			.antMatchers("/groups/**").access("hasRole('ROLE_ADMIN')")
+			.antMatchers("/all").access("hasRole('ROLE_ADMIN')")
+			.antMatchers("/all/**").access("hasRole('ROLE_ADMIN')")
+			.antMatchers("/browse").access("hasRole('ROLE_ADMIN')")
+			.antMatchers("/browse/**").access("hasRole('ROLE_ADMIN')")
+			*/
+	 		
+	 		.and()
+			.formLogin()
+			.loginPage("/login")
+			.loginProcessingUrl("/login")
+			.defaultSuccessUrl("/")
+				.and()
+				.csrf().disable()
+				.logout()
 			.and()
-			.csrf().disable()
-			.logout()
-		.and()
-		.addFilterAfter(oAuth2ClientContextFilter,ExceptionTranslationFilter.class)
-		.addFilterBefore(oAuth2ClientAuthenticationProcessingFilter,FilterSecurityInterceptor.class)
-		.authenticationProvider(authProvider);
+			.addFilterAfter(oAuth2ClientContextFilter,ExceptionTranslationFilter.class)
+			.addFilterBefore(googleOAuth2ClientAuthenticationProcessingFilter,FilterSecurityInterceptor.class)
+			.authenticationProvider(authProvider);
+    }
+    
+    private void configureOrcidOAuth2Authentication(HttpSecurity http) throws Exception {		
+			http.authorizeRequests()
+			.antMatchers("/config").access("hasRole('ROLE_ADMIN')")
+	 		.antMatchers("/edit").access("hasRole('ROLE_ADMIN')")
+	 		.antMatchers("/edit/codebooks").access("hasRole('ROLE_ADMIN')")
+	 		.antMatchers("/edit/**").access("hasRole('ROLE_USER')")
+	 		.antMatchers("/monitoring/**").access("hasRole('ROLE_ADMIN')")
+	 		.antMatchers("/orcid_oauth2_login").anonymous()
+	 		.antMatchers("/login").anonymous()
+	 		.and()
+			.formLogin()
+			.loginPage("/login")
+			.loginProcessingUrl("/login")
+			.defaultSuccessUrl("/")
+				.and()
+				.csrf().disable()
+				.logout()
+			.and()
+			.addFilterAfter(oAuth2ClientContextFilter,ExceptionTranslationFilter.class)
+			.addFilterBefore(orcidOAuth2ClientAuthenticationProcessingFilter,FilterSecurityInterceptor.class)
+			.authenticationProvider(authProvider);
     }
     
     /**
@@ -157,23 +214,11 @@ public class Security extends WebSecurityConfigurerAdapter {
     private void configureDefaultAuthentication(HttpSecurity http) throws Exception {
 		   http
 		   .authorizeRequests()
-		   		/*
-		   		.antMatchers("/search").access("hasRole('ROLE_ADMIN')")
-				.antMatchers("/search/**").access("hasRole('ROLE_ADMIN')")
-				.antMatchers("/codebooks").access("hasRole('ROLE_ADMIN')")
-				.antMatchers("/codebooks/**").access("hasRole('ROLE_ADMIN')")
-				.antMatchers("/groups").access("hasRole('ROLE_ADMIN')")
-				.antMatchers("/groups/**").access("hasRole('ROLE_ADMIN')")
-				.antMatchers("/all").access("hasRole('ROLE_ADMIN')")
-				.antMatchers("/all/**").access("hasRole('ROLE_ADMIN')")
-				.antMatchers("/browse").access("hasRole('ROLE_ADMIN')")
-				.antMatchers("/browse/**").access("hasRole('ROLE_ADMIN')")
-				*/
-		   		.antMatchers("/config").access("hasRole('ROLE_ADMIN')")
-	     		.antMatchers("/edit").access("hasRole('ROLE_ADMIN')")
-	     		.antMatchers("/edit/codebooks").access("hasRole('ROLE_ADMIN')")
-	 			.antMatchers("/edit/**").access("hasRole('ROLE_USER')")
-	 			.antMatchers("/monitoring/**").access("hasRole('ROLE_ADMIN')")
+	   		.antMatchers("/config").access("hasRole('ROLE_ADMIN')")
+     		.antMatchers("/edit").access("hasRole('ROLE_ADMIN')")
+     		.antMatchers("/edit/codebooks").access("hasRole('ROLE_ADMIN')")
+ 			.antMatchers("/edit/**").access("hasRole('ROLE_USER')")
+ 			.antMatchers("/monitoring/**").access("hasRole('ROLE_ADMIN')")
 	 		.and()
 			.formLogin()
 			.and()
@@ -237,4 +282,63 @@ public class Security extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
+	
+	@Bean(name ="userDao" )
+	public UserDao getUserDao(){
+		UserDao userDao = null;
+		if(config.isAuthorizationStoragePropertiesFile()){
+			userDao = new PropertiesUserDaoImpl();	
+		}
+		else if(config.isAuthorizationStorageBaseX()){
+			userDao = new BaseXUserDaoImpl();
+		}
+		
+		return userDao;
+	}
+	@Bean(name ="roleDao" )
+	public RoleDao getRoleDao(){
+		RoleDao roleDao = null;
+		
+		if(config.isAuthorizationStoragePropertiesFile()){
+			roleDao = new PropertiesRoleDaoImpl();	
+		}
+		else if(config.isAuthorizationStorageBaseX()){
+			roleDao = new BaseXRoleDaoImpl();
+		}
+		return roleDao;
+	}
+	
+	@Bean(name ="userRoleDao" )
+	public UserRoleDao getUserRoleDao(){
+		UserRoleDao userRoleDao = null;
+		if(config.isAuthorizationStoragePropertiesFile()){
+			userRoleDao = new PropertiesUserRoleDaoImpl();
+		}
+		else if(config.isAuthorizationStorageBaseX()){
+			userRoleDao = new BaseXUserRoleDaoImpl();
+		}
+		return userRoleDao;
+	}
+	@Bean(name ="permissionDao" )
+	public PermissionDao getPermissionDao(){
+		PermissionDao permissionDao = null;
+		if(config.isAuthorizationStoragePropertiesFile()){
+			permissionDao = new PropertiesPermissionDaoImpl();
+		}
+		else if(config.isAuthorizationStorageBaseX()){
+			permissionDao = new BaseXPermissionDaoImpl();
+		}
+		return permissionDao;
+	}
+	@Bean(name ="rolePermissionDao" )
+	public RolePermissionDao getRolePermissionDao(){
+		RolePermissionDao rolePermissionDao = new PropertiesRolePermissionDaoImpl();
+		if(config.isAuthorizationStoragePropertiesFile()){
+			rolePermissionDao = new PropertiesRolePermissionDaoImpl();
+		}
+		else if(config.isAuthorizationStorageBaseX()){
+			rolePermissionDao = new BaseXRolePermissionDaoImpl();
+		}
+		return rolePermissionDao;
+	}
 }

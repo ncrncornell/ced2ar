@@ -40,34 +40,6 @@
 	    <param-value>${timestamp}</param-value>
 	</context-param>
 
-	<!-- Servlet for /rest/ (read only REST API) -->
-	<servlet>
-		<servlet-name>RestletServlet</servlet-name>
-		<servlet-class>org.restlet.ext.servlet.ServerServlet</servlet-class>
-		<init-param>
-			<param-name>org.restlet.application</param-name>
-			<param-value>edu.ncrn.cornell.ced2ar.api.Main</param-value>
-		</init-param>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>RestletServlet</servlet-name>
-		<url-pattern>/rest/*</url-pattern>
-	</servlet-mapping>
-
-	<!-- Servlet for /erest/ (editing REST API) -->
-	<servlet>
-		<servlet-name>RestletServletE</servlet-name>
-		<servlet-class>org.restlet.ext.servlet.ServerServlet</servlet-class>
-		<init-param>
-			<param-name>org.restlet.application</param-name>
-			<param-value>edu.ncrn.cornell.ced2ar.eapi.Main</param-value>
-		</init-param>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>RestletServletE</servlet-name>
-		<url-pattern>/erest/*</url-pattern>
-	</servlet-mapping>
-
 	<!-- Security Filter--> 
 	<filter>
 		<filter-name>springSecurityFilterChain</filter-name>
@@ -88,23 +60,20 @@
 		<url-pattern>/erest/*</url-pattern>
 		<dispatcher>REQUEST</dispatcher>
 	</filter-mapping>
-	<!--  config page may now be accessed from anywhere. 
+  
+	<filter>
+		<filter-name>initConfigFilter</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
 	<filter-mapping>
-		<filter-name>addressFilter</filter-name>
-		<url-pattern>/config/*</url-pattern>
-		<dispatcher>REQUEST</dispatcher>
-	</filter-mapping> 
-	-->
-	<!-- Make for all endpoints in roots profile -->
-	<!--
-	<filter-mapping>
-		<filter-name>addressFilter</filter-name>
+		<filter-name>initConfigFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 		<dispatcher>REQUEST</dispatcher>
 	</filter-mapping>
-	-->
-	
+
+
 	<!--Startup check for BaseX -->
+	<!-- TODO: With new API, this might not get triggered... -->
 	<filter>
 		<filter-name>baseXCheck</filter-name>
 		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
@@ -119,9 +88,7 @@
 		<url-pattern>/erest/*</url-pattern>
 		<dispatcher>REQUEST</dispatcher>
 	</filter-mapping>
-	
-	
-	
+		
 <!-- Mappings to file extensions allowed -->
 	<!-- Web/markup -->
 	<servlet-mapping>

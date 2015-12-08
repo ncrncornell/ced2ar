@@ -37,7 +37,7 @@ public class PropertiesBase{
 	 * @return
 	 */
 	public Map<String, String> getPropertiesMap(){
-    	Map<String, String> propertiesMap =  new HashMap<String,String>();
+		Map<String, String> propertiesMap = new HashMap<String,String>();
     	List<String> keys = getKeys();
     	for(String key : keys){
     		String value =getValue(key);

@@ -39,23 +39,23 @@ public class BaseXChecker implements Filter {
 	 *Filters requests to check if BaseX db is built correctly 
 	 */
 	@Override
-	public void doFilter(ServletRequest request, ServletResponse response,FilterChain chain) 
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) 
 	throws IOException, ServletException {
-		//Checks to make sure BaseX has been validated
-		if(!baseXChecked){			
+		if(!baseXChecked){	
+			logger.debug("Checking BaseX integrity for application start");
 			BaseX.integrityCheck();
 			baseXChecked = true;
-			logger.debug("Starting password randomizer process ...");
-			BaseX.randomizePasswords();
-			logger.debug("Done password randomizer process.");
+			
+			//TODO: Switch for this or remove completely?
+			//logger.debug("Starting password randomizer process ...");
+			//BaseX.randomizePasswords();
+			//logger.debug("Done password randomizer process.");
 		}
 		chain.doFilter(request, response);
 	}
 
 	@Override
 	public void init(FilterConfig config) throws ServletException {
-
 		
 	}
-
 }

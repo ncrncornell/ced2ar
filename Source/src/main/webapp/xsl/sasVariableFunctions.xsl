@@ -65,5 +65,22 @@
 		<xsl:value-of select="substring($formatedCurrentTimeMilli,1,1)"/>			
 	</xsl:function>
 	
+	<!--
+		This function replaces certain characters with their escape characters
+		Replaces = with  &#61;
+		Replaces > with  &#62;
+		Replaces < with  &#60;
+		Replaces " with  &#34;
+		Replaces ' with  &#39;
+		
+	 -->
+	<xsl:function name="ncrnxsl:getSanitizedString">
+		<xsl:param name="originalString"/>
+		<xsl:variable name='modifiedString'>
+			<xsl:value-of select='translate($originalString,"="," ")'/>
+		</xsl:variable>
+		<xsl:value-of select="$modifiedString"/>	
+				
+	</xsl:function> 
 	
 </xsl:stylesheet>

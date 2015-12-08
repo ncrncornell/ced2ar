@@ -5,7 +5,7 @@
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags"%>
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <c:if test="${not print}">
-	<c:set var="js" scope='request'>toggleB</c:set>
+	<c:set var="js" scope='request'>toggleB hints/popups hints/crowdsourceWarning</c:set>
 </c:if>
 <t:main>
 	<c:if test="${not empty newVersion}">
@@ -18,27 +18,36 @@
 		</em>
 	</c:if>
 	<c:if test="${not empty results}">
-	
 		<c:choose>
 			<c:when test="${type eq 'var'}">
 				<a href="${baseURI}/codebooks/${baseHandle}/v/${version}/vars/${var}/exportToSTATA"
-				class="printButton3b printRemove" title="Download STATA variable values">Stata</a>
+				class="printButton3b printRemove" title="Download Stata variable values" aria-label="Download Stata variable values">Stata</a>
 				<a href="${baseURI}/codebooks/${baseHandle}/v/${version}/vars/${var}/exportToSAS"
-				class="printButton3b printRemove" title="Download SAS variable values">SAS</a>	
+				class="printButton3b printRemove" title="Download SAS variable values" aria-label="Download SAS variable values">SAS</a>	
 				<a href="?print=y" class="printButton" target="_blank"
-					title="View print version"> <i class="fa fa-print"></i>
+					title="View print version" aria-label="View print verson"> <i class="fa fa-print"></i>
 				</a>
 				<c:if test="${editing}">
-					<c:if test="${git}">
-						<a href="${baseURI}/codebooks/${baseHandle}/v/${version}/vars/${var}/versions"
-								class="printButton" title="View versions"> <i
-							class="fa fa-git"></i>
-						</a>
-					</c:if>
-					<a href="${baseURI}/edit/codebooks/${baseHandle}/v/${version}/vars/${var}"
-						class="printButton" title="Edit this page"><i
-						class="fa fa-pencil"></i>
-					</a>
+					<c:choose>
+						<%-- TODO: Probably a better way to handle this --%>
+						<c:when test="${empty empty userEmail and empty userName}">
+							<a href="${baseURI}/edit/codebooks/${baseHandle}/v/${version}/vars/${var}"
+								class="printButton" title="Login" 
+								aria-label="View variables changed"> <i class="fa fa-sign-in"></i>
+							</a>
+						</c:when>
+						<c:otherwise>
+							<c:if test="${git}">
+								<a href="${baseURI}/codebooks/${baseHandle}/v/${version}/vars/${var}/versions"
+										class="printButton" title="View versions"> <i
+									class="fa fa-git"></i>
+								</a>
+							</c:if>
+							<a href="${baseURI}/edit/codebooks/${baseHandle}/v/${version}/vars/${var}"
+								class="printButton" title="Edit this page"><i class="fa fa-pencil"></i>
+							</a>	
+						</c:otherwise>
+					</c:choose>				
 				</c:if>
 			</c:when>
 			<c:when test="${type eq 'group'}">

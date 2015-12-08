@@ -1,8 +1,8 @@
 package edu.ncrn.cornell.ced2ar.eapi;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -19,6 +19,8 @@ import edu.ncrn.cornell.ced2ar.api.data.BaseX;
  *@author NCRN Project Team 
  */
 
+
+//TODO: Move (part of) this into the rest.queries package
 public class QueryUtil {
 
 	 private static final Logger logger = Logger.getLogger(QueryUtil.class);
@@ -240,10 +242,9 @@ public class QueryUtil {
 	 * @param hash
 	 * @param handleVars
 	 */
-	protected static void insertVarCommit(String hash, Hashtable<String,List<String>> handleVars){
-		Enumeration<String> enumration = handleVars.keys();
-		while(enumration.hasMoreElements()){
-		    String handle = enumration.nextElement();
+	protected static void insertVarCommit(String hash, Map<String,List<String>> handleVars){
+		Set<String> handleVarKeys = handleVars.keySet();
+		for(String handle : handleVarKeys){
 		    List<String> vars = handleVars.get(handle);
 		    
 		    String xqueryTest =  "count(for $c in collection('git/git')/git/commits/commit"
@@ -301,9 +302,12 @@ public class QueryUtil {
 				xquery+=" and $c[@local='true'] return string-join(string-join((data($c/@hash),data($c/@timestamp)),'.'),' ')";
 			break;
 			default:
-				//$c/@local descending,
-				xquery+="order by number($c/@timestamp) descending return string-join(string-join((data($c/@hash),"
-				+ "data($c/@timestamp),data($c/@user),data($c/@local)),','),' ')";
+				//$c/@local descending,		
+				xquery = "let $c := " +xquery 
+				+ "order by number($c/@timestamp) descending"
+				+ " return string-join(string-join((data($c/@hash),"
+				+ " data($c/@timestamp),data($c/@user),data($c/@local)),','),'')"
+				+ " return string-join($c,';')";
 			break;
 		}
 
@@ -402,7 +406,7 @@ public class QueryUtil {
 		+" let $n := subsequence($ids,1,1)+1"
 		+" return if(count($ids) gt 0)"
 		+" then $n else 0";
-		String groupID = "_"+BaseX.getXML(xquery);
+		String groupID = "_"+BaseX.getXML(xquery).trim();
 		return groupID;
 	}
 	
@@ -417,7 +421,7 @@ public class QueryUtil {
 		String xquery = "let $v:= count(collection('CED2AR/"+handle+"')/codeBook/dataDscr/var)"
 		+" let $va:= count(collection('CED2AR/"+handle+"')/codeBook/dataDscr/var[@access != ''])"
 		+" return data(($va,$v))";
-		String[] result = BaseX.getXML(xquery).split(" ");
+		String[] result = BaseX.getXML(xquery).replaceAll("\\s+"," ").split(" ");
 		return result;	
 	}
 	
@@ -433,6 +437,7 @@ public class QueryUtil {
 	 * @param ua user agent
 	 * @param lp last page
 	 */
+	@Deprecated
 	public static void insertReport(String bt, String bd, String rs, String n, String e, String ip, String ts, String ua, String lp){
 		String xquery = "insert node element bugReport{"
 			+" element type {'"+bt+"'},"

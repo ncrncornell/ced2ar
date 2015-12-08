@@ -1,9 +1,10 @@
+<%--TODO: This JSP isn't used anymore --%>
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags"%>
 <c:set var="js" scope='request'>register</c:set>
-<c:set var="css" scope='request'>edit.min</c:set>
+<c:set var="css" scope='request'>edit</c:set>
 <t:main>
 	<div id="userComments" class="toggleContent">
 		<h2>Register with CED<sup>2</sup>AR</h2>

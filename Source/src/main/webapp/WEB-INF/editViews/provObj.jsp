@@ -3,9 +3,9 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags"%>
 <c:set var="js" scope='request'>provObj bootstrap/bootstrap-editable.min</c:set>
-<c:set var="css" scope='request'>edit.min provEdit bootstrap/bootstrap-editable</c:set>
+<c:set var="css" scope='request'>edit provEdit bootstrap/bootstrap-editable</c:set>
 <t:main>
-	<h2>Prov Info - ${targetNode['label']}</h2>
+	<h2>Workflow Entity - ${targetNode['label']}</h2>
 	<div id="provEdit">
 		<form>
 			<input id="provID" type="hidden" value="${targetNode['id']}" />
@@ -28,6 +28,14 @@
 					<a href="#" id="provDate" class="bse">${targetNode['date']} <i class="fa fa-pencil"></i></a>
 				</p>
 				<p><a href="${baseURI}/prov2?n=${targetNode['id']}">View on Graph</a></p>
+				<c:if test="${isCodebook}">
+					<p><a href="${baseURI}/edit/prov/${targetNode['id']}?d=true">Generate Disclosure Form</a></p>
+				</c:if>
+				<span class="edc">
+					<a id="nodeDelete" class="noSelect" href="#" title="Delete entire node?">
+						<i class="fa fa-trash-o"></i> Delete node
+					</a>
+				</span>
 			</fieldset>
 			<fieldset>
 				<legend>

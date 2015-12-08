@@ -9,6 +9,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+
+import edu.ncrn.cornell.ced2ar.api.data.Config;
+
+
 /**
 *Maps to login pages 
 *@author Cornell University, Copyright 2012-2015
@@ -23,6 +27,8 @@ public class Login {
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public ModelAndView login(HttpSession session, HttpServletRequest request,HttpServletResponse response, Model model) {
 		model.addAttribute("subTitl","Login");
+		Config config = Config.getInstance();
+		model.addAttribute("config",config);
 		return new ModelAndView("/WEB-INF/editViews/login.jsp");
 	}
 	

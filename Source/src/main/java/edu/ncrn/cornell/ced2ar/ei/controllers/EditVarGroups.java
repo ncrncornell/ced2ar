@@ -1,8 +1,9 @@
 package edu.ncrn.cornell.ced2ar.ei.controllers;
 
-import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
+import java.util.WeakHashMap;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -10,12 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +23,7 @@ import org.springframework.web.servlet.HandlerMapping;
 
 import edu.ncrn.cornell.ced2ar.api.data.Fetch;
 import edu.ncrn.cornell.ced2ar.eapi.QueryUtil;
+import edu.ncrn.cornell.ced2ar.eapi.rest.queries.EditCodebookData;
 import edu.ncrn.cornell.ced2ar.web.classes.Loader;
 import edu.ncrn.cornell.ced2ar.web.classes.Parser;
 
@@ -55,55 +52,7 @@ public class EditVarGroups {
 	
 	@Autowired
 	private Loader loader;
-	
-//Utilities
-		
-		//TODO:Move somewhere else
-		/**
-		 * Retrieves variables in JSON format for autocomplete
-		 * @param handle
-		 * @param response
-		 * @return
-		 */
-		@RequestMapping(value = "/data/codebooks/{h}/vars", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-		@ResponseBody
-		public String jsonVarsInCodebook(@PathVariable(value = "h") String handle, HttpServletResponse response){
-			String apiURL = loader.getPath()+"/rest/codebooks/"+handle+"/variables";
-			String json = Fetch.getJson(apiURL)[0];
-			response.setContentType("application/json");
-			return json;
-		}
-		
-		/**
-		 * Retrieves variables in JSON format for autocomplete
-		 * @param handle
-		 * @param response
-		 * @return
-		 */
-		@RequestMapping(value = "/data/codebooks", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-		@ResponseBody
-		public String jsonCodebookList(HttpServletResponse response){
-			String apiURL = loader.getPath()+"/rest/codebooks/";
-			String json = Fetch.getJson(apiURL)[0];
-			response.setContentType("application/json");
-			return json;
-		}
-		
-		@RequestMapping(value = "/data/prov/nodes", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-		@ResponseBody
-		public String jsonProvNodes(HttpServletResponse response){
-			JSONArray nodes = null;
-			String jsonData = Fetch.get(loader.getPath()+"/rest/prov");
-			try{
-				JSONObject json = (JSONObject) new JSONParser().parse(jsonData);
-				nodes = (JSONArray) json.get("nodes");
-			}catch(ParseException e){
-				logger.error("Error parsing JSON from internal database: "+e.getMessage());
-			}
-			response.setContentType("application/json");
-			return nodes.toString();
-		}
-		
+
 //Endpoints
 	
 	/**
@@ -169,7 +118,7 @@ public class EditVarGroups {
 	@RequestParam(value="label", required = true) String label,
 	@RequestParam(value="desc", required = true) String desc,
 	Model model, HttpSession session, HttpServletResponse response){
-		
+				
 		if(name.equals("") || label.equals("")){
 			session.setAttribute("error2", "Name and label are required");
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -180,11 +129,14 @@ public class EditVarGroups {
 		model.addAttribute("version",version);
 		
 		String groupID = QueryUtil.pickGroupID(handle);
-		String host = loader.getHostName();
-		int code = Fetch.groupEdit(host, baseHandle, version, groupID, name, label, desc);
+		EditCodebookData editCodebookData = new EditCodebookData();
+		int code = editCodebookData.editVarGrp(baseHandle, version, groupID, name, label, desc);
 		
 		if(code > 0 && code < 400){
-			session.setAttribute("info_splash","Changes Saved. Added group '"+name+"'");
+			String groupURL =  loader.getPath() + "/codebooks/"
+			+baseHandle+"/v/"+version+"/groups/"+groupID+"/";
+			session.setAttribute("info_splash","Changes Saved. Added group "+
+			"<a href='"+groupURL+"'>"+name+"</a>");
 		}else if(code < 500){
 			session.setAttribute("error", "Your request could not be completed.\nYour edit may have created an invalid document.");
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -284,8 +236,9 @@ public class EditVarGroups {
 		String handle = baseHandle+version;
 
 	  	//List of acceptable elements or attributes to edit TODO: put this somewhere else, make sure garbage collection is working
-		Hashtable<String,String[]> validFields = new Hashtable<String,String[]>();
+		Map<String,String[]> validFields = new WeakHashMap<String,String[]>();
 		validFields.put("txt",new String[] {"1","/varGrp/txt","Group Description"});
+		
 		if(validFields.containsKey(field)){		
 			String[] info = validFields.get(field);
 			String apiURL = baseURI + "codebooks/"+handle+"/vargroups/"+id;
@@ -319,7 +272,6 @@ public class EditVarGroups {
 	@RequestParam(value = "newValue", defaultValue = "") String newValue,
 	Model model, HttpSession session, HttpServletResponse response) throws Exception{
 		
-		String host = loader.getHostName();
 		String name = "";
 		String label = "";
 		String txt = "";
@@ -334,8 +286,10 @@ public class EditVarGroups {
 				txt = newValue;
 			break;
 		}
+	
+		EditCodebookData editCodebookData = new EditCodebookData();
+		int code = editCodebookData.editVarGrp(baseHandle, version, id, name, label, txt);
 		
-		int code = Fetch.groupEdit(host, baseHandle, version, id, name, label, txt);
 		if(code > 0 && code < 400){
 			session.setAttribute("info_splash","Changes Saved. Added group '"+name+"'");
 		}else if(code < 500){
@@ -355,33 +309,10 @@ public class EditVarGroups {
 	@RequestParam(value="var", required = true) String var,
 	@RequestParam(value="add", required = true) boolean add,
 	Model model, HttpSession session, HttpServletResponse response) throws Exception{		
-		String host = loader.getHostName();
-		int code = Fetch.groupVarChange(host, baseHandle, version, id, var, add);
-		return Integer.toString(code);
-	}
-	
-	//TODO: implement auto complete somewhere
-	/**
-	 * Test function
-	 * @param baseHandle
-	 * @param version
-	 * @param id
-	 * @param model
-	 * @param session
-	 * @return
-	 */
-	@RequestMapping(value = "/edit/codebooks/{c}/v/{v}/autocomplete", method = RequestMethod.GET)
-	public String autoComplete(@PathVariable(value = "c") String baseHandle, 
-	@PathVariable(value = "v") String version, Model model, HttpSession session){;
-		String handle = baseHandle+version;
-
-		if(!loader.hasCodebook(handle)){
-			session.setAttribute("error","Codebook with handle '"+handle+"' does not exist");			
-			return "redirect:/";
-		}	
-
-		model.addAttribute("varAutoComplete",true);
-		model.addAttribute("handle", handle);
-		return "/WEB-INF/editViews/autoComplete.jsp";
+		EditCodebookData editCodebookData = new EditCodebookData();
+		boolean delete = !add;
+		int code = editCodebookData.editVarGroupVars(baseHandle, version, id, var, true, delete);
+		response.setStatus(code);
+		return "";
 	}
 }

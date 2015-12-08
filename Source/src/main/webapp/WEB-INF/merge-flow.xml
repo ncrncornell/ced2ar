@@ -1,0 +1,65 @@
+<flow xmlns="http://www.springframework.org/schema/webflow"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.springframework.org/schema/webflow
+		http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+	
+	<var name="mergeProperties" class="edu.ncrn.cornell.ced2ar.merge.MergeProperties"/>
+	
+	<action-state id="fetchCodebooks">
+		<evaluate expression="mergeMultiAction.loadCodebooks(mergeProperties,flowRequestContext)"/>
+		<transition on="success" to="startFlow" />
+		<!-- TODO: add error view-state? -->
+	</action-state>
+	
+	<view-state id="startFlow" view="/WEB-INF/mergeViews/flow/start.jsp" model="mergeProperties">
+		<transition on="compareVars" to="compareVars"/>
+	</view-state>
+	
+	<action-state id="compareVars">
+		<evaluate expression="mergeMultiAction.compareVars(mergeProperties,flowRequestContext)"/>
+		<transition on="success" to="remoteVars" />
+		<transition on="error" to="remote404" />
+	</action-state>
+	
+	<view-state id="remote404" view="/WEB-INF/mergeViews/flow/404.jsp" model="mergeProperties">
+	</view-state>
+	
+	<view-state id="remoteVars" view="/WEB-INF/mergeViews/flow/add.jsp" model="mergeProperties">
+		<transition on="addVars" to="addVars"/>
+	</view-state>
+	
+	<action-state id="addVars">
+		<evaluate expression="mergeMultiAction.addVars(mergeProperties,flowRequestContext)"/>
+		<transition on="success" to="mergeVars" />
+	</action-state>
+	
+	<view-state id="mergeVars" view="/WEB-INF/mergeViews/flow/vars.jsp" model="mergeProperties">
+		<transition on="doMerge" to="doMerge" />
+	</view-state>
+	
+	<action-state id="doMerge">
+		<evaluate expression="mergeMultiAction.doMerge(mergeProperties,flowRequestContext)"/>
+		<transition on="yes" to="showMerge" />
+		<transition on="no" to="compareCover" />
+	</action-state>
+	
+	<view-state id="showMerge" view="/WEB-INF/mergeViews/flow/var.jsp" model="mergeProperties">
+		<transition on="doMerge" to="doMerge"/>
+	</view-state>
+	
+	<action-state id="compareCover">
+		<evaluate expression="mergeMultiAction.mergeTitlepage(mergeProperties,flowRequestContext)"/>
+		<transition on="success" to="showCover" />
+	</action-state>
+	
+	<view-state id="showCover" view="/WEB-INF/mergeViews/flow/titlepage.jsp" model="mergeProperties">
+		<transition on="endMerge" to="endMerge" />
+	</view-state>
+	
+	<action-state id="endMerge">
+		<evaluate expression="mergeMultiAction.finish(mergeProperties,flowRequestContext)"/>
+		<transition on="success" to="finish" />
+	</action-state>
+	
+	<end-state id="finish" view="/WEB-INF/mergeViews/flow/end.jsp"/>
+</flow>	

@@ -165,7 +165,7 @@
 					</p>
 				</xsl:for-each>
 				<xsl:if test="count(codeBook/fileDscr) eq 0">
-					<p>Sorry, no file information is avalible for this codebook.</p>
+					<p>Sorry, no file information is available for this codebook.</p>
 				</xsl:if>
 			</div>
 		</div>
@@ -173,7 +173,7 @@
 		<p class="toggleHeader lb2 tcs">Terms of Use</p>
 		<div class="toggleContent">
 			<xsl:if test="not(codeBook/stdyDscr/dataAccs[1]/*[normalize-space()])">
-				<p class="lb2">No documentation avalible for terms of use</p>
+				<p class="lb2">No documentation available for terms of use</p>
 			</xsl:if>
 			<xsl:if test="codeBook/stdyDscr/dataAccs/@ID">
 				<p id="accessLevels" class="toggleHeader hs2">Access Levels</p>

@@ -33,6 +33,10 @@ public class BaseXUserDaoImpl implements UserDao {
 	 */
 	@Override
 	public User getUser(String userId) {
+		//TODO Find a better place for this CIMS database existence check
+		// This method is called when a rest call is made. But, we are making a direct call to BaseX 
+		// for UserManagement API
+	//	BaseX.integrityCheck();
 		logger.debug("Start getUser method " + userId);
 		return getUser(userId,false);  // Fetch if the user is active.
 	}

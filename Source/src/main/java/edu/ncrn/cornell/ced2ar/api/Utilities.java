@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.validator.routines.UrlValidator;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.XML;
@@ -20,6 +21,7 @@ import edu.ncrn.cornell.ced2ar.api.data.BaseX;
  *@author Cornell Labor Dynamics Institute
  *@author NCRN Project Team 
  */
+
 public class Utilities {
 	/**
 	/*Check to make sure search parameters are valid and return field is present and valid
@@ -51,6 +53,7 @@ public class Utilities {
 	 * @return String the string now in JSON format
 	 */
 	//TODO: This method alone requires a seperate java package. Try to remove.
+	@Deprecated
 	public static String xmlToJson(String xmlString) {
 		String json = null;
 		try {
@@ -76,10 +79,10 @@ public class Utilities {
 	 * @return
 	 */
 	public static boolean codebookExists(String h,String database){
-		String xquery = "for $c in collection('"+database+"') return fn:base-uri($c)";
-		String[] handles = BaseX.getXML(xquery, false).split(" ");
+		String xquery = "for $c in collection('"+database+"') return fn:base-uri($c)";	
+		String[] handles = BaseX.getXML(xquery, false).replace("\n", " ").split(" ");
 		for(String handle : handles){
-			handle = handle.replace(database+"/", "").trim();
+			handle = handle.replace(database+"/", "").trim().toLowerCase();
 			if(handle.equals(h)){ 
 				return true;
 			}
@@ -87,4 +90,17 @@ public class Utilities {
 		return false;
 	}
 	
+	/**
+	 * Check to see if a URI is validate
+	 * @param uri
+	 * @return
+	 */
+	public static boolean validateURI(String uri){
+		//String[] types = {"http","https","ftp","file"};
+		//UrlValidator.ALLOW_ALL_SCHEMES + UrlValidator.ALLOW_LOCAL_URLS
+		//TODO: not validating URI's from local file system, or with file extension
+		String[] schemes = {"http","https","ftp"};
+		UrlValidator validator = new UrlValidator(schemes);
+		return validator.isValid(uri);
+	}	
 }

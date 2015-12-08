@@ -8,6 +8,9 @@
 <c:set var="css" scope='request'>config</c:set>
 <t:main>
 	<h2>Configuration Properties</h2>
+	<a href="downloadProperties" class="printButton" title="Download properties">
+	  <i class="fa fa-download"></i>
+	</a>
 	<h4>Current BaseX url</h4>
 	<em>${propertiesForm.propertiesMap['baseXDB']}</em>
 	<form:form action="config" method="post" id="properties"
@@ -25,15 +28,6 @@
 		</div>
 		<table class='configTable'>
 			<h4>Other Properties</h4>
-			<tr>
-				<td>Editing API Application Name</td>
-				<td><input type="text" name="propertiesMap['eAPI']"
-					value="${propertiesForm.propertiesMap['eAPI']}"> <form:errors
-						class='configError' path="propertiesMap[eAPI]" /></td>
-			</tr>
-
-
-
 
 			<!-- START Bug Report Service   -->
 
@@ -86,17 +80,6 @@
 					 -->
 			<!-- END Bug Report Service   -->
 
-
-
-
-
-
-
-
-
-
-
-
 			<tr>
 				<td>HTTP Timeout</td>
 				<td><input type="text" name="propertiesMap['timeout']"
@@ -137,8 +120,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td><input type="submit" class="btn" value='Update Properties'>
-				</td>
+				<td><input type="submit" class="btn" value='Update Properties'></td>		
 			</tr>
 		</table>
 	</form:form>

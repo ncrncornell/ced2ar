@@ -1,0 +1,160 @@
+/*Prov 2 CSS
+=============================================================================*/
+
+#main{
+	padding:5px!important;
+}
+
+#wrapper{
+	padding-bottom:7.25em!important;
+}
+
+#footer{
+	padding:2px!important;
+	margin-top:1px!important;
+	height:7.75em!important;
+}
+
+@media only screen and (max-width: 650px) {	
+	#graph2Info{
+   		top:7.2em!important;
+	}
+}
+
+#graph2{
+	min-height:300px;
+    width:auto;
+    margin:1em auto 0em;
+    border:1px solid #ddd;
+    border-radius:4px;
+    background-color:rgba(255,255,255,0.75);
+}
+
+#graph2:not(.small){
+	min-width:32em;	
+}
+
+#provSmall{
+	/*position:fixed;*/
+	max-height:500px;
+}
+
+#graph2 h2{
+	text-align:center;
+	margin-top:1em;
+	font-style:italic;	
+}
+
+.provForm #graph2{
+	margin:1em auto 1em!important;
+}
+
+h2{
+	margin:.25em 0em;
+	line-height:1;
+}
+
+#graph2Info{
+	background-color:rgba(255,255,255,0.85);
+	border:1px solid #ddd;
+    border-radius:4px;
+   	z-index:2;
+   	float:left;
+   	position:absolute;
+   	display:inline-block;
+   	top:5em;
+   	left:1.5em;
+   	max-width:30em;
+}
+
+.col-xs-10 #graph2Info{
+	top:4em!important;
+}
+
+#nodeFilterList{
+	border-radius: 4px;
+	margin: .5em .5em .5em 0;
+	min-width: 15em;
+	border: 1px solid #ccc;
+	height: 2.5em;
+	font-size: .85em;
+	vertical-align: middle;
+	color: #555;
+}
+
+#graph2Info button{
+  margin:.3em auto;
+}
+
+#provHeaderControls h2{
+	display: inline;
+  	margin: auto .5em auto 0em;
+  	vertical-align: middle;
+}
+
+.provButtonF{
+	float: right;
+	color: #ccc;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	padding: 0.2em 0.5em;
+	font-size: 1.25em;
+	margin:.2em .125em;
+}
+
+.provButtonF:hover{
+	color: #f3f3f3;
+	background-color: #0093d0;
+	border: 1px solid #0093d0;
+	text-decoration: none;
+}
+
+
+#provShuffle i{
+	padding-right:.33em;
+}
+
+#provHeaderControls{
+	min-width:32em;	
+	i{
+		font-size:1.45em;
+	}
+}
+
+#provSmall{
+	#graph2{
+		margin-bottom:1em!important;
+	}
+
+	#nodeFilterList{
+		border:1px solid #aaa;
+		height:25px;
+		background:-webkit-linear-gradient(top,#fff 20%,#f6f6f6 50%,#eee 52%,#f4f4f4 100%);
+		box-shaddow:0 0 3px #fff inset,0 1px 1px rgba(0,0,0,.1);
+		color:#444;
+		font-size:13px;
+	}
+	
+	#provHeaderControls{
+		button{
+			margin-left:0;
+		}
+	}
+}
+
+form[name='provFilter']{
+	display:inline-block;
+	margin-left:1em;
+}
+
+#inputNew, #inputExisting{
+	display:none;
+	margin:.5em auto;
+}
+
+#authorSearch{
+	margin-bottom:.5em;
+	border:1px solid #ccc;
+	border-radius:3px;
+	padding:2px 6px;
+}

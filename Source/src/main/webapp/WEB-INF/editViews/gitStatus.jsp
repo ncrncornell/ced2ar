@@ -5,7 +5,7 @@
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags"%>
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <c:set var="css" scope='request'>versionStatus</c:set>
-<c:set var="js" scope='request'>gitStatus</c:set>
+<!-- c:set var="js" scope='request'>gitStatus inlineLoad-->
 <t:main>
 	<div id="gitStatus">
 		<h2>Codebook Status</h2>
@@ -14,8 +14,6 @@
 		<c:set var="conflictAction" value="false"/>
 		<c:set var="pullIntoBaseXAction" value="false"/> 
 		<c:set var="invalidRemoteAction" value="false"/>
-		
-		
 		<table class="table table-striped">
 			<thead>
 				<tr>
@@ -46,26 +44,26 @@
 					<!--  START Git Status Column -->
 					<c:choose>
 						<c:when test="${codebook.status eq 'LOCAL_BEHIND'}"> 
-							<td class="status_localBehind">${codebook.status}</td>
+							<td class="status status_localBehind">${codebook.status}</td>
 						</c:when>
 						<c:when  test="${codebook.status eq 'UP_TO_DATE'}"> 
-							<td class="status_uptodate">${codebook.status}</td>
+							<td class="status status_uptodate">${codebook.status}</td>
 						</c:when>
 						<c:when test="${codebook.status eq 'CONFLICT'}"> 
-							<td class="status_conflict">${codebook.status}</td>
+							<td class="status status_conflict">${codebook.status}</td>
 						</c:when>
 						<c:when test="${codebook.status eq 'INVALID_REMOTE'}"> 
-							<td class="status_remote_invalid">${codebook.status}</td>
+							<td class="status status_remote_invalid">${codebook.status}</td>
 						</c:when>
 						
 						<c:when test="${codebook.status eq 'LOCAL_AHEAD'}"> 
-							<td class="status_localAhead">${codebook.status}</td>
+							<td class="status status_localAhead">${codebook.status}</td>
 						</c:when>
 						<c:when test="${codebook.status eq 'LOCAL_DOES_NOT_EXIST'}"> 
-							<td class="status_local_non_existant">${codebook.status}</td>
+							<td class="status status_local_non_existant">${codebook.status}</td>
 						</c:when>
 						<c:when test="${codebook.status eq 'REMOTE_DOES_NOT_EXIST'}"> 
-							<td class="status_remote_non_existant">${codebook.status}</td>
+							<td class="status status_remote_non_existant">${codebook.status}</td>
 						</c:when>
 
 						<c:otherwise> 
@@ -84,18 +82,23 @@
 					</td>
 					<c:choose>
 						<c:when test = "${codebook.baseXExistanceStatus eq 'EXISTS'}">
-							<td class="status_exist">
+							<td class="status status_exist">
 								${codebook.baseXExistanceStatus}
 							</td>	
 						</c:when>
 						<c:otherwise>
-							<td class="status_does_not_exist">
-								${codebook.baseXExistanceStatus}<br>
+							<td class="status status_does_not_exist">
+								 ${codebook.baseXExistanceStatus}
 								<c:if test="${codebook.localGitExistanceStatus eq 'EXISTS'}">
-									<br />
-									<a class="ingestIntoBasexButton btn" href="ingestintobasex?codebook=${codebook.codebookBaseHandle}&version=${codebook.codebookVersion}" title="Add codebook to BaseX">Add</a>
+									<form id="add${codebook.codebookName}Form" method= "post" 
+									action="ingestintobasex">
+										<input type="hidden" name = "codebook" value="${codebook.codebookBaseHandle}"/>
+										<input type="hidden" name = "version" value="${codebook.codebookVersion}"/>
+										<button class="btn inlineLoad" data-toggle="modal" data-target=".bs-example-modal-lg"  type="submit" class="btn printButton3b printRemove">
+				                			 Add Codebook to BaseX
+				            			</button>
+				            		</form>	
 								</c:if>	
-								
 							</td>	
 						</c:otherwise>
 					</c:choose>
@@ -104,25 +107,58 @@
 			
 			<tr><td colspan='5'>
 				<c:choose>
+				
 					<c:when test="${invalidRemoteAction eq true }">
 						<c:if test= "${conflictAction eq false}">
 							<a class="replaceInvalidRemoteButton btn" href="removeRemote" title="Replace Invalid Remote Codebook with Local">Replace Invalid Codebook</a>
 						</c:if>
 					</c:when>
 					<c:otherwise>
+						<form name = "commitChanges" method = "post" action = "commitpending">
+							<button  type="submit" class="printButton3b printRemove">
+			                	Commit Pending Changes
+			            	</button>
+						</form>
+					
 						<!--  Pull Action should come first followed by a Push. Conflicts are resolved by pulling first and merging in favor of remote  -->
 						<c:if test="${conflictAction eq true}">
-							<a class="conflictButton btn" href="merge" title="Merge in Favor of Remote">Merge</a>
+							<form name = "mergeFavoringRemote" method = "post" action = "mergeInFavorOfRemote">
+								<button  type="submit" class="printButton3b printRemove">
+				                	Merge In Favor of Remote
+				            	</button>
+							</form>
+							
 						</c:if>
 						<c:if test="${pullAction eq 'true' && conflictAction eq false}">
-							<a class="pullFromRemoteButton btn" href="pullfromremote" title="Pull from Remote">Pull from Remote</a>
+							<form name = "pullFromremote" method = "post" action = "pullfromremote">
+								<button  type="submit" class="printButton3b printRemove">
+				                	Pull from Remote & Update
+				            	</button>
+							</form>
 						</c:if>
 						<c:if test="${pushAction eq 'true' && conflictAction eq false && pullAction eq false}">
-							<a class="pushToRemoteButton  btn" href="pushtoremote" title="Push to Remote">Push To Remote</a>
+							<form name = "push2remote" method = "post" action = "pushtoremote">
+								<button  type="submit" class="printButton3b printRemove">
+				                	Push to Remote & Update
+				            	</button>
+							</form>
 						</c:if>
 					</c:otherwise>
 				</c:choose>
 			</td></tr>
 		</table>
 	</div>
+<!-- 
+<button  data-toggle="modal" data-target=".bs-example-modal-sm"  class="btn printButton3b printRemove">
+	Hello
+</button>
+
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="model" aria-labelledby="myLargeModalLabel">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+		<i class="fa fa-circle-o-notch fa-spin"></i>
+    </div>
+  </div>
+</div>
+-->	
 </t:main>

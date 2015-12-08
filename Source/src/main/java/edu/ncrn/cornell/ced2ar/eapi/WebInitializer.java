@@ -12,8 +12,6 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.ContextRefreshedEvent;
 
-import edu.ncrn.cornell.ced2ar.sql.dao.VariableDAO;
-
 /**
  * Clones a remote repository after the application context is loaded. 
  * Code will be executed when application is started, context is refreshed and application is shutdown.
@@ -79,7 +77,9 @@ public class WebInitializer implements ApplicationListener{
 			}catch(IOException|GitAPIException e){
 				e.printStackTrace();
 				logger.warn("There is an error in commiting the changes to local repo: " + e.getMessage());
-			}finally{
+			}
+			
+			finally{
 				versionControl = null;
 			}
 		}

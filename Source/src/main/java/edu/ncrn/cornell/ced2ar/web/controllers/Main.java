@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import edu.ncrn.cornell.ced2ar.api.data.Config;
 import edu.ncrn.cornell.ced2ar.web.classes.Loader;
 
 /**
@@ -127,6 +128,11 @@ public class Main {
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
     public String test(Model model) {
 		model.addAttribute("subTitl","Test Page");
+		
+		model.addAttribute("crowdsourceSwitch",Config.getInstance().getCrowdSourcingRole());
+		String remoteURL = Config.getInstance().getRemoteURL() + "/test";//TODO: Change per page
+		model.addAttribute("remoteServerURL",remoteURL);
+		
         return "/WEB-INF/views/test.jsp";
     } 
 	

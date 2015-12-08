@@ -6,8 +6,13 @@
 <t:main>
 	<c:if test="${editing}">
 		<a href="${baseURI}/edit/codebooks" class="printButton"
-			title="Edit codebooks"> <i class="fa fa-cog"></i>
+			title="Edit codebooks" aria-label="Edit codebooks"> <i class="fa fa-cog"></i>
 		</a>
+		<c:if test="${prov}">
+			<a href="${baseURI}/edit/workflow" class="printButton"
+				title="View Workflow Graph" aria-label="View Workflow Graph, warning not screenreader friendly"> <i class="fa fa-connectdevelop"></i>
+			</a>
+		</c:if>
 	</c:if>
 	<div>
 		<h2>Codebooks</h2>

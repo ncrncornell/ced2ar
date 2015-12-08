@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.openid.OpenIDAttribute;
 import org.springframework.security.openid.OpenIDAuthenticationToken;
 
+import edu.ncrn.cornell.ced2ar.api.data.Config;
 import edu.ncrn.cornell.ced2ar.security.idmgmt.service.UserService;
 
 /**
@@ -130,7 +131,11 @@ public class Service implements UserDetailsService, AuthenticationUserDetailsSer
 		logger.debug("Start fetchUserDetails for userId " + userId );
         boolean authorized = userService.isUserRegistered(userId);
         logger.debug("userId:authorized="+userId+":"+authorized);
-        session.setAttribute("userEmail", userId);
+
+        Config config = Config.getInstance();
+        if(config.getOpenAccess().equals("true")){
+        	session.setAttribute("userEmail", userId);
+		}
        
         if(authorized){
             List<GrantedAuthority> authorities = null;
@@ -144,7 +149,7 @@ public class Service implements UserDetailsService, AuthenticationUserDetailsSer
             }
             OAUserDetail user = new OAUserDetail(userId, authorities);
             user.setEmail(userId);
-            user.setName(userId);
+            //user.setName(userId);
             session.setAttribute("userAuth", true);
             return user;
         }else{

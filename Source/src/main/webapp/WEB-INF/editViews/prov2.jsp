@@ -4,9 +4,9 @@
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags"%>
 <%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form" %>
 <c:set var="js" scope='request'>provEdit2</c:set>
-<c:set var="css" scope='request'>provEdit edit.min</c:set>
+<c:set var="css" scope='request'>provEdit edit</c:set>
 <t:main>
-	<h2>Add New Prov Entity</h2>
+	<h2>Workflow Editing - New Entry</h2>
 	<%--TODO: Write editing for existing node. Show all relationships, allow to change, or delete --%>
 	<%--TODO: Write upload button --%>
 	<div>
@@ -46,13 +46,14 @@
 				</legend>
 				<select name="provObjClass">			
 					<option value="">--Select Type--</option>
-					<option value="stat">Statistical Code</option>	
-					<option value="script">Scripting Code</option>	
+					<option value="meta">Archive</option>
+					<option value="ddi">Data File</option>	
+					<option value="ddi">DDI Metadata</option>
 					<option value="doc">Documentation File</option>	
-					<option value="ddi">DDI Metadata</option>		
 					<option value="meta">Other Structured Metadata</option>	
-					<option value="meta">File Archive</option>	
-					<option value="other">Other</option>						
+					<option value="other">Other</option>	
+					<option value="script">Scripting Code</option>
+					<option value="stat">Statistical Code</option>						
 				</select>
 				<i class="fa fa-question-circle helpIcon" data-toggle="popover" 
 					title="" data-original-title="File Type" 

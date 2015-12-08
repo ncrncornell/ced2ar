@@ -1,7 +1,7 @@
 package edu.ncrn.cornell.ced2ar.web.controllers;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import edu.ncrn.cornell.ced2ar.api.data.Config;
@@ -56,6 +57,8 @@ public class PropertiesConfigurer {
 	PropertiesValidator propertiesValidator;
 	@Autowired
 	Config config;
+	
+	private static String EXPORT_PROPERTIES_FILE_NAME="ced2ar.properties";
 	/**
 	 * Validates the user input before update are made.  
 	 * 
@@ -66,6 +69,20 @@ public class PropertiesConfigurer {
 	  protected void initBinder(WebDataBinder binder) {
 	    binder.setValidator(propertiesValidator);
 	  }
+	
+	/**
+	 * This method allows for download of contents of properties file.
+	 * @param response
+	 * @return 
+	 */
+	@RequestMapping(value = "/downloadProperties", method = RequestMethod.GET, produces="text/plain")
+	@ResponseBody
+	public String downloadProperties(HttpServletResponse response) {
+    	String properties =  configurationProperties.getProperties();
+		response.setContentType("application/txt");
+		response.setHeader("Content-Disposition","attachment; filename=" +EXPORT_PROPERTIES_FILE_NAME);
+		return properties;
+	}
 
 	/**
 	 *	Changes the url of the baseX.  Save the new url and encoded reader, writer and admin password in the .properties file.  
@@ -89,7 +106,7 @@ public class PropertiesConfigurer {
 			 @RequestParam(value = "writerPassword", defaultValue = "") String writerPassword
 			 )throws Exception{
 		
-			Map<String,String> messages = new HashMap<String,String>();
+			Map<String,String> messages = new WeakHashMap<String,String>();
 			
 			
 			if(StringUtils.isEmpty(baseXDBUrl)){
@@ -179,7 +196,7 @@ public class PropertiesConfigurer {
 			 @RequestParam(value = "baseXDBUrl", defaultValue = "") String baseXDBUrl)throws Exception{
 
 		Map<String, String> propertiesMap =  configurationProperties.getPropertiesMap();
-		Map<String,String> messages = new HashMap<String,String>();
+		Map<String,String> messages = new WeakHashMap<String,String>();
 
 		if(StringUtils.isNotEmpty(baseXDBUserId)){// Change BaseX Password  
 				String originalUid ="";

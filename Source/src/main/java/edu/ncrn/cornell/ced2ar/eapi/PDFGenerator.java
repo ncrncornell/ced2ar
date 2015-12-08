@@ -32,7 +32,6 @@ import com.lowagie.text.DocumentException;
 
 import edu.ncrn.cornell.ced2ar.api.data.Config;
 import edu.ncrn.cornell.ced2ar.api.data.Fetch;
-import edu.ncrn.cornell.ced2ar.api.endpoints.Codebook;
 
 /**
  *This Class Generates Codebooks in PDF format.
@@ -109,9 +108,6 @@ public class PDFGenerator {
 		}
 		logger.info("Done Generating Codebook PDFs");
 	}
-	
-	
-	
 	
 	/**
 	 * Generates a PDF for a codebook that consists of

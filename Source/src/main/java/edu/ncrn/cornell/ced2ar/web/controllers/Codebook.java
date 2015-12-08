@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.TreeMap;
 
 import javax.servlet.ServletContext;
@@ -27,6 +28,7 @@ import org.springframework.web.servlet.HandlerMapping;
 
 import edu.ncrn.cornell.ced2ar.api.data.Config;
 import edu.ncrn.cornell.ced2ar.api.data.Fetch;
+import edu.ncrn.cornell.ced2ar.api.rest.queries.CodebookData;
 import edu.ncrn.cornell.ced2ar.web.classes.Loader;
 import edu.ncrn.cornell.ced2ar.web.classes.Parser;
  
@@ -44,6 +46,7 @@ import edu.ncrn.cornell.ced2ar.web.classes.Parser;
 public class Codebook {
 	public static final String EXPORT_STAT_PACKAGE_SAS = "SAS";
 	public static final String EXPORT_STAT_PACKAGE_STATA = "STATA";
+	
 	@Autowired
 	private ServletContext context;
 	
@@ -71,10 +74,11 @@ public class Codebook {
 	//TODO: Remember to clear cache when updating
 	@Cacheable( value="codebook", key="handle")
 	public String getTitlePage(String handle){		
-		String baseURI = loader.getPath() + "/rest/";
-		String apiURI = baseURI + "codebooks/"+ handle + "/titlepage";		
-		logger.debug("fetching title page for " + apiURI);		
-		String xml = Fetch.getXML(apiURI)[0];
+		//String baseURI = loader.getPath() + "/rest/";
+		//String apiURI = baseURI + "codebooks/"+ handle + "/titlepage";		
+		//logger.debug("fetching title page for " + apiURI);		
+		CodebookData codebookData = new CodebookData();
+		String xml = codebookData.getTitlePage(handle, "xml","namespaces");
 		
 		//Temp fix for white space chopping issues with BaseX
 		xml = xml.replaceAll("(\\S)(<ExtLink)", "$1 <ExtLink");
@@ -148,6 +152,31 @@ public class Codebook {
 				 } 
 				 	 
 				 String path = context.getRealPath("/xsl/codebook.xsl");//Local file path to find XSL doc
+				 
+				 //TODO: Shouldn't need anymore
+				 /*
+				 xml = xml.replaceFirst("<codeBook", "<codeBook  "+ 
+                 " xmlns:dc=\"http://purl.org/dc/terms/\""+
+                 " xmlns:ex=\"http://example.com/ns/ex#\""+
+                 " xmlns:prov=\"http://www.w3.org/ns/prov#\""+
+                 " xmlns:foaf=\"http://xmlns.com/foaf/0.1/\""+
+                 " xmlns:tr=\"http://example.com/ns/tr#\""+
+                 " xmlns:xhtml=\"http://www.w3.org/1999/xhtml\""+
+                 " xmlns:dcmitype=\"http://purl.org/dc/dcmitype/\""+
+                 " xmlns:saxon=\"http://xml.apache.org/xslt\""+
+                 " xmlns:ced2ar=\"http://ced2ar.org/ns/core#\""+
+                 " xmlns:file=\"http://ced2ar.org/ns/file#\""+
+                 " xmlns:type=\"http://ced2ar.org/ns/type#\""+
+                 " xmlns:RePEc=\"https://ideas.repec.org/#\""+
+                 " xmlns:repeca=\"https://ideas.repec.org/e/#\""+
+                 " xmlns:ns0=\"http://purl.org/dc/elements/1.1/\""+
+                 " xmlns:exn=\"http://ced2ar.org/ns/external#\""+
+                 " xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\""+
+                 " xmlns:act=\"http://ced2ar.org/ns/activities#\""+
+                 " xmlns:fn=\"http://www.w3.org/2005/xpath-functions\""+
+                 " xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"");
+				 */
+				 
 				 Parser xp = new Parser(xml, path, 0);
 				 String count = xp.getAttrValue("/codeBook", "variables");
 				 if(count != null){
@@ -159,6 +188,13 @@ public class Codebook {
 					 model.addAttribute("baseHandle",indexInfo[0]);
 					 
 					 String title = xp.getValue("/codeBook/docDscr/citation/titlStmt/titl");
+
+					 //Crowdsourcing
+					 model.addAttribute("crowdsourceSwitch",Config.getInstance().getCrowdSourcingRole());
+					 String remoteURL = Config.getInstance().getRemoteURL() 
+					 + "/codebooks/"+indexInfo[0]+"/v/"+indexInfo[1];
+					 model.addAttribute("remoteServerURL",remoteURL);
+					 
 					 model.addAttribute("handle", handle);
 					 model.addAttribute("codebook", xp.getData());
 					 model.addAttribute("codebookUse",indexInfo[2]);
@@ -203,6 +239,7 @@ public class Codebook {
 	@PathVariable(value = "v") String version, @RequestParam(value = "print", defaultValue = "n") String print, HttpServletResponse response){
 		 model.addAttribute("baseHandle", baseHandle);
 		 model.addAttribute("version", version);
+		 
 		 String handle = baseHandle+version;	
 		 return showCodebook(handle,print,model, response);
 	}
@@ -227,9 +264,10 @@ public class Codebook {
 		model.addAttribute("subTitl","Commits - "+ handle.toUpperCase());
 		 
 		String data = Fetch.get(baseURI+"codebooks/"+handle+"/versions");
-		ArrayList<String[]> versions= new ArrayList<String[]>(); 
+		List<String[]> versions= new ArrayList<String[]>(); 
+		
 		if(data != null && !data.equals("")){
-			String[] commits = data.split(" ");
+			String[] commits = data.split(";");
 			for(String commit : commits){
 				String[] commitData = commit.split(",");
 				Long epoch = Long.valueOf(commitData[1].trim()).longValue() * 1000;
@@ -265,9 +303,9 @@ public class Codebook {
 		 
 		try{
 			String data = Fetch.get(baseURI+"codebooks/"+handle+"/versions?type=vars").trim();
-			ArrayList<String[]> versions= new ArrayList<String[]>(); 
+			List<String[]> versions= new ArrayList<String[]>(); 
 			if(data != null && !data.equals("")){
-				String[] commits = data.split(";");
+				String[] commits = data.trim().split(";");
 				for(String commit : commits){
 					commit = commit.trim();
 					String[] commitData = commit.split(",");	
@@ -396,8 +434,11 @@ public class Codebook {
 			 String[] indexInfo = loader.getCodebooks(baseURI).get(handle);
 			 String xml = Fetch.getShortXML(apiURI)[0];
 	 
-			 if(!Parser.containsNode(xml,"//var"))
-				 return "redirect:";
+			 if(!Parser.containsNode(xml,"//var")){
+				 session.setAttribute("error","Variable does not exist");		
+				 model.addAttribute("type","error");
+				 return "redirect:/all";
+			 }
 			 String path = context.getRealPath("/xsl/variable.xsl");//Local file path to find XSL doc
 			 Parser xp = new Parser(xml, path, 0);
 			 
@@ -424,6 +465,14 @@ public class Codebook {
 				 model.addAttribute("newVersion",latest);
 			 }
 			 
+			 //Crowdsourcing
+			 model.addAttribute("crowdsourceSwitch",Config.getInstance().getCrowdSourcingRole());
+			 String remoteURL = Config.getInstance().getRemoteURL() 
+					 + "/codebooks/"+indexInfo[0]+"/v/"+version+"/vars/"+variable;
+			 model.addAttribute("remoteServerURL",remoteURL);
+			 model.addAttribute("crowdsourceCompareURL",loader.getBuildName()+"/codebooks/"
+					 +indexInfo[0]+"/v/"+version+"/vars/"+variable+"/diff");
+			 			 
 			 model.addAttribute("baseHandle",indexInfo[0]);
 			 model.addAttribute("version",version);
 			 model.addAttribute("hasMath", true);
@@ -438,7 +487,7 @@ public class Codebook {
 		 }catch(NullPointerException | NumberFormatException e){
 			logger.warn(e.getMessage());
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			model.addAttribute("error","Error retrieving data");	
+			session.setAttribute("error","Error retrieving data");		
 			model.addAttribute("type","error");
 			return "/WEB-INF/views/view.jsp";
 		 }
@@ -471,6 +520,7 @@ public class Codebook {
 		return showVariable(variable,handle,print,model,response);
 	}
 	
+	//TODO:Var version not working for user
 	@RequestMapping(value = "/codebooks/{c}/v/{v}/vars/{n}/versions", method = RequestMethod.GET)
 	public String showVarGit(Model model, @PathVariable(value = "c") String baseHandle,
 	@PathVariable(value = "v") String version, @PathVariable(value = "n") String var){
@@ -492,8 +542,9 @@ public class Codebook {
 		model.addAttribute("type","var");
 		model.addAttribute("var", var);
 		model.addAttribute("subTitl","Commits - "+ var + " ("+handle.toUpperCase()+")");
+		
 		String data = Fetch.get(baseURI+"codebooks/"+handle+"/variables/"+var+"/versions");
-		ArrayList<String[]> versions= new ArrayList<String[]>(); 
+		List<String[]> versions= new ArrayList<String[]>(); 
 		if(data != null && !data.equals("")){
 			String[] commits = data.split(" ");
 			for(String commit : commits){
@@ -501,12 +552,12 @@ public class Codebook {
 				Long epoch = Long.valueOf(commitData[1].trim()).longValue() * 1000;
 				SimpleDateFormat format = new SimpleDateFormat("MMMM d, yyyy 'at' h:mm a");
 				String timeStamp = format.format(epoch);
-				versions.add(new String[]{commitData[0], timeStamp,commitData[2]});
+				versions.add(new String[]{commitData[0], timeStamp, commitData[3]});
 			}
 			model.addAttribute("gitURL",config.getRemoteRepoURL());
 			model.addAttribute("versions", versions);	
 		}
-		return "/WEB-INF/views/versions.jsp";
+		return "/WEB-INF/views/varVersions.jsp";
 	}
 
 //AJAX Endpoints
@@ -621,8 +672,7 @@ public class Codebook {
     @RequestMapping(value = "/filterVerbose", method = RequestMethod.GET)
     public String verboseFilter() {
         return "/WEB-INF/ajaxViews/verboseFilter.jsp";        
-    }      
-    
+    }       
 
 //Stats export
     
@@ -716,12 +766,11 @@ public class Codebook {
 			Parser xp = new Parser(xml, path, 0);
 			data  = xp.getData();
 		}
-		return data;
-		
+		return data;		
 	}
 
 	/**
-	 * @param codebookId Codebook handle
+	 * @param codebookId codebook handle
 	 * @param versionId	VersionId of the codebook
 	 * @param statisticalPackage SAS or STATA
 	 * @return String Representing STATA or SAS code for all variable values in the codebook 
@@ -729,7 +778,7 @@ public class Codebook {
 	private String getAllValuesExportCode(String codebookId, String versionId,  String statisticalPackage)  {
 		String apiURI 	= loader.getPath()+ "/rest/codebooks/"+codebookId+versionId + "?type=noNamespaces";
 		String codebook	= Fetch.getXML(apiURI)[0];
-		String	data 	= "";
+		String data = "";
 
 		if(statisticalPackage.equalsIgnoreCase(EXPORT_STAT_PACKAGE_STATA)) {
 			String path = context.getRealPath("/xsl/stataVariables.xsl");

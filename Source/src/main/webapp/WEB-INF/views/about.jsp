@@ -31,7 +31,7 @@
 		<div class="lb">
 			<h3>Current Collaborators</h3>
 			<p>
-				Bill Block - <span class='sh'>Cornell Institute for Social and Economic Research, Cornell University</span><br />
+				William Block - <span class='sh'>Cornell Institute for Social and Economic Research, Cornell University</span><br />
 				Warren Brown - <span class='sh'>Cornell Institute for Social and Economic Research, Cornell University</span><br />
 				Venky Kambhampaty - <span class='sh'>Cornell Institute for Social and Economic Research, Cornell University</span><br />
 				Carl Lagoze - <span class='sh'>School of Information, University of Michigan</span><br />
@@ -44,19 +44,24 @@
 		<div class="lb">
 			<h3>Previous Collaborators</h3>
 			<p class="past lb">
+				<span class="ph">Spring/Summer 2015</span><br />
+				Kyle Brumsted - <span class='sh'>Cornell NCRN Node, Intern from McGill University</span><br />
+				Haeyong Shin - <span class='sh'>Cornell University</span><br />
+			</p>
+			<p class="past lb">
 				<span class="ph">Summer 2014</span><br />
-				Kyle Brumsted - <span class='sh'>Cornell Institute for Social and Economic Research, Intern from McGill University</span><br />
+				Kyle Brumsted - <span class='sh'>Cornell NCRN Node, Intern from McGill University</span><br />
 			</p>
 			<p class="past lb">
 				<span class="ph">Fall 2013</span><br />
-				Shoujun Su  - <span class='sh lb2'>Cornell University Graduate Student</span><br />
+				Shoujun Su  - <span class='sh lb2'>Cornell University</span><br />
 			</p>
 			<p class="past lb">
 				<span class="ph">Fall 2012 Class Project (Version 1.0 Beta)</span><br />
-				Justin Burden - <span class='sh'>Cornell University Graduate Student</span><br />
-				Chantelle Farmer - <span class='sh'>Cornell University Graduate Student</span><br />
-				Jessica Kane - <span class='sh'>Cornell University Graduate Student</span><br />
-				Shudan Zheng - <span class='sh'>Cornell University Graduate Student</span><br />	
+				Justin Burden - <span class='sh'>Cornell University</span><br />
+				Chantelle Farmer - <span class='sh'>Cornell University</span><br />
+				Jessica Kane - <span class='sh'>Cornell University</span><br />
+				Shudan Zheng - <span class='sh'>Cornell University</span><br />	
 			</p>
 		</div>
 		<div class="lb" id="legal">
@@ -97,7 +102,7 @@
 			<h3>Current Version</h3>
 			<p>
 				<%--TODO: Would be nice to automate this somehow --%>
-				CED<sup>2</sup>AR version <span itemprop="version">2.6.0.4</span> 
+				CED<sup>2</sup>AR version <span itemprop="version">2.8.1.0</span> 
 			</p>
 			<c:if test="${initParam.buildTimeStamp ne '${maven.build.timestamp}'}">
 				<p>

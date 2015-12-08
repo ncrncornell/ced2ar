@@ -13,6 +13,19 @@
 				</td>
 			</tr>
 			<tr>
+				<td class="staticHeader">Top Access Level</td>
+				<td class="value">
+					<xsl:choose>
+						<xsl:when test="codeBook/var/@access != ''">
+							<xsl:value-of select="/codeBook/var/@access" />
+						</xsl:when>
+						<xsl:otherwise>
+							<em>undefined (no restrictions)</em>
+						</xsl:otherwise>
+					</xsl:choose>
+				</td>
+			</tr>
+			<tr>
 				<td class="staticHeader">Label</td>
 				<td class="value">
 					<xsl:value-of select="codeBook/var/labl"></xsl:value-of>
@@ -51,6 +64,7 @@
 				</td>
 			</tr>
 		</table>
+		
 		<xsl:if test="codeBook/var/@files  != ''">
 			<p>
 				<span class="staticHeader">Files</span>
@@ -84,6 +98,18 @@
 				</xsl:for-each>
 			</p>
 		</xsl:if>
+		
+		<xsl:if test="codeBook/var/txt != ''">
+			<p>
+				<span class="staticHeader">Full Description </span>
+			</p>
+			<div class="value2">
+				<span itemprop="description">
+					<xsl:copy-of select="codeBook/var/txt/node()" />
+				</span>
+			</div>
+		</xsl:if>
+		
 		<xsl:if test="count(codeBook/var/sumStat) gt 0">
 			<p>
 				<span class="staticHeader">Summary Statistics </span>
@@ -117,6 +143,9 @@
 									</xsl:when>
 									<xsl:when test="@type eq 'mode'">
 										Mode
+									</xsl:when>
+									<xsl:when test="@type eq 'other'">
+										Other
 									</xsl:when>
 								</xsl:choose>
 							</td>
@@ -175,16 +204,7 @@
 				</span>
 			</div>
 		</xsl:if>
-		<xsl:if test="codeBook/var/txt != ''">
-			<p>
-				<span class="staticHeader">Full Description </span>
-			</p>
-			<div class="value2">
-				<span itemprop="description">
-					<xsl:copy-of select="codeBook/var/txt/node()" />
-				</span>
-			</div>
-		</xsl:if>
+		
 		<xsl:if test="codeBook/var/catgry/*">
 			<p class="toggleHeader">
 				Values (<xsl:value-of select="count(codeBook/var/catgry)" />

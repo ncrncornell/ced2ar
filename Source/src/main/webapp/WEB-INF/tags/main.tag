@@ -31,22 +31,23 @@
 	<title>${subTitl}CED2AR</title>
 	<%-- Applied based on whether or not print argument was given --%>
 	<c:choose>
+		<%--TODO: add back minified css --%>
 		<c:when test="${print}">
 			<link rel="stylesheet" type="text/css"  href="${baseURI}/styles/fonts.css" />
-			<link rel="stylesheet" type="text/css" href="${baseURI}/styles/main.min.css" />
+			<link rel="stylesheet" type="text/css" href="${baseURI}/styles/main.css" />
 			<link rel="stylesheet" type="text/css" href="${baseURI}/styles/print.css" />
 		</c:when>
 		<c:when test="${not print && restricted}">
 			<link rel="stylesheet" type="text/css" href="${baseURI}/styles/bootstrap/bootstrap.min.css" />
 			<link rel="stylesheet" type="text/css" href="${baseURI}/styles/bootstrap/bootstrap-theme.min.css" />
-			<link rel="stylesheet" type="text/css" href="${baseURI}/styles/main.min.css" />
+			<link rel="stylesheet" type="text/css" href="${baseURI}/styles/main.css" />
 			<link rel="stylesheet" type="text/css" media="print" href="${baseURI}/styles/print.css" />
 		</c:when>
 		<c:otherwise>
 			<link rel="stylesheet" type="text/css" href="${baseURI}/styles/fonts.css" />
-			<link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
-			<link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css" />
-			<link rel="stylesheet" type="text/css" href="${baseURI}/styles/main.min.css" />
+			<link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
+			<link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" />
+			<link rel="stylesheet" type="text/css" href="${baseURI}/styles/main.css" />
 			<link rel="stylesheet" type="text/css" media="print" href="${baseURI}/styles/print.css" />
 		</c:otherwise>
 	</c:choose>
@@ -64,16 +65,16 @@
 	
 	<%--IE doesn't like loading Font Awesome --%>
 	<c:choose>
-		<%--
 		<c:when test="${fn:contains(header['User-Agent'],'MSIE') || fn:contains(header['User-Agent'],'Trident')}">
-			 <link rel="stylesheet" type="text/css" href="${baseURI}/font-awesome/css/font-awesome-ie.css" />		
+			<%-- <link rel="stylesheet" type="text/css" href="${baseURI}/font-awesome/css/font-awesome.min.css" /> --%>
+			<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
+			 <%--<link rel="stylesheet" type="text/css" href="${baseURI}/font-awesome/css/font-awesome-ie.css" />--%>
 		</c:when>
-		--%>
 		<c:when test="${restricted}">
 			<link rel="stylesheet" type="text/css" href="${baseURI}/font-awesome/css/font-awesome.min.css" />
 		</c:when>
 		<c:otherwise>
-			<link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" />
+			<link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
 		</c:otherwise>
 	</c:choose>
 	<link rel="shortcut icon" href="${baseURI}/images/favicon.png" />
@@ -83,16 +84,34 @@
 		<c:if test="${not empty sessionScope.filter}"><c:set var="meta_cbb" scope="session" value="true" /></c:if>
 		<span id="meta_codebook">${meta_cbb}</span>
 		<span id="meta_uri">${baseURI}</span>
+		<span id="meta_username">${userName}</span>
 		<span id="meta_user">${userEmail}</span>
+		<input type="hidden" id="meta_demo" value="${demoMode}" />
 	</span>
 	<div id="load"></div>
 	<div id="wrapper" class="container-fluid">
 		<%--Chooses banner color based off server location --%>
 		<c:choose>
+			<c:when test="${fn:contains(pageContext.request.serverName,'wiki.ncrn.cornell.edu')}">
+				<c:set var="demoMode" scope="application" value="true" />
+				<c:set var="tagLine" scope="application">Community Development Server (Beta)</c:set>
+				<c:set var="hC" scope="application">hC0</c:set>
+			</c:when>
 			<c:when test="${fn:contains(pageContext.request.serverName,'demo.ncrn.cornell.edu')}">
+				<c:set var="demoMode" scope="application" value="true" />
+				<c:set var="tagLine" scope="application">Demo Mode</c:set>
 				<c:set var="hC" scope="application">hC3</c:set>
 			</c:when>
+			<c:when test="${fn:contains(pageContext.request.serverName,'dev.ncrn.cornell.edu')}">
+				<c:set var="tagLine" scope="application">Development Server</c:set>
+				<c:set var="hC" scope="application">hC0</c:set>
+			</c:when>
+			<c:when test="${fn:contains(pageContext.request.serverName,'www2.ncrn.cornell.edu')}">
+				<c:set var="tagLine" scope="application">Official Server</c:set>
+				<c:set var="hC" scope="application">hC0</c:set>
+			</c:when>
 			<c:when test="${fn:contains(pageContext.request.serverName,'cornell.edu')}">
+				<c:set var="tagLine" scope="application"></c:set>
 				<c:set var="hC" scope="application">hC0</c:set>
 			</c:when>
 			<c:when test="${pageContext.request.serverName == 'localhost'}">
@@ -109,7 +128,7 @@
 				<div class="row">
 					<div class="hidden-xs col-sm-8">
 						<p>
-							<c:if test="${hC eq 'hC3'}">Demo Mode - </c:if>
+							<c:if test="${not empty tagLine}">${tagLine} - </c:if>
 							The Comprehensive Extensible Data Documentation and Access Repository
 							<c:if test="${restricted}">(Restricted Network Mode)</c:if>
 							<c:if test="${hC eq 'hC1'}">(Local Access)</c:if>
@@ -118,7 +137,9 @@
 					<div id="loginStatus" class="col-xs-12 col-sm-4">
 						<p>
 							<c:if test="${not empty userEmail}">
-								Logged in as ${userEmail}
+								Logged in as 
+								${userName}
+								${userEmail}
 							</c:if>
 						</p>
 					</div>
@@ -126,47 +147,7 @@
 			</div>
 		</div>
 		<t:nav />
-		<div id="info">
-			<c:if test="${not empty error}">
-				<div class="alert alert-danger fade in">
-					<button type="button" class="close" data-dismiss="alert">×</button>
-					ERROR: ${error}
-				</div>
-				<c:remove var="error" />
-			</c:if>
-			<c:if test="${not empty info_splash}">
-				<div class="alert alert-success fade in">
-					<button type="button" class="close" data-dismiss="alert">×</button>
-					${info_splash}
-				</div>
-				<c:remove var="info_splash" />
-			</c:if>
-			<c:if test="${not empty error2}">
-				<c:set scope="session" var="error">${error2}</c:set>
-				<c:remove var="error2" />
-			</c:if>
-			<c:if test="${not empty info_splash2}">
-				<c:set scope="session" var="info_splash">${info_splash2}</c:set>
-				<c:remove var="info_splash2" />
-			</c:if>
-		</div>
-		<div class="row crumbJar xs-hidden">
-			<div id="crumbs" class="col-md-offset-1 col-lg-offset-2 col-md-10 col-lg-8">
-				<c:if test="${not empty crumbs}">
-					<ul class="breadcrumb">
-						<li><a href="${baseURI}">CED2AR</a><span class="divider"></span></li>
-						<c:if test="${fn:length(crumbs) gt 1 }">
-							<c:forEach var="crumb" items="${crumbs}"
-								end="${fn:length(crumbs)-2}">
-								<li><a href="${baseURI}/${crumb[1]}">${crumb[0]}</a><span
-									class="divider"></span></li>
-							</c:forEach>
-						</c:if>
-						<li class="active">${crumbs[ fn:length(crumbs)- 1][0]}</li>
-					</ul>
-				</c:if>
-			</div>
-		</div>
+
 		<%--This block of logic decides whether or not to make the main div
 			 fill the entire page, or center itself with sidebars  --%>
 		<c:choose>
@@ -177,14 +158,38 @@
 			</c:when>
 			<c:otherwise>
 				<c:set var="mainWidth" scope="request"
-					value="col-sm-11 col-md-10 col-lg-8 " />
+					value="col-sm-12 col-md-10 col-lg-8 " />
 				<c:set var="sideWidth" scope="request"
 					value="hidden-sm hidden-xs col-md-1 col-lg-2" />
 				<c:set var="sideWidthR" scope="request"
-					value="col-lg-2 col-md-1 hidden-sm hidden-xs" />
+					value="hidden-sm hidden-xs col-md-1 col-lg-2" />
 			</c:otherwise>
 		</c:choose>
 		<div id="mainRow" class="row">
+			<div id="info">
+				<c:if test="${not empty error}">
+					<div class="alert alert-danger fade in">
+						<button type="button" class="close" data-dismiss="alert">×</button>
+						ERROR: ${error}
+					</div>
+					<c:remove var="error" />
+				</c:if>
+				<c:if test="${not empty info_splash}">
+					<div class="alert alert-success fade in">
+						<button type="button" class="close" data-dismiss="alert">×</button>
+						${info_splash}
+					</div>
+					<c:remove var="info_splash" />
+				</c:if>
+				<c:if test="${not empty error2}">
+					<c:set scope="session" var="error">${error2}</c:set>
+					<c:remove var="error2" />
+				</c:if>
+				<c:if test="${not empty info_splash2}">
+					<c:set scope="session" var="info_splash">${info_splash2}</c:set>
+					<c:remove var="info_splash2" />
+				</c:if>
+			</div>		
 			<div id="sidebar" class="${sideWidth}">
 				<div id="filter">
 					<div id="filterCodebook"></div>
@@ -193,6 +198,25 @@
 			</div>
 			<div id="filterHide"></div>
 			<div id="main" class="${mainWidth}">
+				<div class="row crumbJar xs-hidden">
+					<div id="crumbs" class="col-lg-12">
+						<%--TODO: Add Unofficial/official switch --%>
+						<t:crowdsourced />
+						<c:if test="${not empty crumbs}">
+							<ul class="breadcrumb">
+								<li><a href="${baseURI}">CED2AR</a><span class="divider"></span></li>
+								<c:if test="${fn:length(crumbs) gt 1 }">
+									<c:forEach var="crumb" items="${crumbs}"
+										end="${fn:length(crumbs)-2}">
+										<li><a href="${baseURI}/${crumb[1]}">${crumb[0]}</a><span
+											class="divider"></span></li>
+									</c:forEach>
+								</c:if>
+								<li class="active">${crumbs[ fn:length(crumbs)- 1][0]}</li>
+							</ul>
+						</c:if>
+					</div>
+				</div>
 				<jsp:doBody />
 			</div>
 			<div id="sidebarR" class="${sideWidthR}"></div>
@@ -207,7 +231,7 @@
 					</a>
 					<br />
 					&copy; 2012-2015, <span itemscope itemtype="http://schema.org/WebSite">
-						<span itemprop="copyrightHolder" > Cornell Institute for
+						<span itemprop="copyrightHolder" > Cornell Institute for 
 						Social and Economic Research </span></span>
 				</p>
 				<c:choose>
@@ -220,10 +244,12 @@
 						<a href="${baseURI}/bugreport" class="footerButton"><i
 							class="fa fa-bug"></i>Report a Bug</a>
 					</c:otherwise>
-				</c:choose>
+				</c:choose>			
+				<a href="https://cornell.qualtrics.com/SE/?SID=SV_7a1Wl3aNdVvfkQR" class="footerButton" target="_blank"><i
+					class="fa fa-users"></i>User Survey</a>
 				<span id='contactUs'>
 					<a class='footerButton emailContact'><i class='fa fa-envelope'></i>Email us</a>
-				</span> 
+				</span> 		
 				<a href="${baseURI}/about#legal" class="footerButton"><i
 					class="fa fa-gavel"></i>Copyright Information</a>
 				<a href="https://github.com/ncrncornell" class="footerButton"><i
@@ -259,8 +285,10 @@
 			<script type="text/javascript"
 				src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
 			<script type="text/javascript"
-				src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+				src="//netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+			<!--  
 			<script type="text/javascript" src="${baseURI}/scripts/survey.js"></script>
+			-->
 		</c:otherwise>
 	</c:choose>
 	<c:forEach var="j" items="${fn:split(js,' ')}">
@@ -306,6 +334,19 @@
 			  $(".emailContact").attr("href", "mailto:"+link);	
 			  $(".emailContact2").html(link);		
 			  $(".emailContact2").attr("href", "mailto:"+link);		
+			  
+			  //Resizes side bar if screenwidth is 1200px to 1400px
+			  //
+			  var w = $(window).width();
+			  <%-- TODO: Move this into LESS compiled bootstrap later--%>
+			  if(w > 1200 && w < 1450 && !$("#main").hasClass("col-xs-12")){
+				  $("#main").removeClass("col-lg-8");	
+				  $("#main").addClass("col-lg-10");
+				  $("#sidebar").removeClass("col-lg-2");
+				  $("#sidebar").addClass("col-lg-1");
+				  $("#sidebarR").removeClass("col-lg-2");
+				  $("#sidebarR").addClass("col-lg-1");
+			  }
 			}	
 	</script>
 	<c:if test="${analytics}">

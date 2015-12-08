@@ -47,7 +47,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="staticHeader">Top Level Access</td>
+				<td class="staticHeader">Top Access Level</td>
 				<td class="value">
 					<xsl:choose>
 						<xsl:when test="/codeBook/var/@access != ''">
@@ -232,6 +232,9 @@
 									</xsl:when>
 									<xsl:when test="@type eq 'mode'">
 										Mode
+									</xsl:when>
+									<xsl:when test="@type eq 'other'">
+										Other
 									</xsl:when>
 								</xsl:choose>
 							</td>

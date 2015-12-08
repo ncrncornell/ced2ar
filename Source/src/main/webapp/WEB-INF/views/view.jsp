@@ -4,22 +4,22 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags"%>
 <c:if test="${type ne 'error'}">
-	<c:set var="css" scope='request'>filter.min</c:set>
+	<c:set var="css" scope='request'>filter </c:set>
 </c:if>
-<c:set var="js" scope='request'>filter.min load.min read.min</c:set>
+<c:set var="js" scope='request'>filter load read</c:set>
 <%--This JSP page can be used to display errors, search results, browsing results (alphabetical starting with a letter), or all results --%>
 <t:main>
 	<c:choose>
-		<c:when test="${type.equals('error')}">
+		<c:when test="${type eq 'error'}">
 			<t:search />
 		</c:when>
-		<c:when test="${type.equals('search')}">
+		<c:when test="${type eq 'search'}">
 			<t:search />
 		</c:when>
-		<c:when test="${type.equals('browse')}">
+		<c:when test="${type eq 'browse'}">
 			<t:browse />
 		</c:when>
-		<c:when test="${type.equals('all')}">
+		<c:when test="${type eq 'all'}">
 			<t:all />
 		</c:when>
 	</c:choose>

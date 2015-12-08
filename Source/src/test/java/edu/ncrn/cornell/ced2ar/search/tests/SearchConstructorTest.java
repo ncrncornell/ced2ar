@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import edu.ncrn.cornell.ced2ar.api.SearchConstructor;
+import edu.ncrn.cornell.ced2ar.api.rest.queries.SearchConstructor;
 
 /**
  *@author Cornell University, Copyright 2012-2015

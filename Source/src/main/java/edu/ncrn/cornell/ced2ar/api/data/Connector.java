@@ -7,13 +7,10 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-import javax.servlet.ServletContext;
-
 import org.apache.commons.httpclient.URIException;
 import org.apache.commons.httpclient.util.URIUtil;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
-import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -29,7 +26,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * HTTP connections class
@@ -60,9 +57,6 @@ public class Connector{
 	private HttpPost hPost = null;
 	private HttpPut hPut = null;
 	private HttpDelete hDelete = null;
-	
-	@Autowired
-	private ServletContext context;
 	
 	/**
 	 *Constructor with default host
@@ -227,7 +221,7 @@ public class Connector{
 		if(this.mode != RequestType.PUT) return;
 		this.hPut.setEntity(new ByteArrayEntity(contents.getBytes()));
 	}
-
+	
 	/**
 	 * Adds a field and value to the form for Post request.
 	 * @param field String the field to be set in the Post form
@@ -240,6 +234,38 @@ public class Connector{
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Adds body content to a post request
+	 */
+	public void setPostBody(String content)
+	{
+		if(this.mode != RequestType.POST) return;
+		try {
+			this.hPost.setEntity(new ByteArrayEntity(content.getBytes("UTF-8")));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * adds an inputStream as a file to the form for the post request
+	 * @param ins the inputStream of the file
+	 * @param fileName the file name
+	 */
+	public void setPostFile(FileUpload fileUpload, String fileName){
+		if(this.entity == null) this.entity = new MultipartEntity();
+		MultipartFile file = fileUpload.getFile();			
+		InputStream ins;
+		try {
+			ins = file.getInputStream();
+			InputStreamBody inb = new InputStreamBody(ins, fileName);
+			this.entity.addPart("file", inb);
+		} catch (IOException e) {
+			logger.error("Error setting post file from FileUpload");
+			e.printStackTrace();
+		}	
 	}
 	
 	/**
@@ -398,7 +424,8 @@ public class Connector{
 			logger.debug("Executing request " + this.hDelete.getRequestLine());
 			return client.execute(this.hDelete);
 		case POST:
-			hPost.setEntity(this.entity);
+			//hPost.setEntity(this.entity);
+			if (hPost.getEntity() == null) hPost.setEntity(this.entity);
 			logger.debug("Executing request " + this.hPost.getRequestLine());
 			return client.execute(this.hPost);
 		case PUT:

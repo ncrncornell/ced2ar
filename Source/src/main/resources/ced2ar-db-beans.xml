@@ -11,9 +11,10 @@
 	<!-- MySQL DB Config Beans -->
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://rsch501.ciserrsch.cornell.edu:3306/metadata" />
-		<property name="username" value="ced2artest" />
-		<property name="password" value="ys9CT3ytH3vmdEV" />
+		<!-- See external documents -->
+		<property name="url" value="jdbc:mysql://hostname:3306/metadata" />
+		<property name="username" value="" />
+		<property name="password" value="" />
 	</bean>
   
   	<!-- MySQL DB DAO Beans -->

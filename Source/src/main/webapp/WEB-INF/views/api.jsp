@@ -8,7 +8,7 @@
 			<h2>API Guide</h2>
 			<p>
 				If you are a developer and would like to incorporate our API into
-				your application, please <a href="#footer">contact</a> CISER for
+				your application, please <a href="#footer">contact us</a> for
 				more information.
 			</p>
 			<h4>Current URIs</h4>

@@ -8,6 +8,7 @@ public class Variable {
 	private int endPos;
 	private int startPos;
 	private String originalName;
+	private String type;
 	
 /*Getters and setters*/	
 	public String getName(){
@@ -56,4 +57,12 @@ public class Variable {
 	public void setEndPos(int i){
 		endPos = i;
 	}	
+	
+	public String getType(){
+		return type;
+	}
+	
+	public void setType(String t){
+		type = t;
+	}
 }

@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags"%>
-<c:set var="css" scope='request'>edit.min</c:set>
+<c:set var="css" scope='request'>edit</c:set>
 <c:set var="js" scope='request'>release</c:set>
 <t:main>
 	<h2>Release ${codebookInfo[4]} (${codebookInfo[0]} - ${codebookInfo[1]})</h2>
@@ -27,7 +27,7 @@
 				</c:choose>
 			</p>
 			<p class="lb2">
-				<a class="releaseItem" href="${baseURI}/edit/codebooks/${codebookInfo[0]}/v/${version}/accessvars">
+				<a class="releaseItem" href="${baseURI}/edit/codebooks/${codebookInfo[0]}/v/${version}/accessvars2">
 					<i class="fa fa-plus"></i>Apply access levels</a>
 				&nbsp;
 				<a class="releaseItem" href="${baseURI}/edit/codebooks/${codebookInfo[0]}/v/${version}/#accessLevels">
@@ -66,7 +66,11 @@
 			</div>
 		</c:when>
 		<c:otherwise>
-			<p>Sorry, this codebook does not have access levels.</p>
+			<p>
+				Sorry, this codebook does not have access levels. <br />
+				<a class="releaseItem" href="${baseURI}/edit/codebooks/${codebookInfo[0]}/v/${version}/#accessLevels">
+				<i class="fa fa-pencil"></i>Add access levels</a>			
+			</p>
 		</c:otherwise>
 	</c:choose>
 </t:main>

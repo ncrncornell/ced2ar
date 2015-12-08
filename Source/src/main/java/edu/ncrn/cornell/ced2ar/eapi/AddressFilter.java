@@ -35,8 +35,6 @@ public class AddressFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response,FilterChain chain) throws IOException, ServletException {
 		String addressRemote = request.getRemoteAddr();
 		//String addressLocal = request.getLocalAddr();
-		//System.out.println("Request from " + addressRemote);
-		//System.out.println("Request to " + addressLocal);
 		
 		if(addressRemote.equals("0:0:0:0:0:0:0:1") || addressRemote.equals("127.0.0.1")){
 			chain.doFilter(request, response);

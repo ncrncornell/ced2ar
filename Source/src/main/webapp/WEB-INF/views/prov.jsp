@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags"%>
-<c:set var="css" scope='request'>joint.min prov</c:set>
+<c:set var="css" scope='request'>/jointjs/joint.min prov</c:set>
 <t:main>
 	<div id="graph"></div>
 	<script type="text/javascript"

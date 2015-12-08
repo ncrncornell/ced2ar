@@ -5,8 +5,8 @@ import java.io.InputStream;
 import java.io.StringWriter;
 import java.math.BigInteger;
 import java.security.MessageDigest;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.WeakHashMap;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
@@ -15,7 +15,6 @@ import org.apache.log4j.Logger;
 import org.basex.api.client.ClientSession;
 
 import edu.ncrn.cornell.ced2ar.api.data.Connector.RequestType;
-import edu.ncrn.cornell.ced2ar.eapi.QueryUtil;
 
 /**
  * Handles data retrieval from BaseX web application
@@ -104,7 +103,7 @@ public class BaseX  {
 	 * @param handle
 	 * @param contents
 	 */
-	public static void put2(String handle, String contents){
+	public static void put2(String handle, String contents, String database){
 		ClientSession session = null;
 		try {
 			//TODO: Switch and args for change auth level between writer and reader
@@ -115,12 +114,12 @@ public class BaseX  {
 			String password = decodedAuth[1];			
 			session = new ClientSession("localhost", 1984, user, password);
 			
-			//Temp fix, new validation doesnt like missing namespace declarations
+			//Temp fix, new validation doesn't like missing namespace declarations
 			contents = contents.replace("<xhtml:", "<");
 			contents = contents.replace("</xhtml:", "</");
 			
 			InputStream stream = IOUtils.toInputStream(contents, "UTF-8");
-			session.execute("open CED2AR");
+			session.execute("open "+database);
 			session.replace("/"+handle, stream);
 		
 		} catch (IOException e) {
@@ -133,8 +132,7 @@ public class BaseX  {
 					session.close();
 				} catch (IOException e) {}
 			}
-		}
-		
+		}		
 	}
 	
 	/*Tests to see if BaseX DB is reachable*/
@@ -157,6 +155,23 @@ public class BaseX  {
 		}	
 	}
 	
+	/**
+	 * 
+	 * Same as test connection except that this method does not use reader authorize.
+	 * @return boolean whether or not BaseX can be accessed
+	 */
+	public static boolean checkBaseX(String uri){
+		//Tests if BaseX can be accessed
+		Connector c = new Connector(uri);
+		c.buildRequest(RequestType.GET);
+		c.execute();
+		int code = c.getResponseCode();
+		if(code < 400 && code != -1){
+			return true;
+		}else{
+			return false;
+		}	
+	}
 	/**
 	 * Method validateConnection.
 	 * @param uri String the location to be validated
@@ -236,6 +251,7 @@ public class BaseX  {
 		httpGetWriter("rest/CED2AR/?command=","delete "+handle);
 	}
 	
+	//TODO: error handling for put
 	/**
 	 * Replaces or writes new codebook to repo
 	 * @param fileName the name of the codebook to add
@@ -243,10 +259,12 @@ public class BaseX  {
 	 * @param message GIT message to add
 	 */
 	public static void put(String fullHandle, String contents){
+		put2(fullHandle,contents,"CED2AR");
+		/**
 		if(!QueryUtil.hasVersionIndex2(fullHandle)){ 
 			httpGetWriter("rest/CED2AR/?command=","add TO "+fullHandle+" <xml/>"); 
 		}
-		httpPut("rest/CED2AR/",fullHandle, contents);
+		httpPut("rest/CED2AR/",fullHandle, contents);*/
 	}
 	
 	/**
@@ -255,10 +273,12 @@ public class BaseX  {
 	 * @param contents
 	 */
 	public static void putM(String fullHandle, String contents){
+		put2(fullHandle,contents,"CED2ARMaster");
+		/*
 		if(!QueryUtil.hasVersionIndex2(fullHandle)){ 
 			httpGetWriter("rest/CED2ARMaster/?command=","add TO "+fullHandle+" <xml/>"); 
 		}
-		httpPut("rest/CED2ARMaster/",fullHandle, contents);
+		httpPut("rest/CED2ARMaster/",fullHandle, contents);*/
 	}
 	
 	/**
@@ -411,6 +431,21 @@ public class BaseX  {
 		if(httpGetRep("rest/", "CED2AR") != 200){
 			command("CREATE DB CED2AR");
 		}
+		
+		//Checks to see if prov database is present
+		//Needs to be all caps
+		if(httpGetRep("rest/", "prov") != 200){
+			command("CREATE DB prov");
+			//TODO: Placeholder for now, pulls from dev server. 
+			//Might not be needed in the future since we're using Neo4j
+			command("store to prov.json http://104.131.43.251/docs/misc/json/blankprov.json","/prov");
+		}
+		
+		//Will also throw 404 if not filled
+		if(httpGetRep("rest/", "CED2ARMaster") != 200){
+			command("CREATE DB CED2ARMaster");
+		}
+		
 		//Checks to see if index database is present
 		if(httpGetRep("rest/", "index") != 200){
 			String xml = "<codeBooks xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\""
@@ -433,6 +468,16 @@ public class BaseX  {
 			command("add TO git "+xml,"/git/");
 		}	
 
+		// Checks to see if CIMS database is present
+		/*
+		if(httpGetRep("rest/", "cims") != 200){	
+			//Creates schemas database
+			//command("CREATE DB cims");	
+			//String xml =getDefaultCIMSDatabseXML();
+			//command("add TO git "+xml,"/git/");
+		}	
+		*/
+		
 		//Checks to see if users database is present
 		/*
 		if(httpGetRep("rest/", "users") != 200){	
@@ -443,16 +488,17 @@ public class BaseX  {
 		}*/
 		
 		//List of schemas to add to BaseX
-		WeakHashMap<String, String> schemas = new WeakHashMap<String, String>();
+		Map<String, String> schemas = new HashMap<String, String>();
+		
 		schemas.put("ddi", "http://www.ncrn.cornell.edu/docs/ddi/2.5.NCRN/schemas/codebook.xsd");
-		//schemas.put("bugreports", "http://www.ncrn.cornell.edu/docs/cdr/bugreports.xsd");
-		//TODO: add git, users and cdr schemas
+		//schemas.put("bugreports", "http://www.ncrn.cornell.edu/docs/cdr/bugreports.xsd");//Unused
+
 		
 		//Loop over list and add to BaseX if needed
-		for (String name : schemas.keySet()) {
+		for (String name : schemas.keySet()) {		
 			String schemaUrl = schemas.get(name);
 			//If schema not present
-			if(httpGetRep("rest/schemas/", name) >= 400){
+			//if(httpGetRep("rest/schemas/", name) >= 400){//TODO: New BaseX doesn't return 404's
 				//Tries to retrieve schema from web
 				String xsd = "";
 				Connector c = new Connector(schemaUrl);
@@ -472,7 +518,7 @@ public class BaseX  {
 				}
 				//Adds schema
 				putB(name, xsd, "schemas/");
-			}
+			//}
 		}			
 	}
 
@@ -497,9 +543,10 @@ public class BaseX  {
 		}
 		
 		logger.info("Changing password ... " );
-		String newPasswordInHash = getHashValue(newPassword);
-
-		httpGet("rest?command=","password "+ newPasswordInHash,oldCredenials);
+		//String newPasswordInHash = getHashValue(newPassword);
+//		httpGet("rest?command=","password "+ newPasswordInHash,oldCredenials);
+		
+		httpGet("rest?command=","password "+ newPassword,oldCredenials);
 		String encodedNewUIDPwd 	= new String(Base64.encodeBase64((uid+":"+newPassword).getBytes()));
 
 		successful = validateConnection(baseXURI, encodedNewUIDPwd);
@@ -527,7 +574,7 @@ public class BaseX  {
 		successful = validateConnection(baseXURI, writerCredentials);
 		if(!successful){
 			logger.info("Invalid writer credentials passed." );
-			return successful;
+			return successful;search
 		}
 		return successful;
 	}
@@ -628,7 +675,6 @@ public class BaseX  {
 		
 		String originalUidPassword = propertiesMap.get(configurationKey);
 		String encodedCurrentCredentials =  new String(Base64.encodeBase64((originalUidPassword).getBytes()));
-	
 		String randomPassword = RandomStringUtils.random(12, true, true);
 		
 		try{
@@ -646,4 +692,12 @@ public class BaseX  {
 		return success;
 	}
 
+	private static String getDefaultCIMSDatabseXML(){
+		StringBuilder sb = new StringBuilder();
+		sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+		sb.append("<cims xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">");
+		sb.append("</cims>");
+		return sb.toString();
+	}
+	
 }

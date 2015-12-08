@@ -8,7 +8,7 @@
 <form action="${baseURI}/search" method="get" id="viewControls">
 	<div class="lb3">
 		<input type="text" name="q" value="${fn:trim(query)}" /> <input
-			type="submit" class="btn" value="Search" />
+			type="submit" aria-label="Search for variable" class="btn" value="Search" />
 	</div>
 	<p>
 		<a href="advanced_search">Advanced Search</a>

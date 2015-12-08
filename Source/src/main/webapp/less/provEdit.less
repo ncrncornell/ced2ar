@@ -1,0 +1,196 @@
+fieldset{
+	legend{
+		width:auto;
+	}
+	border:1px solid #ccc;
+	border-radius:4px;
+	display:block;
+	padding:.75em 1em;
+	margin:1em auto 2em;
+}
+
+#provEdit{
+	legend{
+		a{
+			color:#ccc;
+			margin:0 .5em;
+			padding:.2em .5em;
+			border-radius:4px;
+			border:1px solid transparent;
+			float:right;
+			font-size:.9em;
+			position:relative;
+			bottom:4px;
+		}
+		a:hover{
+			color:#f3f3f3;
+			background-color:#0093d0;
+			border:1px solid #0093d0;
+		}
+	}
+	
+	.uri{
+		min-width:35em;
+		display:block;
+	}
+	
+	h2{
+		line-height:1em!important;
+		margin:0em 0em 0.6em 0em!important;
+	}
+	
+	.input-group {
+		border-spacing:0 .5em;
+		float:left;
+		margin-right:1em;
+	}
+}
+
+#proveFileAdd{
+	input[name=fileLocSelect]{
+		margin:0 .125em;
+	}
+	
+	button{
+		height:2.5em;
+		font-size:.85em;
+	}
+}
+
+.provPrev{
+	font-style:italic;
+	font-size:1.2em;
+	color:#555;
+}
+
+#provErrors{
+	color: red;
+	font-style: italic;
+}
+
+#provStatus{
+	color: green;
+	font-style: italic;
+}
+
+fieldset select{
+	border-radius: 4px;
+	margin: .5em .5em .5em 0em;
+	min-width: 15em;
+	border: 1px solid #ccc;
+	height: 2.5em;
+	font-size: .85em;
+	vertical-align: middle;
+	color: #555;
+}
+
+/*BSE
+=============================================================================*/
+.editable-buttons{
+	.btn{
+		background-color:#428bca;
+		border-color:#357ebd;
+		background-image:none;
+	}
+
+	.editable-submit{
+		background-color:#428bca;
+		border-color:#357ebd;
+		color:#f3f3f3;
+	}
+
+	.editable-submit:hover{
+		background-color: #3276b1;
+	  	border-color: #285e8e;
+	}
+
+	.editable-cancel{
+		background-color:#fff;
+		border-color:#ccc;
+		color:#555;
+	}
+
+	.editable-cancel:hover{
+		background-color: #eee;
+	  	border-color: #bbb
+	}
+}
+
+
+.editable-input{
+	input{
+		font-size:1em;
+		color:#555;
+	}
+	
+	input[type=url]{
+		min-width:25em;
+	}
+}
+
+
+.editable-popup .popover-title{
+	font-family:Roboto, sans-serif;
+	font-size:1.2em!important;
+}
+
+.bse i{
+	padding-left:.25em;
+}
+
+.edc{
+	.editable-input{
+		display:none;
+	}
+	
+	.editableform{
+		.form-group{
+			margin:auto;
+			width:100%;
+		}
+	
+		.editable-buttons{
+			margin:auto;
+			display:table;
+		}
+	}
+	
+	.editable-buttons{
+		.editable-submit:hover{
+			background-color: #D91616;
+		  	border-color: #D91616;
+		}
+		
+		.editable-submit{
+			background-color:#F56767;
+			border-color:#F56767;
+			color:#f3f3f3;
+		}
+	}
+}
+
+.editable-click, a.editable-click, a.editable-click:hover{
+	border-bottom:none!important;
+}
+
+#workflowAdd{
+	fieldset{
+		span.input-group:first-of-type{
+			margin:.25em auto;
+		}
+		span.input-group:not(:first-of-type){
+			margin:1.25em auto .25em;
+		}
+	}
+}
+
+#provSuccess{
+	color:green;
+}
+
+.inputErrorMsg{
+	#provError{
+		color:red;
+		font-style:italic;
+	}
+}

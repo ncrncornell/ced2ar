@@ -1,0 +1,37 @@
+@statusRed : #bf3f3f;
+@statusGreen : #3fbf7f;
+@statusBlue : #0C35A6;
+@statusBlack : #222;
+
+#gitStatus{
+	padding:1em 2em;
+}
+
+th{
+	font-weight: bold;
+	text-align: left;
+	vertical-align: middle;
+	font-size: 1.0em;
+}
+
+.status{
+	text-align: left;
+	vertical-align: middle;
+	font-size: 1.0em;
+}
+
+.status_uptodate,.status_exist{
+	color:@statusGreen;
+}
+
+.status_conflict, .status_remote_invalid, .status_does_not_exist, .status_localAhead{
+	color:@statusRed;
+}
+
+.status_localBehind{
+	color:@statusBlue;
+}
+
+.status_local_non_existant, .status_remote_non_existant{
+	color:@statusBlack;
+}

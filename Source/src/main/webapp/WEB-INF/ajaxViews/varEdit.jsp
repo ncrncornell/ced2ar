@@ -14,80 +14,96 @@
 	</c:otherwise>
 </c:choose>
 <div id="loadCoverInner" class="editControlB no Select ${lciw}">
-	<form id="editForm" action="${handle}/edit" method="POST" class="lb2">
+	<div class="nav nav-tabs">
 		<a id="editDiscard" href="#" class="closeWindow" title="Discard Changes">×</a>
-		<h2>${title}</h2>	
-		<a href="#" title="Save changes" id="editSave"
-			class="editControl3 editIcon" onclick="return false;"> <i
-			class="fa fa-floppy-o"></i>
-		</a> 
-		<c:choose>
-			<c:when test="${type.equals('attr')}"></c:when>
-			<c:when test="${type.equals('accs')}">
-				<select name="newValue" class="newAccs">
-					<option value="">undefined</option>
-					<c:forEach var="level" items="${accessLevels}">
-						<c:if test="${not empty level}">
-							<option value="${level}"
-								<c:if test="${level eq curAccs}">selected="selected"</c:if>>
-								${level}</option>
-						</c:if>
-					</c:forEach>
-				</select>
-			</c:when>
-			<c:when test="${type.equals('elem')}">		
-				<c:choose>
-					<c:when test="${editorType.equals('0')}">
-						<script src="${baseURI}/scripts/tinymce/tinymce.min.js"></script>
-						<script type="text/javascript">
-							$("#editSave").css("display","none");
-							
-							tinymce.init({		
-							    selector: "textarea",
-							    menubar : false,
-							    content_css : "${baseURI}/styles/tinymce.css",
-							    oninit : "setPlainText",
-							    plugins: "paste save link code",
-							    target_list: [{title: 'None', value: ''}],
-							    paste_as_text: true,
-							    toolbar: "save | undo redo | link | bullist | italic | code | git",
-							    valid_elements :"a[href|target=_blank],strong/b,em,div,br,p,li,ul",
-							    save_onsavecallback: function(){
-							    	$("textarea [name=newText]").html(this.getContent());
-									$("#editSave").click();
-							    }
-							});
-							
-						</script>
-						<textarea name="newValue" style="height:17.5em">${curVal}</textarea>
-					</c:when>
-					<c:otherwise>
-						<input type="text" name="newValue" class="newTxtPlain" value="${curVal}" />
-					</c:otherwise>
-				</c:choose>		
-			</c:when>
-		</c:choose>
-		<c:if test="${editorType.equals('0')}">
-			<p class="editDoc">
-				This field supports ASCII math
-				See <a href='${baseURI}/docs/faq#q3' target='_blank'>FAQ</a> for details. <br />	
+		<h2>${title}</h2>		
+		<form id="editForm" action="${handle}/edit" method="POST" class="lb2">
+			
+			<a href="#" title="Save changes" id="editSave"
+				class="editControl3 editIcon" onclick="return false;"> <i
+				class="fa fa-floppy-o"></i>
+			</a> 
+			<c:choose>
+				<c:when test="${type.equals('attr')}"></c:when>
+				<c:when test="${type.equals('accs')}">
+					<select name="newValue" class="newAccs">
+						<option value="">undefined</option>
+						<c:forEach var="level" items="${accessLevels}">
+							<c:if test="${not empty level}">
+								<option value="${level}"
+									<c:if test="${level eq curAccs}">selected="selected"</c:if>>
+									${level}</option>
+							</c:if>
+						</c:forEach>
+					</select>
+				</c:when>
+				<c:when test="${type.equals('elem')}">		
+					<c:choose>
+						<c:when test="${editorType.equals('0')}">
+							<script src="${baseURI}/scripts/tinymce/tinymce.min.js"></script>
+							<script type="text/javascript">
+								$("#editSave").css("display","none");
+								
+								tinymce.init({		
+								    selector: "textarea",
+								    menubar : false,
+								    content_css : "${baseURI}/styles/tinymce.css",
+								    oninit : "setPlainText",
+								    browser_spellcheck : true,
+								    plugins: "paste save link code",
+								    target_list: [{title: 'None', value: ''}],
+								    paste_as_text: true,
+								    toolbar: "save | undo redo | link | bullist | italic | code | git",
+								    valid_elements :"a[href|target=_blank],strong/b,em,div,br,p,li,ul",
+								    save_onsavecallback: function(){
+								    	$("textarea [name=newText]").html(this.getContent());
+										$("#editSave").click();
+								    }
+								});
+							</script>
+							<textarea name="newValue" style="height:17.5em">${curVal}</textarea>
+						</c:when>
+						<c:otherwise>
+							<input type="text" name="newValue" class="newTxtPlain" value="${curVal}" />
+						</c:otherwise>
+					</c:choose>		
+				</c:when>
+			</c:choose>
+			<p class="hidden editDoc conflictItem">
+				Please review the following changes before overwriting them.
+				If you wish to discard your edits, simply close the editor.
 			</p>
-		</c:if>
-		<input type="hidden" name="masterValue" value="${masterVal}" /> 
-		<input type="hidden" name="currentValue" value="${curVal}" /> 
-		<input type="hidden" name="field" value="${field}" /> 
-		<input type="hidden" name="index" value="${index}" /> 
-		<input type="hidden" name="append" value="${append}" /> 
-	</form>	
+			<div class="hidden conflictItem" id="conflictDiff"></div>
+			
+			<c:if test="${editorType.equals('0')}">
+				<p class="editDoc">
+					This field supports ASCII math
+					See <a href='${baseURI}/docs/faq#q3' target='_blank'>FAQ</a> for details. <br />	
+				</p>
+			</c:if>
+			<c:if test="${pendingChanges gt 0}">
+				<p class="editDoc">
+					<i class="fa fa-exclamation-triangle fa-lg"></i>
+					Another user is currently editing this field
+				</p>
+			</c:if>		
+			<input type="hidden" name="currentValue" value="${curVal}" /> 
+			<input type="hidden" name="field" value="${field}" /> 
+			<input type="hidden" name="index" value="${index}" /> 
+			<input type="hidden" name="append" value="${append}" /> 
+		</form>	
+
+	</div>
+	<%--Bootstrap tabs don't work on dom refresh --%>
 	<script type="text/javascript">
-		if($("input[name='masterValue']").val()){
-			runDiff(); 
-		}
+		$("#loadCoverInner .nav .tabs a").click(function(){
+			$("#loadCoverInner .nav .tabs li").removeClass("active");
+			$(this).parent().addClass("active");
+			$("#loadCoverInner .tab-pane").hide();
+			
+			var currentTab = $(this).attr("href");
+			$(currentTab).show();
+			return false;
+		});
 	</script>
-	<c:if test="${showMaster}">
-		<h4>Changes from Official Documentation</h4>
-		<div id="outputDiff" class="diffView">
-			<em>No master copy exists</em>
-		</div>
-	</c:if>
 </div>

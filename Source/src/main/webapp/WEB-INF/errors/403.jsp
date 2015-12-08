@@ -7,9 +7,17 @@
 	<h1>Access Denied</h1>
 		<p>
 			You don't have permission to access this page 
-			<c:if test="${not empty userEmail}">
-				(${userEmail})
-			</c:if>
+			<c:choose>
+				<c:when test="${not empty userName and not empty userEmail}">
+					(${userName}&nbsp;${userEmail})
+				</c:when>
+				<c:when test="${not empty userName}">
+					(${userName})
+				</c:when>
+				<c:when test="${not empty userEmail}">
+					(${userEmail})
+				</c:when>
+			</c:choose>
 		</p>
 	<a href="${baseURI}">Return to main page</a>
 </t:error>

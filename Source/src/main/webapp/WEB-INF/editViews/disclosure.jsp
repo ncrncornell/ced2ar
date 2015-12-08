@@ -2,68 +2,60 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags"%>
-<c:set var="css" scope='request'>provEdit</c:set>
+<c:set var="css" scope='request'>disclosure</c:set>
 <t:main>
-	<h2>Disclosure - ${targetNode['label']}</h2>
-	<div id="provEdit">	
-		<fieldset>
-			<legend>
-				<h3>Details</h3>
-			</legend>
+	<h1 class="headerCenter">Appendix D: Clearance Request Memo</h1>
+	<h2 class="headerCenter">Request for Clearance of Research Output</h2>
+	<p class="headerCenter starBottom">Center for Economic Studies and Research Data Centers</p>
+	<div>	
+		<div class="starBottom">
 			<div class="lb2">
-				<p>Project #:</p>
-				<p>Submitted by :</p>
+				<p class="headerFillIn">
+					<span class="headerFillInLabel">Project # : </span>
+				</p>
+				<p class="headerFillIn">
+					<span class="headerFillInLabel">Submitted by  : </span>
+				</p>
 			</div>
 			<p>
-				<em>For reviewer to complete</em>
+				<em>For CES reviewer to complete</em>
 			</p>
-			<p>Cleared for release:</p>
-			<p>Cleared by:</p>
-		</fieldset>
-		<fieldset>
-			<legend>
-				<h3>General Information</h3>
-			</legend>
-			<p>Codebook ID: ${targetNode['id']}</p>
-			<p>
-				Codebook Label: ${targetNode['label']}
-			</p>
-			<p>
-				Codebook Location: ${targetNode['uri']}
-			</p>
-			<p>Type: ${nodeTypes[targetNode['nodeType']].name}</p>
-			<p>Report generated: ${rp}</p>
-		</fieldset>
-		<fieldset>
-			<legend>
-				<h3>Related Items</h3>
-			</legend>
-			<c:choose>
-				<c:when test="${fn:length(outEdges) gt 0}">
+			<p class="headerFillIn">
+				<span class="headerFillInLabel">Cleared for release : </span>
+				</p>
+				<p class="headerFillIn">
+					<span class="headerFillInLabel">Cleared by : </span>
+				</p>
+		</div>
+		<div>
+			<h4>1. General information</h4>
+			<div class="lb2">
+				<p>
+					a. Name of this request's subdirectory under the project's main clearance directory:
+				</p>
+				<p class="response">${targetNode['uri']}</p>
+			</div>
+			${disclosure}
+			<div class="lb2">
+				<p>c. Program that produced the file (e.g., output.sas or model.do)</p>
+				<div class="response">
 					<c:forEach var="edge" items="${outEdges}">
 						<p>
 							<span class="edge">
 								${targetNode['id']}&nbsp;
 								${flatPreds[edge['edgeType']]}&nbsp;
-								<a href="${baseURI}/edit/prov/${edge['target']}"> 
+								<a href="${pageContext.request.serverName}:${pageContext.request.localPort}${baseURI}/edit/prov/${edge['target']}"> 
 									${edge['target']}
-								</a>
+								</a>	
 							</span>
 						</p>
 					</c:forEach>		
-				</c:when>
-				<c:otherwise>
-					<p><em>No outgoing edges</em></p>
-				</c:otherwise>
-			</c:choose>		
-		</fieldset>
-		<c:if test="${not empty vars}">
-		<fieldset >
-			<legend>
-				<h3>Codebook Information</h3>
-			</legend>
-			${vars}
-		</fieldset>
-		</c:if>
+				</div>
+			</div>
+			<h4>4. Variable Definitions</h4>
+			<div class="lb2">
+				${vars}
+			</div>
+		</div>
 	</div>
 </t:main>

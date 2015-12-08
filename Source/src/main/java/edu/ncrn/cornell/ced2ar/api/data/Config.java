@@ -3,6 +3,7 @@ package edu.ncrn.cornell.ced2ar.api.data;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.util.StringUtils;
 
 /**
  * Credentials and URLs for external resources such as BaseX
@@ -19,22 +20,32 @@ public class Config {
 	public static final String AUTHENTICATION_TYPE_OAUTH2 = "OAUTH2";
 	public static final String AUTHENTICATION_TYPE_OPENID = "OPENID";
 	public static final String AUTHENTICATION_TYPE_DEFAULT = "DEFAULT";
+	public static final String AUTHORIZATION_STOREAGE_PROPERFIES_FILE = "PROPERTIES_FILE";
+	public static final String AUTHORIZATION_STOREAGE_BASEX_XML = "BASEX_XML";
+	public static final String EAPI = "ced2ar-web/erest";  //EAPI is a constant now
+	public static final String OAUTH2_PROVIDER_GOOGLE = "GOOGLE";
+	public static final String OAUTH2_PROVIDER_ORCID = "ORCID";
 
+	private String configInitialized;
 	private String baseXDB; 	
 	private String baseXReaderHash;
 	private String baseXWriterHash;
 	private String baseXAdminHash;
 	
+	private String neo4jEndpoint;
+	private String neo4jHash;
+	
 	private int timeout;//Timeout constant
 	private boolean isRestricted;//Switch to determine if in a restricted environment 
 	private int port;//Port on which application runs
-	private String eAPI;//Name of web application that the editing API runs under. Needs to be local.
+	
 	
 	//Email to send the bugReport to
+	private boolean bugReportEnable;
 	private String bugReportEmail;
 	private String bugReportSender;
 	private String bugReportPwd;
-	private boolean bugReportEnable;
+	
 	
 	private boolean devFeatureProv;
 	private boolean devFeatureGoogleAnalytics;
@@ -53,7 +64,13 @@ public class Config {
 	private boolean isGitEnabled;
 	private String remoteRepoURL;
 	private String authenticationType;
+	private String authorizationStorage;
 
+	private String supportedOauth2Providers;
+	
+	private String remoteURL;
+	private String crowdSourcingRole;
+	
 //Getters and setters
 	
 	public boolean isBugReportEnable() {
@@ -62,6 +79,13 @@ public class Config {
 
 	public void setBugReportEnable(boolean bugReportEnable) {
 		this.bugReportEnable = bugReportEnable;
+		
+		if(bugReportEnable){
+			ConfigurationProperties CP = new ConfigurationProperties();
+			this.bugReportEmail = CP.getValue("bugReportEmail");
+			this.bugReportSender = CP.getValue("bugReportSender");
+			this.bugReportPwd = CP.getValue("bugReportPwd");
+		}
 	}
 
 	
@@ -95,22 +119,6 @@ public class Config {
 
 	public void setBaseXAdminHash(String baseXAdminHash) {
 		this.baseXAdminHash = baseXAdminHash;
-	}
-
-	/**
-	 * Method geteAPI.
-	 * @return String
-	 */
-	public String geteAPI() {
-		return eAPI;
-	}
-
-	/**
-	 * Method seteAPI.
-	 * @param eAPI String
-	 */
-	public void seteAPI(String eAPI) {
-		this.eAPI = eAPI;
 	}
 
 	/**
@@ -324,6 +332,33 @@ public class Config {
 	}
 
 	
+	public String geteAPI() {
+		return EAPI;
+	}
+
+	public String getConfigInitialized() {
+		return configInitialized;
+	}
+
+	public void setConfigInitialized(String configInitialized) {
+		this.configInitialized = configInitialized;
+	}
+
+	public String getRemoteURL(){
+		return this.remoteURL;
+	}
+	
+	public void setRemoteURL(String url){
+		this.remoteURL = url;
+	}
+	
+	public String getCrowdSourcingRole(){
+		return this.crowdSourcingRole;
+	}
+	
+	public void setCrowdSourcingRole(String role){
+		this.crowdSourcingRole = role;
+	}
 	
 	public boolean isAuthenticationTypeOauth2() {
 		return getAuthenticationType().equalsIgnoreCase(AUTHENTICATION_TYPE_OAUTH2);
@@ -344,12 +379,82 @@ public class Config {
 		return authenticationTypeDefault;
 	}
 
+	public boolean isAuthorizationStoragePropertiesFile() {
+		boolean authorizationStoragePropertiesFile = false;
+		if(authorizationStorage.equalsIgnoreCase(AUTHORIZATION_STOREAGE_PROPERFIES_FILE)){
+			authorizationStoragePropertiesFile = true;
+		}
+		return authorizationStoragePropertiesFile;
+	}
+	public boolean isAuthorizationStorageBaseX() {
+		boolean authorizationStorageBaseX= false;
+		if(authorizationStorage.equalsIgnoreCase(Config.AUTHORIZATION_STOREAGE_BASEX_XML)){
+			authorizationStorageBaseX = true;
+		}
+		return authorizationStorageBaseX;
+	}
+	
 	public String getAuthenticationType() {
 		return authenticationType;
 	}
 
 	public void setAuthenticationType(String authenticationType) {
 		this.authenticationType = authenticationType;
+		if(isAuthenticationTypeOauth2()){
+			ConfigurationProperties CP = new ConfigurationProperties();
+			this.supportedOauth2Providers  =CP.getValue("supportedOauth2Providers").trim();
+			
+		}
+	}
+	
+	public boolean isGoogleOauth2Supported(){
+		if(StringUtils.isEmpty(supportedOauth2Providers)) return false;
+		int index = supportedOauth2Providers.indexOf(OAUTH2_PROVIDER_GOOGLE);
+		if(index>=0){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	public boolean isOrcidOauth2Supported(){
+		if(StringUtils.isEmpty(supportedOauth2Providers)) return false;
+		int index = supportedOauth2Providers.indexOf(OAUTH2_PROVIDER_ORCID);
+		if(index>=0){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	
+	
+	public String getAuthorizationStorage() {
+		return authorizationStorage;
+	}
+
+	public void setAuthorizationStorage(String authorizationStorage) {
+		this.authorizationStorage = authorizationStorage;
+	}
+
+	public String getSupportedOauth2Providers() {
+		return supportedOauth2Providers;
+	}
+	
+	public String getNeo4jEndpoint(){
+		return this.neo4jEndpoint;
+	}
+	
+	public void setNeo4jEndpoint(String s){
+		this.neo4jEndpoint = s;
+	}
+	
+	public String getNeo4jHash(){
+		return this.neo4jHash;
+	}
+	
+	public void setNeo4jHash(String s){
+		this.neo4jHash = s;
 	}
 
 	public static Config getInstance(){		
@@ -362,4 +467,6 @@ public class Config {
 			if(appContext !=null) appContext.close();
 		}
 	}	
+	
+	
 }

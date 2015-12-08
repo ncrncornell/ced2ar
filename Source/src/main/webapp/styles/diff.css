@@ -1,11 +1,1 @@
-.diffView{
-	margin:1em auto;
-	max-width: 100%;
-	min-width: 100%;
-	background-color:white;
-	padding: .25em;
-	border-radius: 4px;
-	min-width: 15em;
-	border: 1px solid #ccc;
-	font-size: .85em;
-}
+.diffView{margin:1em auto;max-width:100%;padding:.4em .6em;min-width:15em;border:1px solid #ccc;background-color:#fff;font-size:.85em}

@@ -3,9 +3,9 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags"%>
 <c:set var="js" scope='request'>provEdit</c:set>
-<c:set var="css" scope='request'>provEdit edit.min</c:set>
+<c:set var="css" scope='request'>provEdit edit</c:set>
 <t:main>
-	<h2>Prov Editing</h2>
+	<h2>Workflow Editing - New Relationship</h2>
 	<div id="provEdit">
 		<form id="provForm" method="POST" class="lb2" action="/">
 			<input type="hidden" name="psObject" id="psObject" value="${psObject}" >
@@ -41,9 +41,9 @@
 							<span id="provObjNew" class="hidden">
 								<select name="provObjClass">			
 										<option value="-1">--Select Class--</option>
-										<option value="0">Entity</option>	
-										<option value="1">Agent</option>	
-										<option value="2">Activity</option>				
+										<option value="0">Data Object</option>	
+										<option value="1">Program</option>	
+										<option value="2">Project</option>				
 								</select>
 								<span class="input-group">
 									<span class="input-group-addon">
@@ -97,9 +97,9 @@
 							<span id="provSubNew" class="hidden">
 								<select name="provSubClass">			
 										<option value="-1">--Select Class--</option>
-										<option value="0">Entity</option>	
-										<option value="1">Agent</option>	
-										<option value="2">Activity</option>				
+										<option value="0">Data Object</option>	
+										<option value="1">Program</option>	
+										<option value="2">Project</option>				
 								</select>
 								<span class="input-group">
 									<span class="input-group-addon">
@@ -129,8 +129,7 @@
 					<input type="hidden" value='${predList}' />
 					<select disabled class="disabled" name="provPred"></select>
 	        </fieldset>
-	        <fieldset class="fieldSetI">  
-	        	
+	        <fieldset class="fieldSetI">  	        	
 					<legend>4. Review and Add</legend>
 					<p class="lb2">
 						<span class="provPrev" id="provPreviewObj"></span>

@@ -8,6 +8,7 @@
 		<div class="lb">
 			<h2>Frequently Asked Questions</h2>
 		</div>
+		
 		<div id="q1" class="lb">
 			<h4>1. Why aren't some features displayed correctly?</h4>
 			<p>
@@ -74,6 +75,6 @@
 				Please see <a href="http://asciimath.org/">http://asciimath.org/</a> 
 				for specific syntax.
 			</p>
-		</div>		
+		</div>	
 	</div>
 </t:main>

@@ -24,9 +24,9 @@
 		  });
 		</script>
 </head>
-<body>
-	<div id="main" class="container">
-		<jsp:doBody />
-	</div>
-</body>
+	<body>
+		<div id="main" class="container">
+			<jsp:doBody />
+		</div>
+	</body>
 </html>

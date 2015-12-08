@@ -36,6 +36,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 
 /**
@@ -456,11 +457,13 @@ public class Parser {
 			}catch(NullPointerException | TransformerFactoryConfigurationError | TransformerException e2){ 
 				return null;
 			}finally{
+			
 				writer.close();
 			}
 			 		
-		} catch (IOException | XPathExpressionException | ParserConfigurationException | SAXException e) {
-			e.printStackTrace();
+		}catch(IOException | XPathExpressionException | ParserConfigurationException | SAXException e) {
+			logger.error(e.getMessage() + " - on content: ");
+			logger.error(this.RAW_DATA);
 		}
 		return null;		
 	}

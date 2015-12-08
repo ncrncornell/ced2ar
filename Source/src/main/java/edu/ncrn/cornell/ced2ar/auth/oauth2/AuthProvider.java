@@ -1,11 +1,16 @@
 package edu.ncrn.cornell.ced2ar.auth.oauth2;
 
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
+
 
 import edu.ncrn.cornell.ced2ar.api.data.Config;
 import edu.ncrn.cornell.ced2ar.auth.OAUserDetail;
@@ -28,9 +33,11 @@ import edu.ncrn.cornell.ced2ar.auth.Service;
  * If the user is not a registered user, this class will throw userNotFoundException 
  */
 
-public class AuthProvider  implements AuthenticationProvider {
+public class AuthProvider implements AuthenticationProvider {
 	private static final Logger logger = Logger.getLogger(AuthProvider.class);
 	
+	@Autowired
+	private HttpSession session;
 	@Autowired(required = true)
 	private Service userDetailService;
 	
@@ -45,19 +52,26 @@ public class AuthProvider  implements AuthenticationProvider {
 		logger.debug("Authentication Started");
 		AuthToken token = (AuthToken) authentication;
 		logger.debug("OAuth2Token = " + token);
-		OAUserDetail user = (OAUserDetail) token.getPrincipal();		
+		OAUserDetail user = (OAUserDetail) token.getPrincipal();
+		String userName = user.getName();
+		
 		try{
 			user = (OAUserDetail) userDetailService.loadUserByUsername(user.getUsername());
+			userDetailService.loadUserByUsername(user.getUsername());
 			logger.debug("User with token  " + token + " is successfully authorized and a registered user of CED2AR. Assigning roles to the user ...");
 			token = new AuthToken(user);
 			token.setAuthenticated(true);
+			
+			session.setAttribute("userName", userName);
+			session.setAttribute("userEmail", user.getEmail());
+			
 			logger.debug("User with token " + token + " logged in ");
 		}catch(UsernameNotFoundException usernameNotFoundException){
 			//All users are added ROLE_USER group
 			Config config = Config.getInstance();
 			if(config.getOpenAccess().equals("true")){
-				//token = new AuthToken(user);
 				token.setAuthenticated(true);
+				session.setAttribute("userName", userName);
 			}else{
 				logger.debug("User trying google/login is not registered");
 				token = null;

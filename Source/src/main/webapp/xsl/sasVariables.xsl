@@ -55,31 +55,50 @@
 			<xsl:if test="catgry/*">
 				<xsl:for-each select="catgry">
 			<!--
-				Example output of this block 
-					1 ="N/A"
+				This block prints
+				variableName = Variable Label
+								Example output of this block 
+					1 ="N/N"
 					2 ="Yes, laid off"
 					3 = ""	
-				in case the value is "N/A" we will print "." (dot) 1 = "."
-				in case the value is empty, we will print the label it self 3 = "3"
+				
+				
+				if the variable name is 'Sysmiss' prin "."
+				otherwise
+				do the following 
+					in case the value is "N/A" we will print "." (dot) 1 = "."
+					in case the value is empty, we will print the label it self 3 = "3"
+				
 				 
 			 -->
-			 		
-					<xsl:value-of select="catValu"/>
+			  		<xsl:variable name='valueName'>
+						<xsl:value-of select="catValu" />
+					</xsl:variable>
+			 
+					<xsl:value-of select="ncrnxsl:getSanitizedString($valueName)"/>
 					<xsl:variable name = "valueLabel">
 						<xsl:value-of select="labl"/>
 					</xsl:variable>
 					<xsl:text> ="</xsl:text>
 					<xsl:choose>
-						<xsl:when test='$valueLabel eq "N/A"'>
+						<xsl:when test='$valueName eq "Sysmiss"'>
 							<xsl:text>.</xsl:text>
 						</xsl:when>
-						<xsl:when test='$valueLabel eq ""'> 
-							<xsl:value-of select="catValu"/>
-						</xsl:when>
 						<xsl:otherwise>
-							<xsl:value-of select="$valueLabel"/>
+							<xsl:choose>
+								<xsl:when test='$valueLabel eq "N/A"'>
+									<xsl:text>.</xsl:text>
+								</xsl:when>
+								<xsl:when test='$valueLabel eq ""'> 
+									<xsl:value-of select='ncrnxsl:getSanitizedString($valueName)'/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select='ncrnxsl:getSanitizedString($valueLabel)'/>
+								</xsl:otherwise>
+							</xsl:choose>
 						</xsl:otherwise>
-					</xsl:choose>
+					</xsl:choose>					
+					
 					<xsl:text>"&#xa;</xsl:text>
 				</xsl:for-each>
 				

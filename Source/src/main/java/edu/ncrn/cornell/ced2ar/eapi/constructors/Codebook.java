@@ -33,8 +33,12 @@ public class Codebook {
 	private String HANDLE;	
 	private XMLHandle XH;
 	
+	/**
+	 * Constructs and prints codebook to console from the CISER MySQL DB
+	 * @param args
+	 */
 	public static void main(String[] args){	
-		Codebook codebook = new Codebook("cnss2013");
+		Codebook codebook = new Codebook("S2013_OC");
 		codebook.init();
 		System.out.println(codebook.getDDI());
     }
@@ -68,13 +72,11 @@ public class Codebook {
 	private void constructVars(){
 		long startTime = System.currentTimeMillis();
 		
-		System.out.println("Codebook generation has started");
 		logger.debug("Codebook generation has started");
 
 		VariableDAO  variableDAO = (VariableDAO) CONTEXT.getBean("variableDAO");
 		ArrayList<Variable> vars = variableDAO.getVarsInCodebook(HANDLE);
 		
-		System.out.println("Adding vars...");
 		logger.debug("Adding vars...");
 		
 		for(Variable var : vars){
@@ -82,6 +84,13 @@ public class Codebook {
 			String label = var.getLabel();
 			int startPos = var.getStartPos();
 			int endPos = var.getEndPos();
+			String type = var.getType().toLowerCase();
+			
+			if(type.equals("num")){
+				type = "numeric";
+			}else if(type.equals("char")){
+				type = "character";
+			}
 			
 			//TODO: How to add original name
 			String originalName = var.getOriginalName();
@@ -116,28 +125,33 @@ public class Codebook {
 				XH.addReplace(xpathEnd, label, true, true, false, true);		
 			}
 			
-			System.out.println("Adding values...");
-			logger.debug("Adding values");
+		
 			
 			//Parse values this way to skip long numeric values
 			VariableValueDAO valueDAO = (VariableValueDAO) CONTEXT.getBean("variableValueDAO");
 			ArrayList<VariableValue> values = valueDAO.getValuesForVar(varName, HANDLE);
-			
-			
-			String type = "character";
+
 			if(values.size() > 0){
+				
+				/*
 				try{  
 				    Double.parseDouble(values.get(0).getValueLabel());  
 				    type = "numeric";
-				}catch(NumberFormatException nfe){}  
-	
-				if(values.size() < 100 || !type.equals("numeric")){
+				}catch(NumberFormatException|NullPointerException nfe){}  
+				*/
+				//values.size() < 100 || 
+				if(!type.equals("numeric")){
+					
+					logger.debug("Adding values "+varName+"... ");
+					
 					for(VariableValue varValue : values){
 						//Values and labels aren't trimed in SQL...
 						String value = varValue.getValue().trim();
-						String valLabel = varValue.getValueLabel().trim();
-				
-						//System.out.println("Adding "+value + " - " + label + " to " + varName);
+						String valLabel = "";
+						try{ 
+							valLabel = varValue.getValueLabel().trim();
+						}catch(NullPointerException e){}
+						
 						logger.debug("Adding "+value + " - " + label + " to " + varName);
 						
 						String xpathCat = "/codeBook/dataDscr/var[@name='"+varName+"']/catgry";
@@ -152,13 +166,10 @@ public class Codebook {
 					}
 				}
 			}
-
 			String xpathType = "/codeBook/dataDscr/var[@name='"+varName+"']/varFormat/@type";
 			XH.addReplace(xpathType, type, true, true, false, true);	
-
 		}
 		
-		System.out.println("Adding sum stats...");
 		logger.debug("Adding sum stats...");
 		
 		//Adds sum stats
@@ -198,13 +209,16 @@ public class Codebook {
 		//VariableNoteDAO  noteDAO = (VariableNoteDAO) CONTEXT.getBean("variableNoteDAO");
 		//ArrayList<VariableNote> notes = noteDAO.getNotesForCodebook(HANDLE);
 		//TODO: Add notes
-
+		
+		//Adds template fileDscr to edit
+		String fileDscrXpath ="/codeBook/fileDscr/fileTxt/fileName";
+		XH.addReplace(fileDscrXpath, "From CISER SQL archive", true, true, true, true);
+		
 		//Add namespace information
 		XH.addNamespace();
 		
 		long endTime = System.currentTimeMillis();
 		logger.debug("Done. Process took "+((endTime - startTime) / 1000.0) + " seconds");
-		System.out.println("Done. Process took "+((endTime - startTime) / 1000.0) + " seconds \n");
 		
 	}
 	

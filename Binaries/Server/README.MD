@@ -3,6 +3,7 @@
 - Java 7+
 - Tomcat 7+
 
+
 1. Setup Java 7. Although Java 8 should work as well, but is not fully tested.
 2. Install Tomcat. See the [Tomcat Docs](https://tomcat.apache.org/tomcat-7.0-doc/setup.html).
 3. Configure the Tomcat manager, and [create an account](http://tomcat.apache.org/tomcat-7.0-doc/manager-howto.html#Configuring_Manager_Application_Access) to access it. 
@@ -26,4 +27,6 @@
 
 ## Other configuration notes
 
-Other files, aside from the configruation properties above, may need to be edited. For intstance, authorized users can be added by editing `WEB-INF/classes/ced2ar-user-config.properties`.
+* Other files, aside from the configuration properties above, may need to be edited. For instance, authorized users can be added by editing `WEB-INF/classes/ced2ar-user-config.properties`. See [the wiki](https://github.com/ncrncornell/ced2ar/wiki/The-CED2AR-Configuration-Files) for details.
+* Enable an [Apache front](https://github.com/ncrncornell/ced2ar/wiki/Fronting-Tomcat-with-Apache) for Tomcat for better load-balancing and security.
+* [Linux Server Notes](https://github.com/ncrncornell/ced2ar/wiki/Linux)

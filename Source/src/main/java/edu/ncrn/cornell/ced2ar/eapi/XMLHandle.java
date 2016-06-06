@@ -1268,7 +1268,44 @@ public class XMLHandle {
 				serializer.serialize(_doc);
 				
 				xmlToTest = xmlStrOut.toString().replaceFirst("<codeBook", "<codeBook xmlns=\"ddi:codebook:2_5\"");
-			// if there is prov, add namespaces for validation
+			
+				
+				//This is a work around. 
+				//xhtml elements should be recognized without the namespace specification
+				//but for now we will add it so that documents validate.
+				xmlToTest = xmlToTest.replaceAll("<ul>", "<xhtml:ul>");
+				xmlToTest = xmlToTest.replaceAll("</ul>", "</xhtml:ul>");
+				xmlToTest = xmlToTest.replaceAll("<li>", "<xhtml:li>");
+				xmlToTest = xmlToTest.replaceAll("</li>", "</xhtml:li>");
+				xmlToTest = xmlToTest.replaceAll("<h1>", "<xhtml:h1>");
+				xmlToTest = xmlToTest.replaceAll("</h1>", "</xhtml:h1>");
+				xmlToTest = xmlToTest.replaceAll("<h2>", "<xhtml:h2>");
+				xmlToTest = xmlToTest.replaceAll("</h2>", "</xhtml:h2>");
+				xmlToTest = xmlToTest.replaceAll("<h3>", "<xhtml:h3>");
+				xmlToTest = xmlToTest.replaceAll("</h3>", "</xhtml:h3>");
+				xmlToTest = xmlToTest.replaceAll("<h4>", "<xhtml:h4>");
+				xmlToTest = xmlToTest.replaceAll("</h4>", "</xhtml:h4>");
+				xmlToTest = xmlToTest.replaceAll("<h5>", "<xhtml:h5>");
+				xmlToTest = xmlToTest.replaceAll("</h5>", "</xhtml:h5>");
+				xmlToTest = xmlToTest.replaceAll("<h6>", "<xhtml:h6>");
+				xmlToTest = xmlToTest.replaceAll("</h6>", "</xhtml:h6>");
+				xmlToTest = xmlToTest.replaceAll("<ol>", "<xhtml:ol>");
+				xmlToTest = xmlToTest.replaceAll("</ol>", "</xhtml:ol>");
+				xmlToTest = xmlToTest.replaceAll("<dl>", "<xhtml:dl>");
+				xmlToTest = xmlToTest.replaceAll("</dl>", "</xhtml:dl>");
+				xmlToTest = xmlToTest.replaceAll("<pre>", "<xhtml:pre>");
+				xmlToTest = xmlToTest.replaceAll("</pre>", "</xhtml:pre>");
+				xmlToTest = xmlToTest.replaceAll("<blockquote>", "<xhtml:blockquote>");
+				xmlToTest = xmlToTest.replaceAll("</blockquote>", "</xhtml:blockquote>");
+				xmlToTest = xmlToTest.replaceAll("<address>", "<xhtml:address>");
+				xmlToTest = xmlToTest.replaceAll("</address>", "</xhtml:address>");
+				xmlToTest = xmlToTest.replaceAll("<hr>", "<xhtml:hr>");
+				xmlToTest = xmlToTest.replaceAll("</hr>", "</xhtml:hr>");
+				//might also need to add logic for <div> and <table>, but those elements 
+				//also exist in ddi namespace. 
+				
+				
+				// if there is prov, add namespaces for validation
 				xmlToTest =  xmlToTest.replaceFirst("<prov:document", "<prov:document "+
 	                    " xmlns:dc=\"http://purl.org/dc/terms/\""+
 	                    " xmlns:ex=\"http://example.com/ns/ex#\""+
@@ -1289,6 +1326,9 @@ public class XMLHandle {
 	                    " xmlns:act=\"http://ced2ar.org/ns/activities#\""+
 	                    " xmlns:fn=\"http://www.w3.org/2005/xpath-functions\""+
 	                    " xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"");
+				
+				
+				//System.out.println("[DEBUG]:: "+xmlToTest.substring(0, 400));
 			//for comments or bug reports we don't need more attributes
 			}else{				
 				OutputFormat format = new OutputFormat(_doc);
@@ -1330,6 +1370,7 @@ public class XMLHandle {
 	    	e= (SAXParseException) e;
 	    	String msg = "Invalid XML " + e.getMessage();
 		    error = msg;
+		    System.out.println("[PARSING ERROR]:: "+error);
 		    return false;
 	    }catch (IOException e){
 	    	String msg = "Internal Parsing Error During Validation";

@@ -42,9 +42,18 @@ public class Main {
 	 * @return String the search page location
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-    public String home() {
-        return "redirect:search";
+    public String home(){
+		return "redirect:search";
+	}
+	
+	/**
+	 * Controller mapping for lightbox buttons to choose browse or search as new homepage.
+	public String home(Model model){
+		model.addAttribute("subTitle","Home");
+		model.addAttribute("metaDesc", "Welcome to the CED2AR project.");
+        return "/WEB-INF/views/home.jsp";
     } 
+    **/
 
 	/**
 	 * Method info.

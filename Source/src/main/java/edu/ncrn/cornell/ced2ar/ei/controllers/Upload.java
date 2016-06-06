@@ -162,7 +162,7 @@ public class Upload {
 				clearCodebookCache(model);		
 			}else{
 				String rep = editCodebookData.getError();
-				
+				//Why are we parsing a an error string with the xml parser??
 				String path = context.getRealPath("/xsl/apiError.xsl");//Local file path to find XSL doc
 				Parser xp = new Parser(rep,path,1);
 				String error = xp.getData();

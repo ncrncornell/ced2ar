@@ -12,3 +12,5 @@ profiles/*
 #Eclipse
 .settings
 
+#Logs
+logs

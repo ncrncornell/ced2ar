@@ -11,10 +11,11 @@ Installation with CED2AR:
 ```
 /rest?command=alter user <username> <password> 
 ```
-Note that password should be an md5 hash of your new password
+Note that password should be an md5 hash of your new password.
+
 4. In the source code, navigate to /profiles/localtemp/config.properties. 
 Change the values of basex.reader.hash, basex.writer.hash and basex.admin.hash. 
-The hash is a base 64 encoding of <username>:<password> 
+The hash is a base 64 encoding of `<username>:<password>`
 (same as HTTP basic authentication format)
 
 5. Rebuild your project. You may need to manually clear the values 

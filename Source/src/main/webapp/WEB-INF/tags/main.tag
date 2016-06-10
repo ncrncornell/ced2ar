@@ -230,21 +230,13 @@
 								<img alt="Creative Commons License" height="15" width="80"  src="${baseURI}/images/cc.png" />
 					</a>
 					<br />
-					&copy; 2012-2015, <span itemscope itemtype="http://schema.org/WebSite">
+					&copy; 2012-2016, <span itemscope itemtype="http://schema.org/WebSite">
 						<span itemprop="copyrightHolder" > Cornell Institute for 
 						Social and Economic Research </span></span>
 				</p>
-				<c:choose>
-					<c:when test="${restricted or (not bugReportEnabled)}">
-						<p>
-							Please report bugs to <span class="emailContact2"></span>
-						</p>
-					</c:when>
-					<c:otherwise>
-						<a href="${baseURI}/bugreport" class="footerButton"><i
-							class="fa fa-bug"></i>Report a Bug</a>
-					</c:otherwise>
-				</c:choose>			
+				<p>
+					Please report bugs on <a href="https://github.com/ncrncornell/ced2ar/issues">GitHub</a>.
+				</p>
 				<a href="https://cornell.qualtrics.com/SE/?SID=SV_7a1Wl3aNdVvfkQR" class="footerButton" target="_blank"><i
 					class="fa fa-users"></i>User Survey</a>
 				<span id='contactUs'>

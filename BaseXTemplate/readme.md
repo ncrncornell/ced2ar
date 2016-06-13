@@ -9,9 +9,8 @@ Installation with CED2AR:
 
 3. Change the password for the admin, writer and reader accounts using the command: 
 ```
-/rest?command=alter user <username> <password> 
+/rest?command=alter password <username> <password> 
 ```
-Note that password should be an md5 hash of your new password.
 
 4. In the source code, navigate to /profiles/localtemp/config.properties. 
 Change the values of basex.reader.hash, basex.writer.hash and basex.admin.hash. 

@@ -37,5 +37,5 @@ Additional [configuration notes](https://github.com/ncrncornell/ced2ar/wiki/The-
 **Copyright Cornell University 2012-2016**
 
 <a name="footnote1">1</a>: CED2AR has been tested the most on Tomcat 7,
-however we also have performed limited testing with Tomcat 9 and did not
+however we also have performed limited testing with Tomcat 8 and 9 and did not
 experience any issues.

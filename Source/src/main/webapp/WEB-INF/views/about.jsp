@@ -27,6 +27,13 @@
 			<a href='http://getbootstrap.com/' target="_blank"><img class="imgLogo2 img-rounded" src="images/bootstrap.png" alt="Twitter Bootstrap" width="143" height ="80"/></a>
 			<a href='http://www.ddialliance.org/' target="_blank"><img class="imgLogo2" src="images/ddi.png" alt="DDI" width="128" height ="80"/></a>
 			<a href='http://basex.org/' target="_blank"><img class="imgLogo2" src="images/basex.png" alt="BaseX" width="80" height ="80"/></a>
+			<a href='https://www.yourkit.com/java/profiler/index.jsp' target="_blank"><img class="imgLogo2" src="images/yklogo.png" alt="YourKit" height ="80"/></a>
+			<p>
+				YourKit supports open source projects with its full-featured Java Profiler.
+				YourKit, LLC is the creator of <a href="https://www.yourkit.com/java/profiler/index.jsp">YourKit Java Profiler</a>
+				and <a href="https://www.yourkit.com/.net/profiler/index.jsp">YourKit .NET Profiler</a>,
+				innovative and intelligent tools for profiling Java and .NET applications.
+			</p>
 		</div>
 		<div class="lb">
 			<h3>Current Collaborators</h3>

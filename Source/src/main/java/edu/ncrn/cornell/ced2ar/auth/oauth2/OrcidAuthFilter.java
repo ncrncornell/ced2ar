@@ -45,8 +45,8 @@ import edu.ncrn.cornell.ced2ar.auth.OAUserDetail;
  * @author NCRN Project Team
  * 
  *         Authorization method is called when a user tries to authorize.
- *         Process of authentication is as follows A check is made to see if
- *         OAUTH2 provider (google) authorization code exists in the request. if
+ *         Process of authentication is as follows: A check is made to see if
+ *         OAUTH2 provider (ORCID) authorization code exists in the request. If
  *         authorization does not exists, one will be fetched by posting a call
  *         to authURL. This call will fetch the code and
  *         OAuth2ClientAuthenticationProcessingFilter will redirect back. With

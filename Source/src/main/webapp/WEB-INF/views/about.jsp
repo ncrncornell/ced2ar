@@ -8,8 +8,8 @@
 			<h2>About the CED<sup>2</sup>AR Project</h2>
 			<p itemprop="about">
 				The Comprehensive Extensible Data Documentation and Access Repository (CED<sup>2</sup>AR)
-				is funded by the National Science Foundation (NSF), under grant <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1131848" target="_blank">#1131848</a> 
-				and developed by the Cornell Node of the NSF Census Research Network (NCRN).
+				is funded by the National Science Foundation (NSF), under grant <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1131848" target="_blank">#1131848</a>
+				and developed by the <a href="https://www.ncrn.cornell.edu">Cornell Node of the NSF Census Research Network (NCRN)</a>.
 				The Cornell NCRN branch includes researchers and developers from the Cornell Institute 
 				for Social and Economic Research  <a href="http://ciser.cornell.edu/" target="_blank">(CISER)</a> 
 				and the Cornell <a href="http://www.ilr.cornell.edu/ldi/" target="_blank">Labor Dynamics Institute</a>.
@@ -27,26 +27,34 @@
 			<a href='http://getbootstrap.com/' target="_blank"><img class="imgLogo2 img-rounded" src="images/bootstrap.png" alt="Twitter Bootstrap" width="143" height ="80"/></a>
 			<a href='http://www.ddialliance.org/' target="_blank"><img class="imgLogo2" src="images/ddi.png" alt="DDI" width="128" height ="80"/></a>
 			<a href='http://basex.org/' target="_blank"><img class="imgLogo2" src="images/basex.png" alt="BaseX" width="80" height ="80"/></a>
+			<a href='https://www.yourkit.com/java/profiler/index.jsp' target="_blank"><img class="imgLogo2" src="images/yklogo.png" alt="YourKit" height ="80"/></a>
+			<p>
+				YourKit supports open source projects with its full-featured Java Profiler.
+				YourKit, LLC is the creator of <a href="https://www.yourkit.com/java/profiler/index.jsp">YourKit Java Profiler</a>
+				and <a href="https://www.yourkit.com/.net/profiler/index.jsp">YourKit .NET Profiler</a>,
+				innovative and intelligent tools for profiling Java and .NET applications.
+			</p>
 		</div>
 		<div class="lb">
 			<h3>Current Collaborators</h3>
 			<p>
+				Brandon Barker - <span class='sh'>Center for Advanced Computing, Cornell University</span><br />
 				William Block - <span class='sh'>Cornell Institute for Social and Economic Research, Cornell University</span><br />
 				Warren Brown - <span class='sh'>Cornell Institute for Social and Economic Research, Cornell University</span><br />
-				Venky Kambhampaty - <span class='sh'>Cornell Institute for Social and Economic Research, Cornell University</span><br />
+				Kyle Brumsted - <span class='sh'>Cornell Institute for Social and Economic Research, Cornell University</span><br />
 				Carl Lagoze - <span class='sh'>School of Information, University of Michigan</span><br />
-				Benjamin Perry -  <span class='sh'>Cornell Institute for Social and Economic Research, Cornell University</span><br />
-				Flavio Stanchi - <span class='sh'>Labor Dynamics Institute, Cornell University</span><br />
 				Lars Vilhuber - <span class='sh'>Labor Dynamics Institute, Cornell University</span><br />
-				Jeremy Williams - <span class='sh'>Cornell Institute for Social and Economic Research, Cornell University</span><br />
 			</p>
 		</div>
 		<div class="lb">
 			<h3>Previous Collaborators</h3>
 			<p class="past lb">
 				<span class="ph">Spring/Summer 2015</span><br />
-				Kyle Brumsted - <span class='sh'>Cornell NCRN Node, Intern from McGill University</span><br />
+				Venky Kambhampaty - <span class='sh'>Cornell Institute for Social and Economic Research, Cornell University</span><br />
+				Benjamin Perry -  <span class='sh'>Cornell Institute for Social and Economic Research, Cornell University</span><br />
 				Haeyong Shin - <span class='sh'>Cornell University</span><br />
+				Flavio Stanchi - <span class='sh'>Labor Dynamics Institute, Cornell University</span><br />
+				Jeremy Williams - <span class='sh'>Cornell Institute for Social and Economic Research, Cornell University</span><br />
 			</p>
 			<p class="past lb">
 				<span class="ph">Summer 2014</span><br />

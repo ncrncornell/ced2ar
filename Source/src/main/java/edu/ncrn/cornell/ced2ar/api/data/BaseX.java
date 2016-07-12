@@ -340,7 +340,7 @@ public class BaseX  {
 		c.buildRequest(RequestType.GET, reqPrefix, request);
 		c.writerAuthorize();
 		String s = c.execute();
-		c.close();		
+		c.close();
 		return s;		
 	}
 	

@@ -284,6 +284,7 @@ public class EditVarGroups {
 			break;
 			case "txt":
 				txt = newValue;
+				txt = txt.replaceAll("'", "&apos;");
 			break;
 		}
 	

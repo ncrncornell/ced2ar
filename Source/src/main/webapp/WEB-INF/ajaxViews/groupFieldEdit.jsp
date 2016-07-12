@@ -17,6 +17,27 @@
 		<c:if test="${newTxtHeight lt 3}">
 			<c:set var="newTxtHeight" value="3" />
 		</c:if>
+		<script src="${baseURI}/scripts/tinymce/tinymce.min.js"></script>
+		<script type="text/javascript">
+			$("#editSave").css("display","none");
+			
+			tinymce.init({		
+			    selector: "textarea",
+			    menubar : false,
+			    content_css : "${baseURI}/styles/tinymce.css",
+			    oninit : "setPlainText",
+			    browser_spellcheck : true,
+			    plugins: "paste save link code",
+			    target_list: [{title: 'None', value: ''}],
+			    paste_as_text: true,
+			    toolbar: "save | undo redo | link | bullist | italic | code | git",
+			    valid_elements :"a[href|target=_blank],strong/b,em,div,br,p,li,ul",
+			    save_onsavecallback: function(){
+			    	$("textarea [name=newText]").html(this.getContent());
+					$("#editSave").click();
+			    }
+			});
+		</script>
 		<textarea name="newValue" style="height:${newTxtHeight}em">${curVal}</textarea>
 		<c:if test="${not empty editDoc}">
 			<p class="editDoc">${editDoc}</p>

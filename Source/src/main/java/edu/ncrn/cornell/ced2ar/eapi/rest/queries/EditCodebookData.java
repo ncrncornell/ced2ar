@@ -799,7 +799,6 @@ public class EditCodebookData {
 	public int editVarGrp(String baseHandle, String version, String id, 
 	String name, String labl, String txt){
 		//TODO: versioning for this
-
 		String handle = baseHandle+version;
 		String replaceStmt = "";	
 		

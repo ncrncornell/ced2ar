@@ -179,6 +179,18 @@
 				</xsl:for-each>
 			</xsl:for-each>
 		</xsl:if>
+		<!-- Universe here -->
+		<xsl:if test="codeBook/var/universe != ''">
+			<p>
+				<span class="staticHeader">Universe </span>
+			</p>
+			<div class="value2">
+				<span itemprop="description">
+					<xsl:copy-of select="codeBook/var/universe/node()" />
+				</span>
+			</div>
+		</xsl:if>
+		
 		<xsl:if test="count(codeBook/groups/group) gt 0">
 			<p>
 				<span class="staticHeader">Groups</span>

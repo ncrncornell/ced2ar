@@ -317,6 +317,25 @@
 				</xsl:for-each>
 			</xsl:for-each>
 		</xsl:if>
+		<p class="lb2">
+			<span class="staticHeader">Universe</span>
+			<a title="Edit field" class="editIcon2">
+				<xsl:choose>
+					<xsl:when test="/codeBook/var/universe != ''">
+						<xsl:attribute name="href"><xsl:value-of select="$varname" />/edit?f=universe</xsl:attribute>
+						<i class="fa fa-pencil"></i>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:attribute name="href"><xsl:value-of select="$varname" />/edit?f=universe&amp;a=true</xsl:attribute>
+						<i class="fa fa-plus"></i>
+					</xsl:otherwise>
+				</xsl:choose>
+			</a>
+			<xsl:copy-of select="cdr:schemaDoc('universe')" />	
+		</p>
+		<div class="value2">
+			<xsl:copy-of select="/codeBook/var/universe/node()" />
+		</div>
 		<xsl:if test="count(/codeBook/groups/group) gt 0">
 			<p>
 				<span class="staticHeader">Groups</span>

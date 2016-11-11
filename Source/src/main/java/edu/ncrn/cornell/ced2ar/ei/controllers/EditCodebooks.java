@@ -91,6 +91,8 @@ public class EditCodebooks {
 		validFields.put("notes", new String[] {"1","/codeBook/var[@name='"+var+"']/notes["+index+"]","Notes","0"});
 		validFields.put("notesAccs", new String[] {"5","/codeBook/var/notes["+index+"]/@access","Note Access", "1"});
 		validFields.put("qstn", new String[] {"1","/codeBook/var/qstn","Question Text","0"});
+		validFields.put("universe", new String[] {"1","/codeBook/var/universe", "Universe","0"});
+
 		return validFields;
 	}
 	

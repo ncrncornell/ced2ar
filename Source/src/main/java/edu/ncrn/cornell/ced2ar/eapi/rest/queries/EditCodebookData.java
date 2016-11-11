@@ -679,8 +679,8 @@ public class EditCodebookData {
 		validFields.put("catStat", new String[] {"5","/var[@name='"+var+"']/catgry["+index+"]/catStat["+index2+"]/@access","Value Statistic Access"});
 		validFields.put("notes", new String[] {"1","/var[@name='"+var+"']/notes["+index+"]","Notes"});
 		validFields.put("notesAccs", new String[] {"5","/var[@name='"+var+"']/notes["+index+"]/@access","Note Access"});
-		
 		validFields.put("qstn", new String[] {"1","/var[@name='"+var+"']/qstn","Question Text"});
+		validFields.put("universe", new String[] {"1","/var[@name='"+var+"']/universe", "Universe"});
 		
 		//TODO: I think the ip param is irrevelant at this point, but was in the old eapi
 		if(!ip.equals("")) logger.debug("Edit request to var from " + ip);

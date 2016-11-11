@@ -1,0 +1,2197 @@
+<codeBook xmlns:act="http://ced2ar.org/ns/activities#" xmlns:ced2ar="http://ced2ar.org/ns/core#" xmlns:RePEc="https://ideas.repec.org/#" xmlns:exn="http://ced2ar.org/ns/external#" xmlns:repeca="https://ideas.repec.org/e/#" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:tr="http://example.com/ns/tr#" xmlns:ex="http://example.com/ns/ex#" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:prov="http://www.w3.org/ns/prov#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:saxon="http://xml.apache.org/xslt" xmlns:ns0="http://purl.org/dc/elements/1.1/" xmlns:fn="http://www.w3.org/2005/xpath-functions" xmlns:dcmitype="http://purl.org/dc/dcmitype/" xmlns:dc="http://purl.org/dc/terms/" xmlns="ddi:codebook:2_5" xsi:schemaLocation="ddi:codebook:2_5 http://www.ncrn.cornell.edu/docs/ddi/2.5.NCRN.P/schemas/codebook.xsd">
+  <docDscr>
+    <citation>
+      <titlStmt>
+        <titl>SIPP Synthetic Beta v6.02</titl>
+        <altTitl>SSBv6</altTitl>
+        <IDNo agency="DOI">TBD</IDNo>
+      </titlStmt>
+      <rspStmt>
+        <AuthEnty affiliation="Cornell University">Virtual RDC</AuthEnty>
+      </rspStmt>
+      <prodStmt>
+        <producer abbr="Cornell NCRN Project">Cornell NSF-Census Research Network</producer>
+        <copyright>Cornell NCRN Project</copyright>
+        <prodDate date="3 April 2014">November 12, 2015</prodDate>
+        <prodPlac>Cornell Institute for Social and Economic Research (CISER), Cornell University, Ithaca NY<ExtLink URI="http://ciser.cornell.edu"/>
+        </prodPlac>
+        <software>The Comprehensive Extensible Data Documentation and Access Repository 2.7</software>
+        <software>The Comprehensive Extensible Data Documentation and Access Repository 2.6</software>
+        <software>The Comprehensive Extensible Data Documentation and Access Repository 2.6</software>
+        <fundAg abbr="NSF">National Science Foundation (NSF)</fundAg>
+        <grantNo agency="National Science Foundation">1131848</grantNo>
+      </prodStmt>
+      <distStmt source="producer">
+        <distrbtr URI="http://www.ncrn.cornell.edu" abbr="Cornell NCRN Project">NSF-Census Research Network - Cornell node</distrbtr>
+        <distrbtr URI="http://www.ciser.cornell.edu" abbr="CISER">Cornell Institute for Social and Economic Research</distrbtr>
+        <distrbtr URI="http://www.ilr.cornell.edu/ldi" abbr="LDI">Labor Dynamics Institute</distrbtr>
+        <distDate date="2015">2015</distDate>
+      </distStmt>
+      <verStmt>
+        <version date="2015-11-24 10:05:15 (upload date)">2015-01-14</version>
+      </verStmt>
+      <biblCit>
+        <p>Lori B. Reeder and Martha Stinson and Kelly E. Trageser and Lars Vilhuber. Codebook for the SIPP Synthetic Beta 6.0.2 [Codebook file]. Cornell Institute for Social and Economic Research and Labor Dynamics Institute [distributor]. Cornell University, Ithaca, NY, 2015</p>
+      </biblCit>
+    </citation>
+    <docSrc>
+      <titlStmt>
+        <titl>SSB_codebook_v6-0-beta</titl>
+        <altTitl>SSBv6</altTitl>
+      </titlStmt>
+    </docSrc>
+  </docDscr>
+  <stdyDscr>
+    <citation>
+      <titlStmt>
+        <titl>SSB_codebook_v6-0-beta</titl>
+        <IDNo>6.0</IDNo>
+      </titlStmt>
+      <rspStmt>
+        <AuthEnty>United States Department of Commerce. Bureau of the Census.</AuthEnty>
+        <AuthEnty>Social Security Administration.</AuthEnty>
+        <AuthEnty>Internal Revenue Service.</AuthEnty>
+        <AuthEnty>Cornell University. Labor Dynamics Institute.</AuthEnty>
+      </rspStmt>
+      <prodStmt>
+        <producer abbr="Census">United States Department of Commerce. Bureau of the Census.</producer>
+        <copyright>none</copyright>
+        <prodPlac>Washington, DC, USA</prodPlac>
+        <fundAg>National Science Foundation</fundAg>
+        <grantNo>1042181</grantNo>
+      </prodStmt>
+      <distStmt>
+        <distrbtr URI="http://www2.vrdc.cornell.edu/news/data/sipp-synthetic-beta-file/">Labor Dynamics Institute</distrbtr>
+        <distrbtr URI="http://www.census.gov/programs-surveys/sipp/methodology/sipp-synthetic-beta-data-product.html">United States Department of Commerce. Bureau of the Census.</distrbtr>
+        <distDate date="5 June 2014">5 June 2014</distDate>
+      </distStmt>
+      <verStmt>
+        <version>6.0</version>
+      </verStmt>
+      <biblCit>
+        <p>U.S. Census Bureau. SIPP Synthetic Beta: Version 6.0.2 [Computer file]. Washington DC; Cornell University, Synthetic Data Server [distributor], Ithaca, NY, 2015</p>
+      </biblCit>
+    </citation>
+    <stdyInfo>
+      <subject>
+        <keyword>SIPP</keyword>
+      </subject>
+      <abstract>
+        <p>The SIPP Synthetic Beta (SSB) is a Census Bureau product that integrates person-level micro-data from a household survey with administrative tax and benefit data. These data link respondents from the Survey of Income and Program Participation (SIPP) to Social Security Administration (SSA)/Internal Revenue Service (IRS) Form W-2 records and SSA records of retirement and disability benefit receipt, and were produced by Census Bureau staff economists and statisticians in collaboration with researchers at Cornell University, the SSA and the IRS. The purpose of the SSB is to provide access to linked data that are usually not publicly available due to confidentiality concerns. To overcome these concerns, Census has synthesized, or modeled, all the variables in a way that changes the record of each individual in a manner designed to preserve the underlying covariate relationships between the variables. The only variables that were not altered by the synthesis process and still contain their original values are gender and a link to the first reported marital partner in the survey. Eight SIPP panels (1990, 1991, 1992, 1993, 1996, 2001, 2004, 2008) form the basis for the SSB, with a large subset of variables available across all the panels selected for inclusion and harmonization across the years. Administrative data were added and some editing was done to correct for logical inconsistencies in the IRS/SSA earnings and benefits data.</p>
+      </abstract>
+      <sumDscr>
+        <timePrd>1951-2007</timePrd>
+        <collDate>1990-2004</collDate>
+        <nation abbr="U.S.">United States of America</nation>
+        <geogCover>State Level</geogCover>
+        <anlyUnit>Person</anlyUnit>
+        <universe>Civilian non-institutionalized population living in the United States</universe>
+        <dataKind>mixed survey and administrative record data (partially synthetic)</dataKind>
+      </sumDscr>
+    </stdyInfo>
+    <method>
+      <dataColl>
+        <dataCollector abbr="Census">U.S. Census Bureau</dataCollector>
+        <sampProc/>
+        <collMode/>
+        <sources>
+          <dataSrc>
+            <p>SIPP Panels (1990, 1991, 1992, 1993, 1996, 2001, 2004, and 2008)</p>
+          </dataSrc>
+          <dataSrc>
+            <p>SSA records of retirement and disability benefit receipt (1984-2012)</p>
+          </dataSrc>
+          <dataSrc>
+            <p>IRS Form W-2 records on respondents (1951-2011)</p>
+          </dataSrc>
+        </sources>
+      </dataColl>
+      <dataProcessing>
+        <p>Creation of the SSB:</p>
+        <p>The SSB is created from several data sources. The survey data are drawn from
+          multiple panels of the Survey of Income and Program Participation (SIPP):
+          the 1990, 1991, 1992, 1993, 1996, and 2004 panels. The administrative data
+          are drawn from the following SSA files: the Master Earnings File, the Master
+          Beneficiary Records (MBR), the Supplemental Security Records (SSR), the 831
+          Disability File (F831), and the Payment History Update System (PHUS).</p>
+        <p>The creation of the SSB begins with the construction of the Gold Standard
+          File (GSF). To construct the GSF, a set of variables from the 1990-2004 SIPP
+          panels are standardized to produce consistent measures across panels. The
+          SIPP respondent identifiers are mapped to Social Security Numbers (SSB) using
+          the Census Bureau's erson Information Validation System (PVS). Using the
+          list of SSN's for the sample is SIPP respondents, SSA creates Summary
+          Earnings Records (SER) and Detailed Earnings Record (DER) extracts from the
+          Master Earnings File. SSA also creates extracts from the four benefit files
+          (MBR, SSR, F831, and PHUS) from the corresponding master files. Using the
+          mapping between the SIPP identifiers and SSN's, Census then links these
+          extracts to the SIPP data. The GSF consists of person-level research
+          variables created from these linked data.</p>
+        <p>The next step in the creation of the SSB is to impute missing values in the
+          GSF multiple times. This process results in four files (implicates) referred
+          to as the Completed Data implicates. Each of these implicates contains
+          original GSF values where non-missing and imputed values where the original
+          value is missing. The imputations across Completed Data implicates are
+          independent of each other.</p>
+        <p>The Completed Data implicates from the basis of the data synthesis that
+          produces the SSB files. From each Completed Data file, four synthetic
+          datasets are created by synthesizing variables conditional on the values in
+          the Completed Data file. Thus, the SSB consists of sixteen files (implicates).
+          All but the following data are synthesized in the SSB implicates: gender,
+          OASDI benefit type, and spouse link (specific variables described in the
+          data items section below). Detailed documentation of the process of data
+          synthesis is available in the publication "<ExtLink URI="http://www2.vrdc.cornell.edu/news/wp-content/papercite-data/pdf/ssafinal.pdf">Final Report to the Social
+            Security Administration on the SIPP/SSA/IRS Public Use File Project</ExtLink>" at<ExtLink URI="http://www2.vrdc.cornell.edu/news/wp-content/papercite-data/pdf/ssafinal.pdf">http://www2.vrdc.cornell.edu/news/wp-content/papercite-data/pdf/ssafinal.pdf</ExtLink>.</p>
+        <p>The Completed Data and SSB implicates need not all have the same number of
+          records. In order to be included in a Completed Data or SSB implicate, an
+          individual's (possibly imputed or synthesized) age must be at least fifteen
+          years as of January 1 in the first year of his or her SIPP panel. The
+          interaction between this restriction and the variation in imputed and
+          synthesized ages across implicates causes the exclusion of a slightly different set of individuals from each Completed Data and SSB implicate.</p>
+      </dataProcessing>
+    </method>
+    <dataAccs ID="released">
+      <useStmt>
+        <confDec URI="http://www.census.gov/programs-surveys/sipp/methodology/sipp-synthetic-beta-data-product.html">Researchers interested in using the SSB can submit an application to the Census Bureau. 
+          The application form and instructions can be downloaded from<ExtLink URI="http://www.census.gov/programs-surveys/sipp/methodology/sipp-synthetic-beta-data-product.html">http://www.census.gov/programs-surveys/sipp/methodology/sipp-synthetic-beta-data-product.html</ExtLink>. Applications will be judged solely of feasibility 
+          of the proposed project (i.e., that the necessary variables are available on the SSB). 
+          Once an application has been accepted, the new user will be given an account on a server where the data can be accessed and analyzed.</confDec>
+        <specPerm URI="http://www.census.gov/programs-surveys/sipp/methodology/sipp-synthetic-beta-data-product.html">The SSB files have been cleared by the Census Bureau Disclosure Review Board, SSA, and IRS 
+          for use by individuals without Census Bureau Special Sworn Status and outside of Census Bureau facilities.</specPerm>
+        <restrctn>
+          <p>The data can only be used on the VirtualRDC Synthetic Data Server at Cornell University. While no SSB data downloads are permitted at this time, users do not have to operate behind the Census Bureau firewall to access this server.</p>
+        </restrctn>
+        <contact>
+          <ExtLink URI="mailto:sehsd.synthetic.data.use.list@census.gov">sehsd.synthetic.data.use.list@census.gov</ExtLink>
+        </contact>
+        <citReq>
+          <p>We request that researchers who publish results from analyses done using these data cite the SSB as their data source and acknowledge the use of the SDS server at Cornell and the support of Census staff in running any validation programs. These citations will help ensure continued funding for the SDS server and the creation of the Gold Standard File and the SSB.</p>
+          <p>Suggested acknowledgement:</p>
+          <p>This analysis was first performed using the SIPP Synthetic Beta (SSB) on the Synthetic Data Server housed at Cornell University which is funded by NSF Grants SES-1042181 and BCS-0941226, and through a grant from the Alfred P. Sloan Foundation. These data are public use and may be accessed by researchers outside secure Census facilities. For more information, visit http://www.census.gov/sipp/synth_data.html. Final results for this paper were obtained from a validation analysis conducted by Census Bureau staff using the SIPP Completed Gold Standard Files and the programs written by this author and originally run on the SSB. The validation analysis does not imply endorsement by the Census Bureau of any methods, results, opinions, or views presented in this paper.</p>
+        </citReq>
+        <conditions>
+          <p>You will need to use an NX client to logon to the Synthetic Data Server. Information about how to set-up your account and use the Synthetic Data Servers will come to you directly from the staff that maintains this server, after approval of your access by Census staff.</p>
+        </conditions>
+        <disclaimer>The data synthesis process employed by Census to protect the linked data from the risk of disclosing the identity of individuals 
+          is relatively new and substantially changes both the survey and administrative data. The intent of the modeling done as part of the synthesis 
+          is to preserve relationships among variables that are of interest to researchers while ensuring that personally identifiable information is 
+          not revealed to the data user. It has not been feasible to ensure accuracy by comparing every relationship among SSB variables with the 
+          corresponding relationship in the underlying confidential micro-data. Hence, we strongly urge researchers not to publish results produced 
+          from the SSB without first requesting that Census validate these results with confidential data housed in a secure environment at the 
+          Census Bureau. Census will perform this validation free of charge to researchers, as resources permit and according to the protocol 
+          established by the three agencies involved and outlined below. Without validation of results, Census, SSA, and IRS make no guarantee 
+          of the validity of the SSB for any research purpose. See<ExtLink URI="http://www.census.gov/programs-surveys/sipp/methodology/sipp-synthetic-beta-data-product.html">http://www.census.gov/programs-surveys/sipp/methodology/sipp-synthetic-beta-data-product.html</ExtLink>for validation conditions.</disclaimer>
+      </useStmt>
+    </dataAccs>
+    <dataAccs ID="restricted"/>
+    <othrStdyMat>
+      <relMat label="Using SSB">
+        <p>Using SSB:</p>
+        <p>The GSF and Completed Data implicates contain personally identifiable
+          information protected by Titles 13, 26, and 42 and cannot be accessed without
+          Census Bureau Special Sworn Status nor outside of Census Bureau facilities.
+          The SSB files, however, have been cleared by the Census Bureau Disclosure
+          Review Board, SSA, and IRS for use by individuals without Census Bureau Special
+          Sworn Status and outside of Census Bureau facilities.</p>
+        <p>Researchers interested in using the SSB can submit an application to the Census
+          Bureau. The application form and instructions can be downloaded from<ExtLink URI="http://www.census.gov/programs-surveys/sipp/methodology/sipp-synthetic-beta-data-product.html">http://www.census.gov/programs-surveys/sipp/methodology/sipp-synthetic-beta-data-product.html</ExtLink>.
+          Applications will be judged solely on
+          feasability of the proposed project (i.e., that the necessary variables are
+          available on the SSB). Once an application has been accepted, the new user will
+          be given an account on a server where the data can be accessed and analyzed.
+          While no SSB data downloads are permitted at this time, users do not have to
+          operate behind the Census Bureau firewall to access this server.</p>
+        <p>The SSB is designed to be analytically valid in that sense that point
+          estimates should be unbiased and estimated variances should lead to inferences
+          similar to those that would be drawn from an identical analysis on the Completed
+          Data implicates. Initial tests of analytic validity of the SSB have been
+          promising. All SSB users are invited to help further test the analytic validity
+          of the SSB by submitting programs used to analyze the SSB to be run on the
+          Completed Data and/or Gold Standard files. Users need only inform Census Bureau
+          staff of the location on the server of such programs and work with Census Bureau
+          staff to ensure that the programs run without error. Census Bureau staff will
+          run the programs on the confidential data and release to the user resulting
+          output that are cleared for release by the Census Bureau Disclosure Review
+          Board. In order to evaluate the effects of the data synthesis separate from the
+          effect of imputing missing data, comparisons should be made between results from
+          the SSB and the Completed Data. To evaluate the effects of missing data
+          imputation, comparisons should be made between results from the Completed Data
+          and the Gold Standard.</p>
+      </relMat>
+      <relMat>When analyzing the SSB, users should account for the multiple imputation aspect
+        of the SSB by averaging statistics of interests across all sixteen implicates.
+        Variance measures should be created following the appropriate multiple
+        imputation formulae as described in the document<ExtLink URI="http://www2.vrdc.cornell.edu/news/wp-content/papercite-data/pdf/sipp_synthetic_beta_training_final_20071026.pdf">Using the SIPP Synthetic
+          Beta for Analysis</ExtLink>.</relMat>
+      <relMat label="Validation">
+        <p>Protocol for Validation of Results:</p>
+        <p>Census will validate results obtained from the SSB on the internal, confidential version of these data (Completed Gold Standard Files). Users who wish to obtain validated results should follow the protocol outlined here.
+          The restricted access site will provide SAS and Stata analysis software and a computing environment similar to the one used to analyze the confidential Completed Gold Standard data on Census Bureau internal computers. Researchers should follow the Census Bureau programming requirements described in SSB Validation Request Guidelines to ensure that the programs will successfully transfer to internal Census computers for validation. Researchers should plan to share their results and programs from the synthetic data analysis with Census, ORES/SSA and SOI/IRS.
+          After programs have successfully run without error on the synthetic data, researchers may request that Census run these programs on the Completed Gold Standard Files. Only programs successfully run without error on the SDS will be eligible to be run on the confidential data by Census staff. Any programs that produce errors on the Completed Gold Standard Files will be returned to users for correction.
+          Once an analysis has been repeated on the Completed Gold Standard File, the results will be reviewed by Census staff for disclosure concerns. Researchers should familiarize themselves with standard Census disclosure rules for outside projects (See the<ExtLink URI="http://www.census.gov/content/dam/Census/programs-surveys/sipp/methodology/Researcher_Handbook_20091119.pdf">RDC Researcher Handbook</ExtLink>here) and should fill out the appropriate memo documenting the requested output (see<ExtLink URI="http://www.census.gov/content/dam/Census/programs-surveys/sipp/methodology/RDCDisclosureRequestMemo.pdf">RDC Disclosure Request Memo</ExtLink>). Data products and output approved by Census staff will be released to the users, ORES/SSA, and SOI/IRS.
+          The validation process can be accomplished in as little as one week for simple results that are generated by clean code and have no disclosure issues. However if the code does not run properly, the sample sizes are too small, or the researcher does not accurately fill out the disclosure memo, the process can take much longer. Census makes no guarantee on the length of time between submission of programs and the release of results from the confidential data.
+          For more information about the validation process, including advice on how to make the process go smoothly and quickly, please see<ExtLink URI="http://www.census.gov/content/dam/Census/programs-surveys/sipp/methodology/SSB%20Request%20Guidelines_May2013.pdf">SSB Validation Request Guidelines</ExtLink>.</p>
+      </relMat>
+      <relStdy>
+        <p>L. B. Reeder, M. Stinson, K. E. Trageser, and L. Vilhuber, "Codebook for the SIPP Synthetic Beta v5.1 [Codebook file]," {Cornell Institute for Social and Economic Research} and {Labor Dynamics Institute} [distributor]. Cornell University, Ithaca, NY, USA, DDI-C document , 2014. Available at<ExtLink URI="http://www2.ncrn.cornell.edu/ced2ar-web/codebooks/ssb/v/v51">http://www2.ncrn.cornell.edu/ced2ar-web/codebooks/ssb/v/v51</ExtLink>.</p>
+      </relStdy>
+      <relPubl>
+        <p>U.S. Census Bureau, "Disclosure Review Board Memo: Second Request for Release of SIPP Synthetic Beta Version 6.0," U.S. Census Bureau 2015.</p>
+        <p>Available at<ExtLink URI="http://www.census.gov/content/dam/Census/programs-surveys/sipp/methodology/DRBMemoTablesVersion2SSBv6_0.pdf">http://www.census.gov/content/dam/Census/programs-surveys/sipp/methodology/DRBMemoTablesVersion2SSBv6_0.pdf</ExtLink>
+        </p>
+      </relPubl>
+      <relPubl>
+        <p>J. M. Abowd, M. Stinson, and G. Benedetto, "Final Report to the Social Security Administration on the SIPP/SSA/IRS Public Use File Project," U.S. Census Bureau 2006. Available at<ExtLink URI="https://www2.vrdc.cornell.edu/news/wp-content/papercite-data/pdf/ssafinal.pdf">https://www2.vrdc.cornell.edu/news/wp-content/papercite-data/pdf/ssafinal.pdf</ExtLink>.</p>
+      </relPubl>
+    </othrStdyMat>
+  </stdyDscr>
+  <fileDscr ID="F1" URI="http://www.census.gov/programs-surveys/sipp/methodology/sipp-synthetic-beta-data-product.html">
+    <fileTxt>
+      <fileName>ssb_v6_0_2_syntheticK_M.sas7bdat</fileName>
+      <dimensns>
+        <caseQnty>783,781</caseQnty>
+        <varQnty>1,186</varQnty>
+      </dimensns>
+      <fileType>SAS</fileType>
+    </fileTxt>
+  </fileDscr>
+  <fileDscr ID="F2" URI="http://www.census.gov/programs-surveys/sipp/methodology/sipp-synthetic-beta-data-product.html">
+    <fileTxt>
+      <fileName>ssb_v6_0_2_syntheticK_M.dta</fileName>
+      <dimensns>
+        <caseQnty>783,781</caseQnty>
+        <varQnty>1,186</varQnty>
+      </dimensns>
+      <fileType>Stata</fileType>
+    </fileTxt>
+  </fileDscr>
+  <dataDscr>
+    <var ID="Mx3LxVgsveaGRNTi" access="released" files="F1 F2" name="panel_1stfullyear">
+      <location EndPos="91" StartPos="88" width="4"/>
+      <labl access="released">First full calendar year observed in panel</labl>
+      <txt>
+        <p>This is the first year in the panel for which every rotation group is in scope to have all the monthly SIPP variables from January to December.</p>
+      </txt>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="n9qa8NiGrcQyVLQP" access="released" files="F1 F2" name="flag_valid_ssn">
+      <location EndPos="2" StartPos="2" width="1"/>
+      <labl access="released">Respondent has a valid Social Security Number</labl>
+      <txt>
+        <p>This variable indicates whether a respondent successfully linked to a valid Social Security Number.</p>
+      </txt>
+      <catgry access="released">
+        <catValu>0</catValu>
+        <labl>Did not link to a Social Security Number</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>Successfully linked to a Social Security Number</labl>
+      </catgry>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="V300" access="released" name="afdc_M">
+      <labl access="released">Indicator for receipt of AFDC or TANF benefits</labl>
+      <txt>This variable indicates that a respondent received public assistance payments (AFDC or TANF) in month M. M goes from 1 to 48 and represents the month number since the start of panel_1stfullyear. The variable comes from the core file. I20REC1-I20REC4 in 1984; R20 in the 1990, 1991, 1992, and 1993 panels; ER20 in the 1996, 2001, 2004, and 2008 panels.</txt>
+      <catgry access="released">
+        <catValu>0</catValu>
+        <labl>Did not receive public assistance payment</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>Received public assistance payment</labl>
+      </catgry>
+    </var>
+    <var ID="V301" access="released" name="afdcamt_M">
+      <labl access="released">Amount of AFDC received</labl>
+      <txt>This variable is the amount of public assistance payments (AFDC or TANF) that a respondent received month M. M goes from 1 to 48 and represents the month number since the start of panel_1stfullyear. The variable comes from the core file. I20AMT1-I20AMT4 in 1984; S20AMT in the 1990, 1991, 1992, and 1993 panels; T20AMT in the 1996, 2001, 2004, and 2008 panels.</txt>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="NXQrO4IWCYXUdFTi" access="released" dcml="12" files="F1 F2" name="birthdate">
+      <location EndPos="152" StartPos="134" width="19"/>
+      <labl access="released" xml-lang="en">Date of Birth</labl>
+      <txt>This variable was taken from a hierarchy of SSA sources instead of the respondent-provided value in the SIPP.  Date of birth was selected from the first non-missing value in the following files:  (i) SSA's Master Benefits Record (MBR) file, (ii) SSA's Supplemental Security Record (SSR) file, and (iii) the Census Bureau's Person Characteristic File (PCF) whose main input is the SSA Numident file.  Thus, this variable is administrative and sometimes differs from the birth date reported in the SIPP survey itself.  When missing due to the lack of a validated SSN for the SIPP respondent, date of birth was imputed using date of birth from the Census-internal version of the SIPP as a predictor variable.  We chose the administrative source for two reasons.  First, the administrative birth date was more consistent with the MBR and DER data and provided more accurate ages for first OASDI benefit receipt and first W-2 or self-employment earnings.  Second, the differences between the administrative birth date and the birth date reported in the survey helped to increase the difficulty of re-identifying a record in the original SIPP public use data using information from a record in the synthetic data, thus improving the confidentiality protections.  This variable is coded as a SAS date variable.  This format gives the number of days between the date of birth and January 1, 1960.  An individual born on January 1, 1959 would have birthdate=-365 and an individual born on January 1, 1961 would have birthdate=365.</txt>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="fhy0g507Aip3ZHEc" access="released" dcml="0" files="F1 F2" name="current_enroll_coll">
+      <location EndPos="9" StartPos="9" width="1"/>
+      <labl access="released" xml-lang="en">Currently Enrolled in College</labl>
+      <txt>Indicates whether an individual is enrolled in college at the time of the SIPP education history topical module and has not finished his/her education.  This variable can be used to differentiate between individuals who completed some college and stopped school and those who have finished some college but not yet stopped attending school.
+
+Education variables come from the following waves, by panel: Wave 3 in 1984 (determined from the year began attending college or university and last year student was at a college or university: TM8026 &amp; TM8040); Wave 2 in the 1990-1993 panels (TM8420, TM8426, TM8440, TM8442); Wave 2 in the 1996 panel (TLASTCOL, TCOLLSTR, TVOCYR, TASSOCYR, TBACHYR); Wave 2 in the 2001-2008 panels (ELASTCOL, ECOLLSTR, EVOCYR, EASSOCYR, EBACHYR).</txt>
+      <catgry access="released">
+        <catValu>0</catValu>
+        <labl>Not currently enrolled in college</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>Currently enrolled in college</labl>
+      </catgry>
+      <catgry access="released" missing="Y">
+        <catValu>Sysmiss</catValu>
+      </catgry>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="tspFfoKZwGahRGEx" access="released" dcml="0" files="F1 F2" name="current_enroll_hs">
+      <location EndPos="8" StartPos="8" width="1"/>
+      <labl access="released" xml-lang="en">Currently Enrolled in HS (or less)</labl>
+      <txt>Indicates whether an individual is attending high school.  This variable can be used to differentiate between people who do not have a high school degree (educ_5cat=1) but are still attending school and those who do not have a high school degree but are not currently attending high school.  Researchers should be careful to consider the age of the individual when using current_enroll_hs and educ_5cat.  Individuals who are still young children at the time of the SIPP will have educ_5cat=1 and current_enroll_hs=0 because they are still attending preschool or elementary school.  Older individuals with these values for the education variables can be classified as not having finished high school. Education variables come from the following waves, by panel: Wave 2 in the 1990-1993 panels (TM8400, TM8404, TM8406); Wave 2 in the 1996 panel (TLSTSCHL, THSYR); Wave 2 in the 1996-2008 panels (ELSTSCHL, EHSYR). Note: this information is not available in the 1984 panel.</txt>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>Currently enrolled in high school</labl>
+      </catgry>
+      <catgry access="released" missing="Y">
+        <catValu>Sysmiss</catValu>
+      </catgry>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="DScsDMyoR2rG1QjC" access="released" dcml="0" files="F1 F2" name="db_pension">
+      <location EndPos="19" StartPos="19" width="1"/>
+      <labl access="released" xml-lang="en">Defined Benefit Pension Plan</labl>
+      <txt>Indicator for whether SIPP respondent was enrolled in a defined benefit pension plan at the time of pension topical module in his/her SIPP panel. Waves for this topical module, by panel, are as follows: Wave 4 from the 1984, 1990, &amp; 1992 panels; Wave 9 from the 1993 panel; Wave 7 from the 1991, 1996, 2001, &amp; 2004 panels; Wave 3 from the 2008 panel.</txt>
+      <catgry access="released">
+        <catValu>0</catValu>
+        <labl>No defined benefit pension plan</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>Had defined benefit pension plan</labl>
+      </catgry>
+      <catgry access="released" missing="Y">
+        <catValu>Sysmiss</catValu>
+      </catgry>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="lRsTMYUBjFOXa3qB" access="released" dcml="0" files="F1 F2" name="dc_pension">
+      <location EndPos="18" StartPos="18" width="1"/>
+      <labl access="released" xml-lang="en">Defined Contribution Pension Plan</labl>
+      <txt>Indicator for whether the individual was enrolled in a defined contribution pension plan at the time of the pension topical module in his/her SIPP panel. Waves for this topical module, by panel, are as follows: Wave 4 from the 1984, 1990, &amp; 1992 panels; Wave 9 from the 1993 panel; Wave 7 from the 1991, 1996, 2001, &amp; 2004 panels; Wave 3 from the 2008 panel.</txt>
+      <catgry access="released">
+        <catValu>0</catValu>
+        <labl>No defined contribution pension plan</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>Had defined contribution pension plan</labl>
+      </catgry>
+      <catgry access="released" missing="Y">
+        <catValu>Sysmiss</catValu>
+      </catgry>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="vVMquYOzJJ7u4w6q" access="released" dcml="12" files="F1 F2" name="deathdate">
+      <location EndPos="170" StartPos="153" width="18"/>
+      <labl access="released" xml-lang="en">Date of Death</labl>
+      <txt>Date of death from administrative data.  This variable is obtained using a hierarchy of administrative sources:  (i) SSA's MBR file, (ii) SSA's SSR file, and (iii) the Census PCF with death information coming from the SSA Numident and Master Death Files.  This variable is coded as a SAS date variable. This format gives the number of days between the date of birth and January 1, 1960.  An individual born on January 1, 1959 would have birthdate=-365 and an individual born on January 1, 1961 would have birthdate=365.</txt>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="V262" access="released" dcml="0" files="F1 F2" intrvl="contin" name="defer_der_fica_YYYY" xml-lang="xml-lang339">
+      <location width="12"/>
+      <labl access="released">DER: Deferred FICA</labl>
+      <txt>Deferred earnings from jobs covered by FICA tax; summed across all employers in the DER to give a person-level total for each year. The practice of withholding deferred wages from employee pay and reporting this on W-2 forms began in 1987.  However in the SSB, we restrict the time series for this variable to be 1990-2011. This decision is due to the fact that so few people had deferred wages between 1987 and 1989 that we could not reliably synthesize these variables.</txt>
+      <varFormat schema="other" type="numeric"/>
+    </var>
+    <var ID="V263" access="released" dcml="0" files="F1 F2" intrvl="contin" name="defer_der_nonfica_YYYY" xml-lang="xml-lang339">
+      <location width="12"/>
+      <labl access="released">DER: Deferred Non-FICA</labl>
+      <txt>Deferred earnings from jobs NOT covered by FICA tax; summed across all employers in the DER to give a person-level total for each year. The practice of withholding deferred wages from employee pay and reporting this on W-2 forms began in 1987. However in the SSB, we restrict the time series for this variable to be 1990-2011. This decision is due to the fact that so few people had deferred wages between 1987 and 1989 that we could not reliably synthesize these variables.</txt>
+      <varFormat schema="other" type="numeric"/>
+    </var>
+    <var ID="Bc2pal2IlVq5Dugw" access="released" dcml="0" files="F1 F2" name="disab_nowork">
+      <location EndPos="15" StartPos="15" width="1"/>
+      <labl access="released" xml-lang="en">Disability Prevents Work - (CORE or TM)</labl>
+      <txt>
+        <p>This variable indicates that a person had a work-preventing disability. This information comes from the disability topical module in the 1984, 1990-1993 panels. In the 1996-2008 panels, this variable is created from a combination of reports in the core and the disability topical module. We look across all waves of the panel and at the topical module and if ever there is a report of a work-preventing disability, we set this indicator to 1. The universe for this variable is all individuals who were at least age 15 and no older than age 70 by the end of the panel. The following disability variables from the core were used: 1996, 2001, 2004, Wave 6 in 2008 (EJOBCANT).</p>
+      </txt>
+      <catgry access="released">
+        <catValu>0</catValu>
+        <labl>No</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>Yes</labl>
+      </catgry>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="ZZW5DDh6mOQpmFLe" access="released" dcml="0" files="F1 F2" name="disab_worklimit">
+      <location EndPos="14" StartPos="14" width="1"/>
+      <labl access="released" xml-lang="en">Work Limiting Disability - (CORE or TM)</labl>
+      <txt>This variable indicates that a person had a work-limiting disability.  This variable is created from a combination of reports in the core and the disability topical module. We look across all waves of the panel and at the topical module and if ever there is a report of a work-limiting disability, we set this indicator to 1. The universe for this variable is all individuals who were at least age 15 and no older than age 70 by the end of the panel. The following disability variables from the core were used: 1984, 1990-1993 (DISAB); 1996, 2001, 2004, &amp; 2008 (EDISABL). Disability topical modules were asked in the following waves, by panel: Wave 3 in 1984 (TM8450, TM8452); Wave 3 in 1990, 1991, &amp; 1993 (TM8918, TM8920); Wave 6 in 1992 (TM8918, TM8920); Wave 5 in 1996, 2001, &amp; 2004 (EJOBDIF); Wave 6 in 2008 (EJOBDIF).</txt>
+      <catgry access="released">
+        <catValu>0</catValu>
+        <labl>No</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>Yes</labl>
+      </catgry>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="jls42TclFdyPAVct" access="released" dcml="0" files="F1 F2" name="educ_5cat">
+      <location EndPos="61" StartPos="61" width="1"/>
+      <labl access="released" xml-lang="en">Education Category</labl>
+      <valrng access="released">
+        <range UNITS="REAL" access="released" max="5" min="1"/>
+      </valrng>
+      <txt>This variable was created from data collected by the education history topical module and represents the highest level of education achieved at that point in time.  The universe for this variables is all individuals who were age 15 at the beginning of their SIPP panel.  This topical module was asked in the following waves, by panel: Wave 3 in 1984 panel (TM8024, TM8028); Wave 2 in the 1990-1993 panels (TM8400, TM8408, TM8416, TM8422); Wave 2 in the 1996 &amp; 2001 panels (EATTAIN); in the 2004-2008 panels (EEDUCATE).</txt>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>No high school degree</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>2</catValu>
+        <labl>High school degree</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>3</catValu>
+        <labl>Some college</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>4</catValu>
+        <labl>College degree</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>5</catValu>
+        <labl>Graduate degree</labl>
+      </catgry>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="Q3DSGwsYkGoOg2Tl" access="released" dcml="0" files="F1 F2" name="field_bach">
+      <location EndPos="75" StartPos="74" width="2"/>
+      <labl access="released" xml-lang="en">Field of Bachelors Degree</labl>
+      <valrng access="released">
+        <range UNITS="REAL" access="released" max="20" min="0"/>
+      </valrng>
+      <txt>
+        <p>Field of bachelors degree as reported in the education history topical module. Universe if individuals who were age 15 by beginning of their SIPP panel and who had a bachelors degree. This topical module was asked in the following waves, by panel: Wave 3 in 1984 panel (TM8038); Wave 2 in the 1990-1993 panels (TM8428, TM8436); Wave 2 in the 1996-2008 panels (EBACHFLD). Categories vary for the 1996-2008 panels and for the 1990-1993 panels.</p>
+      </txt>
+      <catgry access="released">
+        <catValu>0</catValu>
+        <labl>Unknown</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>Agriculture/Forestry</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>2</catValu>
+        <labl>Art/Architecture (1996-2004 panels); Biology (1990-1993 panels)</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>3</catValu>
+        <labl>Business/Management</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>4</catValu>
+        <labl>Communications (1996-2004 panels); Economics (1990-1993 panels)</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>5</catValu>
+        <labl>Computer and Information Sciences (1996-2004 panels); Education (1990-1993
+              panels)</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>6</catValu>
+        <labl>Education (1996-2004 panels); Engineering (1990-1993 panels)</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>7</catValu>
+        <labl>Engineering (1996-2004 panels); English/Journalism (1990-1993 panels)</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>8</catValu>
+        <labl>English/Literature (1996-2004 panels); Home Economics (1990-1993 panels)</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>9</catValu>
+        <labl>Foreign Language (1996-2004 panels); Law (1990-1993 panels)</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>10</catValu>
+        <labl>Health Sciences (1996-2004 panels); Liberal Arts/Humanities (including arts,
+              architecture, music, languages, philosophy) (1990-1993 panels)</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>11</catValu>
+        <labl>Liberal Arts/Humanities (1996-2004 panels); Mathematics/Statistics (1990-1993
+              panels)</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>12</catValu>
+        <labl>Mathematics/Statistics (1996-2004 panels); Medicine (1990-1993 panels)</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>13</catValu>
+        <labl>Nature Sciences (Biological and Physical) (1996-2004 panels); Nursing,
+              Pharmacy, Health Technologies (1990-1993)</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>14</catValu>
+        <labl>Philosophy/Religion/Theology (1996-2004 panels); Physical or Earth Sciences
+              (1990-1993 panels)</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>15</catValu>
+        <labl>Pre-Professional (1996-2004 panels); Police Science or Law Enforcement
+              (1990-1993 panels)</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>16</catValu>
+        <labl>Psychology</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>17</catValu>
+        <labl>Social Sciences/History (1996-2004 panels); Religion/Theology (1990-1993
+              panels)</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>18</catValu>
+        <labl>Other (1996-2004 panels); Social Sciences (1990-1993 panels)</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>19</catValu>
+        <labl>Vocational or Technical Studies (1990-1993 panels)</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>20</catValu>
+        <labl>Other (1990-1993 panels)</labl>
+      </catgry>
+      <catgry access="released" missing="Y">
+        <catValu>Sysmiss</catValu>
+      </catgry>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="yztHoJssJsCPS5x2" access="released" dcml="13" files="F1 F2" name="first_admin_birthdate">
+      <location EndPos="189" StartPos="171" width="19"/>
+      <labl access="released">Administrative birthdate of first born child</labl>
+      <txt>This variable contains the administrative birthdate for the first biological child.  The universe for this variable is all women between the ages of 15 and 65 at the time of the fertility history topical module.  This variable was created by first looking for biological children on the SIPP household roster and choosing the birthdate of the oldest child (if no children were found, the value was set to missing).  The total number of biological children reported on the roster (could possibly be zero) was then compared to the woman's report in her fertility history about the number of children born to her. If the number born to her was larger, first_admin_birthdate was set to missing and imputed using the woman's report of the first year she gave birth as a predictor variable. This process allowed us to create a fertility history that was consistent with the children reported on the roster and their administrative birthdates but still handle cases where older children or all children lived outside the household.</txt>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="nZmmPK0lXzVEUSYD" access="released" dcml="0" files="F1 F2" name="flag_deathdate_exist">
+      <location EndPos="6" StartPos="6" width="1"/>
+      <labl access="released" xml-lang="en">Flag: Existence of Date of Death</labl>
+      <valrng access="released">
+        <range UNITS="REAL" access="released" max="1" min="0"/>
+      </valrng>
+      <txt>Flag to indicate that this respondent died after being interviewed and before 2011.  This flag indicates the existence of a valid value for deathdate.</txt>
+      <catgry access="released">
+        <catValu>0</catValu>
+        <labl>Death date does not exist, respondent did not die during this interval</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>Death date exists, respondent died during this interval</labl>
+      </catgry>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="jJ15ExmmEUu9oGp1" access="released" dcml="0" files="F1 F2" name="flag_mar4t">
+      <location EndPos="7" StartPos="7" width="1"/>
+      <labl access="released" xml-lang="en">Flag: 4 or More Marriages</labl>
+      <valrng access="released">
+        <range UNITS="REAL" access="released" max="1" min="0"/>
+      </valrng>
+      <txt>Flag for existence of a marriage for which date is unknown because it was not collected in the SIPP. 
+The marital history topical module asks about a person's first and second marriages and then his or her most recent marriage.  If any other marriages occurred after the second but before the most recent, no information about this marriage is collected.  However, individuals are categorized as having 1, 2, 3, or more than 3 marriages.  We create flag_mar4t to identify individuals who reported more than 3 marriages.</txt>
+      <catgry access="released">
+        <catValu>0</catValu>
+        <labl>No additional marriage occurred with unknown date</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>An additional marriage occurred but with unknown date</labl>
+      </catgry>
+      <catgry access="released" missing="Y">
+        <catValu>Sysmiss</catValu>
+      </catgry>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="V302" access="released" name="foodstp_M">
+      <labl access="released">Indicator for receipt of SNAP/Food Stamps</labl>
+      <txt>This variable indicates that a respondent received food stamps/SNAP benefits in month M. M goes from 1 to 48 and represents the month number since the start of panel_1stfullyear. The variable comes from the core file. I27REC1-I27REC4 in 1984; R27 in the 1990, 1991, 1992, and 1993 panels; ER27 in the 1996, 2001, 2004, and 2008 panels.</txt>
+      <catgry access="released">
+        <catValu>0</catValu>
+        <labl>Did not receive food stamps/SNAP benefits</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>Received food stamps/SNAP benefits</labl>
+      </catgry>
+    </var>
+    <var ID="qSB7jOmJS9ZdFn4V" access="released" dcml="0" files="F1 F2" name="foreign_born">
+      <location EndPos="12" StartPos="12" width="1"/>
+      <labl access="released" xml-lang="en">Foreign Born</labl>
+      <valrng access="released">
+        <range UNITS="REAL" access="released" max="1" min="0"/>
+      </valrng>
+      <txt>Immigrant Status, born in country other than U.S.Taken from Wave 8 topical module in the 1984 panel and Wave 2 topical module in the 1990-1993, 2001, 2004, &amp; 2008 panels (TM8128, TM8166, TM8174 in the 1984 panel; TM8730, TM8734, TM8709 in the 1990-1993 panels; eprstate, ebrstate and rcitiznt in the 1996 panel; eprstate, ebrstate and tcitiznt 2001 panel; eprstate, ebrstate, citiz, and ebornus in the 2004 &amp; 2008 panels).</txt>
+      <catgry access="released">
+        <catValu>0</catValu>
+        <labl>Born in U.S.</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>Born in country other than U.S.</labl>
+      </catgry>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="V303" access="released" name="fsamt_M">
+      <labl access="released">SNAP/Food Stamps Amount Received</labl>
+      <txt>This variable is the amount of food stamps/SNAP benefits that a respondent received in month M. M goes from 1 to 48 and represents the month number since the start of panel_1stfullyear. The variable comes from the core file. I27AMT1-I27AMT4 in 1984; S27AMT in the 1990, 1991, 1992, and 1993 panels; T27AMT in the 1996, 2001, 2004, and 2008 panels.</txt>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="V293" access="released" dcml="0" files="F1 F2" intrvl="discrete" name="hicov_M" xml-lang="xml-lang339">
+      <location width="67"/>
+      <labl access="released">Health Insurance Coverage</labl>
+      <valrng access="released">
+        <range UNITS="REAL" access="released" max="1" min="0"/>
+      </valrng>
+      <txt>A variable in this array indicates whether an individual was covered by health insurance during month M. M represents the month number since the start of panel_1stfullyear.  Only the first 24 months of the individual's SIPP panel are in universe.  A later release of these data will add months after 24 for longer SIPP panels.  Months that are outside the time frame covered by an individual's SIPP panel will always be missing and out of universe. Health insurance coverage is derived from the following variables: HIIND in the 1984 &amp; 1990-1993 panels; EHIMTH in the 1996-2008 panels.</txt>
+      <catgry access="released">
+        <catValu>0</catValu>
+        <labl>Respondent did not have health insurance coverage during this month</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>Respondent had health insurance coverage during this month</labl>
+      </catgry>
+      <catgry access="released" missing="Y">
+        <catValu>Sysmiss</catValu>
+      </catgry>
+      <varFormat schema="other" type="numeric"/>
+    </var>
+    <var ID="V294" access="released" dcml="0" files="F1 F2" intrvl="discrete" name="hiemp_M" xml-lang="xml-lang339">
+      <location width="58"/>
+      <labl access="released">Health Insurance Coverage from Employer</labl>
+      <valrng access="released">
+        <range UNITS="REAL" access="released" max="1" min="0"/>
+      </valrng>
+      <txt>A variable in this array indicates whether an individual was covered by employer-provided health insurance during month M. M represents the month number since the start of panel_1stfullyear. Only the first 24 months of the individual's SIPP panel are in universe. A later release of these data will add months after 24 for longer SIPP panels. Months that are outside the time frame covered by an individual's SIPP panel will always be missing and out of universe. Employer-provided health insurance coverage is derived from the following variables: HISRC in the 1990-1993 panels; EHEMPLY in the 1996-2008 panels. Note: this question was not included in the 1984 panel.</txt>
+      <catgry access="released">
+        <catValu>0</catValu>
+        <labl>Respondent did not have employer-provided health insurance</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>Respondent had employer-provided health insurance</labl>
+      </catgry>
+      <catgry access="released" missing="Y">
+        <catValu>Sysmiss</catValu>
+      </catgry>
+      <varFormat schema="other" type="numeric"/>
+    </var>
+    <var ID="DwezqNHjv9HYCnv7" access="released" dcml="0" files="F1 F2" name="hispanic">
+      <location EndPos="4" StartPos="4" width="1"/>
+      <labl access="released" xml-lang="en">Hispanic</labl>
+      <valrng access="released">
+        <range UNITS="REAL" access="released" max="1" min="0"/>
+      </valrng>
+      <txt>In the 1984 &amp; 1990-1993 SIPP panels, a value for ethnicity is included on each wave file.  Thus, there are actually as many ethnicity variables as there are waves of the survey and some changes occur across waves as a result of data collection error.  Ethnicity is chosen by creating an array of variables ethncty1-ethncty{max number of waves} and choosing the first non-missing value.  Thus, ethnicity comes from the first wave in which the individual was interviewed instead of from a fixed point in the survey.  Respondents are coded as Hispanic if they have an ethnicity code between 14 and 20.  In the 1996-2008 panels, the longitudinally-edited version contains only one value for ethnicity across all waves (eorigin) and this value is used.  Respondents are coded as Hispanic if they have an ethnicity code between 20 and 28 in 1996 and 2001, or if they have an ethnicity code of 1 in 2004 &amp; 2008.</txt>
+      <catgry access="released">
+        <catValu>0</catValu>
+        <labl>Non-hispanic</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>Hispanic</labl>
+      </catgry>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="a29oUbIrkIXwM8A8" access="released" dcml="18" files="F1 F2" name="homeequity">
+      <location EndPos="229" StartPos="209" width="21"/>
+      <labl access="released" xml-lang="en">Home Equity</labl>
+      <txt>Home equity value as reported in the wealth topical module, collected in the following waves, by panel: Wave 4 in the 1984 (HHTHEQ) &amp; 1990-1993 (HH_THEQ) panels ; Wave 3 in 1996, 2001, &amp; 2004 (THHTHEQ) panels; Wave 4 in 2008 panel (THHTHEQ).</txt>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="WBTgghT1bYivuT0f" access="released" dcml="0" files="F1 F2" name="ind_4cat">
+      <location EndPos="80" StartPos="80" width="1"/>
+      <labl access="released" xml-lang="en">Industry Category (4)</labl>
+      <valrng access="released">
+        <range UNITS="REAL" access="released" max="4" min="1"/>
+      </valrng>
+      <txt>Industry is a characteristic of an individual's job and hence varies over time.  There are industry values reported for (potentially) two jobs in each wave of the survey.  Industry is chosen by summing earnings associated with the array of variables ws1ind1-ws1ind{max number of waves} and ws2ind1-ws2ind{max number of waves} in the 1984,1990-1993 panels, and ejbind1_1-ejbind1_{max number of waves) and ejbind2_1-ejbind2_{max number of waves} in the 1996-2008 panels and choosing the industry associated with the greatest total earnings.  Thus industry is the industry from which greatest earnings are derived in the survey.</txt>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>Manufacturing</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>2</catValu>
+        <labl>Wholesale/retail trade</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>3</catValu>
+        <labl>FIRE, services, public administration, military</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>4</catValu>
+        <labl>Agriculture, mining, construction, transportation, communications, and public
+              utilities</labl>
+      </catgry>
+      <catgry access="released" missing="Y">
+        <catValu>Sysmiss</catValu>
+      </catgry>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="TLtG87Z7dvHLl2QY" access="released" dcml="0" files="F1 F2" name="ind_exist">
+      <location EndPos="10" StartPos="10" width="1"/>
+      <labl access="released" xml-lang="en">Flag: Industry Assigned</labl>
+      <valrng access="released">
+        <range UNITS="REAL" access="released" max="1" min="0"/>
+      </valrng>
+      <txt>This variable indicates whether an individual has a valid industry from a job held during the survey and governs the ind_4cat variable.  If ind_exist=1, the ind_4cat will have a value between 1 and 4.</txt>
+      <catgry access="released">
+        <catValu>0</catValu>
+        <labl>No, last worked 1984 or earlier, or no valid industry reported</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>Yes</labl>
+      </catgry>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="IYUJQ8HcGqZcCwC2" access="released" dcml="13" files="F1 F2" name="initwgt">
+      <location EndPos="133" StartPos="116" width="18"/>
+      <labl access="released">Initial SIPP Weight</labl>
+      <txt>INITWGT contains the base survey weight for the sample unit to which the sample person belongs. This base survey weight is the inverse of the probability of selection for the sample unit, adjusted only for unit non-response and, in rare instances, for sampled units that turned out to represent more than one separate residence. Unlike final panel and calendar year weights, INITWGT includes no adjustment for attrition of households from SIPP panels and are not adjusted at the person level to match any external controls.  SSB users can utilize the weights to produce estimates that account for idiosyncratic probability of selection of sample units and for unit-nonresponse. Estimates for each SIPP panel, using these weights, become representative of the U.S. non-instutionalized population as of the beginning of the panel. For instance, using INITWGT, the distribution of calendar year 2010 administrative earnings for sample persons in the SSB from the 1984 SIPP panel would be representative of the U.S. population as of calendar year 1984.</txt>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="qCqE8v3YmlFDucPj" access="released" dcml="13" files="F1 F2" name="last_admin_birthdate">
+      <location EndPos="208" StartPos="190" width="19"/>
+      <labl access="released">Administrative birthdate of last born child</labl>
+      <txt>This variable contains the administrative birthdate for the last biological child. The universe for this variable is all women between the ages of 15 and 65 at the time of the fertility history topical module. This variable was created by first looking for biological children on the SIPP household roster and choosing the birthdate of the youngest child (if no children were found, the value was set to missing). The total number of biological children reported on the roster (could possibly be zero) was then compared to the woman's report in her fertility history about the number of children born to her. If the number born to her was larger, last_admin_birthdate was set to missing and imputed using the woman's report of the last year she gave birth as a predictor variable. This process allowed us to create a fertility history that was consistent with the children reported on the roster and their administrative birthdates but still handle cases where older children or all children lived outside the household.</txt>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="lJFN1PltOyO9elMn" access="released" dcml="0" files="F1 F2" name="layoff_M">
+      <location EndPos="500" StartPos="489" width="12"/>
+      <labl access="released" xml-lang="en">On Layoff (Without Pay)</labl>
+      <txt>Indicator that individual was on layoff without pay in month M. M represents the month number since the start of panel_1stfullyear.  Only the first 24 months of the individual's SIPP panel are in universe. A later release of these data will add months after 24 for longer SIPP panels. Months that are outside the time frame covered by an individual's SIPP panel will always be missing and out of universe. The variables from which layoff without pay are derived are the following: SC1098 in 1984; REASAB in the 1990-1993 panels; ELAYOFF in the 1996-2008 panels.</txt>
+      <catgry access="released">
+        <catValu>0</catValu>
+        <labl>No</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>Yes</labl>
+      </catgry>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="Bm3nzfjg2K6sOuYA" access="released" dcml="0" files="F1 F2" name="left_layoff_M">
+      <location EndPos="512" StartPos="501" width="12"/>
+      <labl access="released" xml-lang="en">Left a Job Because of Layoff</labl>
+      <txt>The variable indicates that the individual left a job due to a layoff in month M. M represents the month number since the start of panel_1stfullyear.  Only the first 24 months of the individual's SIPP panel are in universe. A later release of these data will add months after 24 for longer SIPP panels. Months that are outside the time frame covered by an individual's SIPP panel will always be missing and out of universe. Note that these questions were not asked in the 1984 panel.</txt>
+      <catgry access="released">
+        <catValu>0</catValu>
+        <labl>No</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>Yes</labl>
+      </catgry>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="AJ6nsE4MHObSbqy4" access="released" dcml="0" files="F1 F2" name="life_ins_1">
+      <location EndPos="16" StartPos="16" width="1"/>
+      <labl access="released" xml-lang="en">Life Insurance Ownership</labl>
+      <txt>This variable indicates that the individual owns a life insurance plan at the time of the assets topical module.  This module was asked in the following waves, by panel: Wave 4 in the 1984 &amp; 1990-1993 panels (TM8308);  Wave 3 in the 1996 panel (EALLI); wave 3 in the 2001 (EALLIE); wave 3 in 2004 (EALLIE); and wave 4 in 2008 (EALLIE).</txt>
+      <catgry access="released">
+        <catValu>0</catValu>
+        <labl>No</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>Yes</labl>
+      </catgry>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="JCHj9sljWcBszEOk" access="released" dcml="0" files="F1 F2" name="male">
+      <location EndPos="3" StartPos="3" width="1"/>
+      <labl access="released" xml-lang="en">Male</labl>
+      <valrng access="released">
+        <range UNITS="REAL" access="released" max="1" min="0"/>
+      </valrng>
+      <txt>In the Census-internal SIPP panels, a value for sex is included on each wave file.  Thus, there are actually as many sex variables as there are waves of the survey and some changes occur across waves as a result of data collection error.  Sex is selected from the array of variables sex1-sex{max number of waves} in which the wave corresponds either to the month in which marital status is first observed (for those without spouses during the course of the SIPP) or to the month in which the respondent's spouse is assigned.  As with the SIPP, the SSB does not allow same-sex couples to report being married and hence gender must be chosen to be consistent with the spouse's gender instead of from a fixed point in the survey.  Thus when a spouse is never assigned, an individual's gender comes from the first wave where they report being not married.  For individuals who are assigned a spouse, gender comes from the first wave where they reveal their spouse.
+This indicator variable is set to 1 if the individual was male and was created from the original categorical sex variable for analytic convenience.This variable is unsynthesized on the SSB and is never missing so there are no imputed values in the Completed Data.</txt>
+      <catgry access="released">
+        <catValu>0</catValu>
+        <labl>Female</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>Male</labl>
+      </catgry>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+      <notes>This variable tells whether a person is male or female</notes>
+    </var>
+    <var ID="zYJmYepBFe4I24eD" access="released" dcml="0" files="F1 F2" name="mbr_agedsp_benefit">
+      <location EndPos="22" StartPos="22" width="1"/>
+      <labl access="released" xml-lang="en">MBR: receive aged spouse benefit</labl>
+      <txt>This variable indicates that the individual received OASDI benefits as an aged spouse.   A person is entitled to aged spouse benefits if they are at least 62 years old and are married to a worker who is receiving retirement or disability benefits.  Like benefits received by a person due to their own eligibility, spouse benefits are reduced if the individual elects to receive them before the full retirement age.  Unmarried divorced spouses of retirement age who were married to the worker for at least 10 years are also eligible for aged spouse benefits.</txt>
+      <catgry access="released">
+        <catValu>0</catValu>
+        <labl>No</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>Yes</labl>
+      </catgry>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="io0JKmrfkoWW2YZY" access="released" dcml="12" files="F1 F2" intrvl="contin" name="mbr_agedsp_benefit_stdate">
+      <location EndPos="412" StartPos="395" width="18"/>
+      <labl access="released">MBR: startdate of benefit</labl>
+      <txt>Date when the person first began receiving aged spouse benefits,
+        conditional on having ever received this type of benefit.</txt>
+      <varFormat formatname="Double" schema="other" type="numeric"/>
+    </var>
+    <var ID="sBiDVksbzBmIKeAo" access="released" dcml="14" files="F1 F2" intrvl="contin" name="mbr_agedsp_benefit_totamt">
+      <location EndPos="430" StartPos="413" width="18"/>
+      <labl access="released">MBR: total monthly benefit</labl>
+      <txt>Total monthly amount of benefits received at beginning of aged spouse
+        benefit entitlement. In most cases this amount is from the same month as
+        in MBR_agedsp_benefit_stdate. However, if data for that month were
+        missing in the MBR extract, we searched through the monthly benefit array
+        to find the first positive value. This amount can be a combination of
+        payments due to multiple entitlement reasons (i.e. dual entitlement).</txt>
+      <varFormat formatname="Double" schema="other" type="numeric"/>
+    </var>
+    <var ID="a0oXGhp6DeQGCCLP" access="released" dcml="0" files="F1 F2" name="mbr_retire_benefit">
+      <location EndPos="20" StartPos="20" width="1"/>
+      <labl access="released" xml-lang="en">MBR: receive retirement benefit</labl>
+      <txt>This variable indicates receipt of an OASDI retirement benefit.  Individuals are eligible for retirement payments if they are at least 62 years old and have 40 quarters of coverage.  Since 1978, workers earn one quarter of coverage for a set amount of FICA-covered annual earnings and can earn up to 4 quarters per year.  The amount of earnings needed to receive credit for a quarter varies by year and was $1,120 in 2011.  Benefits are reduced if the worker elects to receive them before full retirement age.</txt>
+      <catgry access="released">
+        <catValu>0</catValu>
+        <labl>No</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>Yes</labl>
+      </catgry>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="OCstSa62oDmc91US" access="released" dcml="12" files="F1 F2" name="mbr_retire_benefit_stdate">
+      <location EndPos="340" StartPos="323" width="18"/>
+      <labl access="released" xml-lang="en">MBR: retirement benefit start date</labl>
+      <txt>This variable contains the date when the individual first began receiving retirement benefits and is stored as a SAS date variable.  Benefits always begin on the first day of the month.  Individuals born before 1920 were eligible to receive their first payment in the month they turned 62 unless their birthday was the first day of the month, in which case they were eligible for their first payment the month before they turned 62.  Individuals born on January 1 were eligible to receive their first payment in the December before they turned 62.  Individuals born in 1920 or after were eligible to receive their first payment the month after they turned 62 unless their birthday was the first or second day of the month, in which case they were eligible for their first payment in the month they turned 62.</txt>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="NNeF7jc5z9ydG5uG" access="released" dcml="13" files="F1 F2" name="mbr_retire_benefit_totamt">
+      <location EndPos="358" StartPos="341" width="18"/>
+      <labl access="released" xml-lang="en">MBR: total monthly benefit</labl>
+      <txt>This variable provides the monthly amount of retirement benefits received by the individual.  Benefit amounts are calculated based on the worker's average indexed monthly earnings (AIME).  See the Social Security Annual Statistical Supplement for details on how benefit calculations are performed.  This benefit amount is the total amount paid in the first month of own retirement benefits receipt. If the respondent was dually entitled in this month, this benefit amount reflects the total payment made (i.e. the sum of the amounts due to each type of benefit). For example if a person received own and aged spouse retirement benefits, this benefit amount would be the sum of those two benefits.</txt>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="ZJtVOnb3S1HWVEE1" access="released" dcml="0" files="F1 F2" name="mbr_ssdi_applied_k">
+      <location EndPos="30" StartPos="30" width="1"/>
+      <labl access="released" xml-lang="en">MBR SSDI: Application submitted</labl>
+      <txt>
+        <p>This set of variables (mbr_ssdi_applied_1mbr_ssdi_applied_4 where K=1 to 4) indicate whether there is a corresponding record of Social Security Disability Insurance (SSDI) application in the Master Benefit Record (MBR). Details for up to four SSDI applications are maintained. If the individual applied more than four times, then details for only a subset of the applications are recorded in this data, with priority given to approved and more recent applications. The first recorded application, the last recorded application, the first recorded application during the SIPP interview period, and the last recorded application during the SIPP interview period are always kept. For example, if a person applied for SSDI three times, this will be reflected in the following way: mbr_ssdi_applied_1 = 1, mbr_ssdi_applied_2 = 1, mbr_ssdi_applied_3 = 1, mbr_ssdi_applied_4 = 0.</p>
+      </txt>
+      <catgry access="released">
+        <catValu>0</catValu>
+        <labl>Did not apply for SSDI</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>Applied for SSDI</labl>
+      </catgry>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="tvzUDt7N6by7grsu" access="released" dcml="12" files="F1 F2" name="mbr_ssdi_benefit_totamt_k">
+      <location EndPos="684" StartPos="667" width="18"/>
+      <labl access="released" xml-lang="en">MBR SSDI: Benefit amount</labl>
+      <txt>This variable provides the monthly amount of SSDI benefits received by the individual for each of four applications. See mbr_ssdi_applied_k for details on how individual applications are recorded on this file. Benefit amounts are calculated based on the worker's average indexed monthly earnings (AIME). See the Social Security Annual Statistical Supplement for details on how benefit calculations are performed. This benefit amount is the total amount paid in the first month of disability benefits receipt.</txt>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="Fkqk0qZah5AVBY5c" access="released" dcml="0" files="F1 F2" name="mbr_ssdi_ceased_k">
+      <location EndPos="32" StartPos="32" width="1"/>
+      <labl access="released" xml-lang="en">MBR SSDI: Benefits ceased</labl>
+      <txt>This set of variables records whether the individual ever ceased receiving previously granted benefits under each SSDI application record (mbr_ssdi_ceased_k = 1). See mbr_ssdi_applied_k for details on how individual applications are recorded on this file.</txt>
+      <catgry access="released">
+        <catValu>0</catValu>
+        <labl>Did not cease receiving benefit</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>Ceased receiving benefit</labl>
+      </catgry>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="v0j8RpbVbX3LStun" access="released" dcml="12" files="F1 F2" name="mbr_ssdi_ddbc_k">
+      <location EndPos="702" StartPos="685" width="18"/>
+      <labl access="released" xml-lang="en">MBR SSDI: Date of disability benefits cessation</labl>
+      <txt>If the individual ever ceased receiving previously granted SSDI benefits, this variable records the date that those benefits ceased. This date is stored as a SAS date variable. See mbr_ssdi_applied_k for details on how individual applications are recorded on this file.</txt>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="BKQiyHV0r2uCq7Ra" access="released" dcml="13" files="F1 F2" name="mbr_ssdi_ddo_k">
+      <location EndPos="629" StartPos="611" width="19"/>
+      <labl access="released" xml-lang="en">MBR SSDI: Date of disability onset</labl>
+      <txt>The date of disability onset for the associated SSDI application. This date is stored as a SAS date variable. See mbr_ssdi_applied_k for details on how individual applications are recorded on this file.</txt>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="EtMAI9wGDpBz4o02" access="released" dcml="0" files="F1 F2" name="mbr_ssdi_dig_group_k">
+      <location EndPos="87" StartPos="86" width="2"/>
+      <labl access="released" xml-lang="en">MBR SSDI: Diagnosis group</labl>
+      <txt>
+        <p>This variable contains the diagnostic group for the SSDI recipient's primary code for mental or physical disability used in the medical determination of the individual's eligibility for disability benefits.</p>
+      </txt>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>Diseases of the blood</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>2</catValu>
+        <labl>Circulatory system</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>3</catValu>
+        <labl>Congenital anomalies</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>4</catValu>
+        <labl>Digestive system</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>5</catValu>
+        <labl>Endocrine, nutritional, and metabolic diseases</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>6</catValu>
+        <labl>Genitourinary system</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>7</catValu>
+        <labl>Infectious and parasitic diseases</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>8</catValu>
+        <labl>Injuries</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>9</catValu>
+        <labl>Mental disorders</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>10</catValu>
+        <labl>Mental retardation</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>11</catValu>
+        <labl>Musculoskeletal system</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>12</catValu>
+        <labl>Neoplasms</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>13</catValu>
+        <labl>Nervous system and sense organs</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>14</catValu>
+        <labl>Respiratory system</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>15</catValu>
+        <labl>Skin and subcutaneous tissue</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>16</catValu>
+        <labl>Other or unknown</labl>
+      </catgry>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="LDwxK68zq3NPfloV" access="released" dcml="13" files="F1 F2" name="mbr_ssdi_doed_k">
+      <location EndPos="666" StartPos="648" width="19"/>
+      <labl access="released" xml-lang="en">MBR SSDI: Date of entitlement to disability</labl>
+      <txt>The date at which the disabled individual became entitled to disability insurance benefits for the associated SSDI application. This date is stored as a SAS date variable. See mbr_ssdi_applied_k for details on how individual applications are recorded on this file.</txt>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="wM3ZTeTR4YzNDL0g" access="released" dcml="12" files="F1 F2" name="mbr_ssdi_dsd_k">
+      <location EndPos="647" StartPos="630" width="18"/>
+      <labl access="released" xml-lang="en">MBR SSDI: Disability adjudication date</labl>
+      <txt>The date of the disability-adjudication decision for the associated SSDI application. This date is stored as a SAS date variable. See mbr_ssdi_applied_k for details on how individual applications are recorded on this file.</txt>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="Iys94FI9FJGnliDd" access="released" dcml="0" files="F1 F2" name="mbr_ssdi_entitled_k">
+      <location EndPos="31" StartPos="31" width="1"/>
+      <labl access="released" xml-lang="en">MBR SSDI: Application entitles to disability</labl>
+      <txt>An indicator for whether the individual was determined to be entitled to SSDI benefits under the associated application . See mbr_ssdi_applied_k for details on how individual applications are recorded on this file.</txt>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="JZEVO4RoWdZp4dhv" access="released" dcml="0" files="F1 F2" name="mbr_widowsp_benefit">
+      <location EndPos="24" StartPos="24" width="1"/>
+      <labl access="released" xml-lang="en">MBR: receive widowed spouse benefit</labl>
+      <txt>This variable indicates that the individual received OASDI benefits as a widowed spouse. A person is entitled to widowed spouse benefits if they are at least 60 years old and are the widow(-er) of a worker who was fully insured (i.e. had the required number of quarters of coverage for his/her age). Like benefits received by a person due to their own eligibility, widow benefits are reduced if the individual elects to receive them before the full retirement age. Surviving divorced spouses who were married to the worker for at least ten years and did not remarry before age 60 are also eligible for widow benefits.</txt>
+      <catgry access="released">
+        <catValu>0</catValu>
+        <labl>No</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>Yes</labl>
+      </catgry>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="JE3EYEv4Qxwn1SJU" access="released" dcml="12" files="F1 F2" name="mbr_widowsp_benefit_stdate">
+      <location EndPos="484" StartPos="467" width="18"/>
+      <labl access="released" xml-lang="en">MBR: widowed spouse benefit start date</labl>
+      <txt>This variable contains the date when the individual first began receiving widowed spouse benefits and is stored as a SAS date variable. Benefits always begin on the first day of the month. Individuals were eligible to receive their first payment in the month they turned 60 unless their birthday was the first day of the month, in which case they were eligible for their first payment the month before they turned 60. Individuals born on January 1 were eligible to receive their first payment in the December before they turned 60.Start dates range from January 1962 to December 2012.</txt>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="VA1VZ6EFy6dsPXZo" access="released" dcml="13" files="F1 F2" name="mbr_widowsp_benefit_totamt">
+      <location EndPos="502" StartPos="485" width="18"/>
+      <labl access="released" xml-lang="en">MBR: total monthly benefit</labl>
+      <txt>This variable provides the monthly amount of widowed spouse benefits received by the individual. Benefit amounts are calculated based on the worker's average indexed monthly earnings (AIME). See the Social Security Annual Statistical Supplement for details on how benefit calculations are performed. This benefit amount is the total amount paid in the first month of widowed spouse benefits receipt. If the respondent was dually entitled in this month, this benefit amount reflects the total payment made (i.e. the sum of the amounts due to each type of benefit). For example if a person received own and widowed spouse retirement benefits, this benefit amount would be the sum of those two benefits.</txt>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="V8" access="released" dcml="0" files="F1 F2" intrvl="discrete" name="mh1" xml-lang="xml-lang339">
+      <location width="23"/>
+      <labl access="released">Flag: Marital History Event 1</labl>
+      <valrng access="released">
+        <range UNITS="REAL" access="released" max="1" min="0"/>
+      </valrng>
+      <txt>This variable is the first indicator for whether a respondent was married.  Individuals who are never married will have mh1=0.  Individuals who were married one or more times will have mh1=1.</txt>
+      <catgry access="released">
+        <catValu>0</catValu>
+        <labl>Never married</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>First marriage occurred</labl>
+      </catgry>
+      <catgry access="released" missing="Y">
+        <catValu>Sysmiss</catValu>
+      </catgry>
+      <varFormat schema="other" type="numeric"/>
+    </var>
+    <var ID="V9" access="released" dcml="0" files="F1 F2" intrvl="discrete" name="mh2" xml-lang="xml-lang339">
+      <location width="48"/>
+      <labl access="released">Flag: Marital History Event 2</labl>
+      <valrng access="released">
+        <range UNITS="REAL" access="released" max="2" min="0"/>
+      </valrng>
+      <txt>This variable indicates whether a respondent's first marriage ended in widowhood or divorce.  This variable is only in universe for individuals with mh1=1.</txt>
+      <catgry access="released">
+        <catValu>0</catValu>
+        <labl>First Marriage did not end over course of survey</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>First marriage ended in widowhood</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>2</catValu>
+        <labl>First marriage ended in divorce/separation</labl>
+      </catgry>
+      <catgry access="released" missing="Y">
+        <catValu>Sysmiss</catValu>
+      </catgry>
+      <varFormat schema="other" type="numeric"/>
+    </var>
+    <var ID="V10" access="released" dcml="0" files="F1 F2" intrvl="discrete" name="mh3" xml-lang="xml-lang339">
+      <location width="24"/>
+      <labl access="released">Flag: Marital History Event 3</labl>
+      <valrng access="released">
+        <range UNITS="REAL" access="released" max="1" min="0"/>
+      </valrng>
+      <txt>This variable indicates whether a respondent entered into a second marriage.  This variable is only in universe if mh2 =1  or 2.</txt>
+      <catgry access="released">
+        <catValu>0</catValu>
+        <labl>No second marriage</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>Second marriage occurred</labl>
+      </catgry>
+      <catgry access="released" missing="Y">
+        <catValu>Sysmiss</catValu>
+      </catgry>
+      <varFormat schema="other" type="numeric"/>
+    </var>
+    <var ID="V11" access="released" dcml="0" files="F1 F2" intrvl="discrete" name="mh4" xml-lang="xml-lang339">
+      <location width="49"/>
+      <labl access="released">Flag: Marital History Event 4</labl>
+      <valrng access="released">
+        <range UNITS="REAL" access="released" max="2" min="0"/>
+      </valrng>
+      <txt>This variable indicates whether a respondent's second marriage ended in widowhood or divorce.  Only respondents with mh3=1 are in universe for this variable.</txt>
+      <catgry access="released">
+        <catValu>0</catValu>
+        <labl>Second marriage did not end over course of survey</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>Second marriage ended in widowhood</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>2</catValu>
+        <labl>Second marriage ended in divorce/separation</labl>
+      </catgry>
+      <catgry access="released" missing="Y">
+        <catValu>Sysmiss</catValu>
+      </catgry>
+      <varFormat schema="other" type="numeric"/>
+    </var>
+    <var ID="V12" access="released" dcml="0" files="F1 F2" intrvl="discrete" name="mh5" xml-lang="xml-lang339">
+      <location width="23"/>
+      <labl access="released">Flag: Marital History Event 5</labl>
+      <valrng access="released">
+        <range UNITS="REAL" access="released" max="1" min="0"/>
+      </valrng>
+      <txt>This variable indicates whether a respondent entered into a third marriage.  Only individuals with mh4= 1 or 2 are in universe for mh5.</txt>
+      <catgry access="released">
+        <catValu>0</catValu>
+        <labl>No third marriage</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>Third marriage occurred</labl>
+      </catgry>
+      <catgry access="released" missing="Y">
+        <catValu>Sysmiss</catValu>
+      </catgry>
+      <varFormat schema="other" type="numeric"/>
+    </var>
+    <var ID="V13" access="released" dcml="0" files="F1 F2" intrvl="discrete" name="mh6" xml-lang="xml-lang339">
+      <location width="48"/>
+      <labl access="released">Flag: Marital History Event 6</labl>
+      <valrng access="released">
+        <range UNITS="REAL" access="released" max="2" min="0"/>
+      </valrng>
+      <txt>This variable indicates whether a respondent's third marriage ended in widowhood or divorce.  Only respondents with mh5=1 are in universe.</txt>
+      <catgry access="released">
+        <catValu>0</catValu>
+        <labl>Third marriage did not end over course of survey</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>Third marriage ended in widowhood</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>2</catValu>
+        <labl>Third marriage ended in divorce/separation</labl>
+      </catgry>
+      <catgry access="released" missing="Y">
+        <catValu>Sysmiss</catValu>
+      </catgry>
+      <varFormat schema="other" type="numeric"/>
+    </var>
+    <var ID="V14" access="released" dcml="0" files="F1 F2" intrvl="discrete" name="mh7" xml-lang="xml-lang339">
+      <location width="24"/>
+      <labl access="released">Flag: Marital History Event 7</labl>
+      <valrng access="released">
+        <range UNITS="REAL" access="released" max="1" min="0"/>
+      </valrng>
+      <txt>This variable indicates whether respondent entered into a fourth marriage and is in universe only if mh6=1 or 2.  The marital history topical module only collects information about up to three marriges, and hence in cases where mh7=1, the fourth marriage occurred over the course of the SIPP panel, after the marital history topical module had been conducted.</txt>
+      <catgry access="released">
+        <catValu>0</catValu>
+        <labl>No fourth marriage</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>Fourth marriage occurred</labl>
+      </catgry>
+      <catgry access="released" missing="Y">
+        <catValu>Sysmiss</catValu>
+      </catgry>
+      <varFormat schema="other" type="numeric"/>
+    </var>
+    <var ID="V15" access="released" dcml="0" files="F1 F2" intrvl="discrete" name="mh8" xml-lang="xml-lang339">
+      <location width="49"/>
+      <labl access="released">Flag: Marital History Event 8</labl>
+      <valrng access="released">
+        <range UNITS="REAL" access="released" max="2" min="0"/>
+      </valrng>
+      <txt>This variable indicates whether respondent's fourth marriage ended in widowhood or divorce and is only in universe if mh7=1.</txt>
+      <catgry access="released">
+        <catValu>0</catValu>
+        <labl>Fourth marriage did not end over course of survey</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>Fourth marriage ended in widowhood</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>2</catValu>
+        <labl>Fourth marriage ended in divorce/separation</labl>
+      </catgry>
+      <catgry access="released" missing="Y">
+        <catValu>Sysmiss</catValu>
+      </catgry>
+      <varFormat schema="other" type="numeric"/>
+    </var>
+    <var ID="V16" access="released" dcml="0" files="F1 F2" intrvl="contin" name="mh_date1" xml-lang="xml-lang339">
+      <location width="12"/>
+      <labl access="released">Date of Marital History Event 1</labl>
+      <txt>Date of first marriage in SAS date value format.  In universe if mh1=1.</txt>
+      <varFormat schema="other" type="numeric"/>
+    </var>
+    <var ID="V17" access="released" dcml="0" files="F1 F2" intrvl="contin" name="mh_date2">
+      <location width="12"/>
+      <labl access="released">Date of Marital History Event 2</labl>
+      <txt>Date that first marriage ended in divorce or widowhood.  Stored as a SAS date value.</txt>
+      <varFormat schema="other" type="numeric"/>
+    </var>
+    <var ID="V18" access="released" dcml="0" files="F1 F2" intrvl="contin" name="mh_date3">
+      <location width="12"/>
+      <labl access="released">Date of Marital History Event 3</labl>
+      <txt>Date of beginning of second marriage.  Stored as a SAS date value.</txt>
+      <varFormat schema="other" type="numeric"/>
+    </var>
+    <var ID="V19" access="released" dcml="0" files="F1 F2" intrvl="contin" name="mh_date4">
+      <location width="12"/>
+      <labl access="released">Date of Marital History Event 4</labl>
+      <txt>Date of ending of second marriage.  Stored as a SAS date value.</txt>
+      <varFormat schema="other" type="numeric"/>
+    </var>
+    <var ID="V20" access="released" dcml="0" files="F1 F2" intrvl="contin" name="mh_date5">
+      <location width="12"/>
+      <labl access="released">Date of Marital History Event 5</labl>
+      <txt>Date of beginning of third marriage.  Stored as a SAS date value.</txt>
+      <varFormat schema="other" type="numeric"/>
+    </var>
+    <var ID="V21" access="released" dcml="0" files="F1 F2" intrvl="contin" name="mh_date6">
+      <location width="12"/>
+      <labl access="released">Date of Marital History Event 6</labl>
+      <txt>Date of ending of third marriage.</txt>
+      <varFormat schema="other" type="numeric"/>
+    </var>
+    <var ID="V22" access="released" dcml="0" files="F1 F2" intrvl="contin" name="mh_date7">
+      <location width="12"/>
+      <labl access="released">Date of Marital History Event 7</labl>
+      <txt>Date of beginning of fourth marriage.  Stored as a SAS date value.</txt>
+      <varFormat schema="other" type="numeric"/>
+    </var>
+    <var ID="V23" access="released" dcml="0" files="F1 F2" intrvl="contin" name="mh_date8">
+      <location width="12"/>
+      <labl access="released">Date of Marital History Event 8</labl>
+      <txt>Date of fourth marriage ending.  Stored as a SAS date value.</txt>
+      <varFormat schema="other" type="numeric"/>
+    </var>
+    <var ID="ApBLZ1hjEY8UhOBo" access="released" dcml="17" files="F1 F2" name="nonhouswealth">
+      <location EndPos="249" StartPos="230" width="20"/>
+      <labl access="released" xml-lang="en">Non-Housing Financial Wealth</labl>
+      <txt>Non-housing wealth = total wealth minus home equity, collected in the following waves, by panel: Wave 4 in the 1984 (HHTWLTH, HHTHEQ), 1990-1993 (HH_TWLTH, HH_THEQ); Wave 3 in 1996, 2001, &amp; 2004 (THHTWLTH, THHTHEQ) panels; Wave 4 in 2008 panel (THHTWLTH, THHTHEQ).</txt>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="ssv4HTIBxeH33gwt" access="released" dcml="0" files="F1 F2" name="obs_first_sipp_mar_num">
+      <location EndPos="47" StartPos="47" width="1"/>
+      <labl access="released" xml-lang="en">Ordinal Number of First Observed Marriage</labl>
+      <valrng access="released">
+        <range UNITS="REAL" access="released" max="4" min="1"/>
+      </valrng>
+      <txt>This variable tells which of the marriages described in the marital history variables (mh1-mh8) is the linked marriage.  For example, if obs_first_sipp_mar_num=1 then the first marriage is the one observed in the SIPP and the partner from that marriage is the linked spouse.</txt>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>Linked marriage is first reported marriage described by mh1, mh2, mh_date1, and mh_date2</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>2</catValu>
+        <labl>Linked marriage is first reported marriage described by mh3, mh4, mh_date3, and mh_date4</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>3</catValu>
+        <labl>Linked marriage is first reported marriage described by mh5, mh6, mh_date5, and mh_date6</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>4</catValu>
+        <labl>Linked marriage is first reported marriage described by mh7, mh8, mh_date7, and mh_date8</labl>
+      </catgry>
+      <catgry access="released" missing="Y">
+        <catValu>Sysmiss</catValu>
+        <labl>When there is no linked marriage</labl>
+      </catgry>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="EaKFscwxtuBoQbB3" access="released" dcml="0" files="F1 F2" name="occ_3cat">
+      <location EndPos="81" StartPos="81" width="1"/>
+      <labl access="released" xml-lang="en">SIPP-reported occupation - three categories</labl>
+      <valrng access="released">
+        <range UNITS="REAL" access="released" max="3" min="1"/>
+      </valrng>
+      <txt>Occupation is a characteristic of an individual's job and hence varies over time.  There are occupation values reported for (potentially) two jobs in each wave of the survey.  Occupation is chosen by summing earnings associated with the array of variables ws1occ1-ws1occ{max number of waves} and ws2occ1-ws2occ{max number of waves} in the 1984, 1990-1993 panels, and tjbocc1_1-tjbocc1_{max number of waves) and tjbocc2_1-tjbocc2_{max number of waves} in the 1996-2008 panels and choosing the occupation associated with the greatest total earnings.  Thus occupation is the occupation from which greatest earnings are derived in the survey.</txt>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>Managerial and professional specialty occupations</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>2</catValu>
+        <labl>Technical, sales, and administrative support occupations</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>3</catValu>
+        <labl>Other</labl>
+      </catgry>
+      <catgry access="released" missing="Y">
+        <catValu>Sysmiss</catValu>
+      </catgry>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="QuZqLMwYtaRjtzIe" access="released" dcml="0" files="F1 F2" name="occ_exist">
+      <location EndPos="11" StartPos="11" width="1"/>
+      <labl access="released" xml-lang="en">SIPP Occupation - existence</labl>
+      <valrng access="released">
+        <range UNITS="REAL" access="released" max="1" min="0"/>
+      </valrng>
+      <txt>This variable indicates whether a person has a valid occupation from a job held during the survey.</txt>
+      <catgry access="released">
+        <catValu>0</catValu>
+        <labl>No, last worked 1984 or earlier, or no valid industry reported</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>Yes</labl>
+      </catgry>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="yLAvMxUAm36uzZlT" access="released" dcml="0" files="F1 F2" name="own_home">
+      <location EndPos="13" StartPos="13" width="1"/>
+      <labl access="released" xml-lang="en">Own a Home</labl>
+      <valrng access="released">
+        <range UNITS="REAL" access="released" max="1" min="0"/>
+      </valrng>
+      <txt>This variable indicates whether an individual owns a home at the time of the wealth topical module in the person's SIPP panel.  The wealth topical module is conducted in the following waves by panel: wave 4 in the 1984 &amp; 1990-1993 panels (TM8530, TM8608). In panels 1996-2004, tenure is available for each month of the survey, for this variable (own_home), tenure is defined as tenure during 12th month in the survey (ETENURE), and the universe for the real estate/wealth topical module is defined in wave 3 (EHREUNV). In 2008, ETENURE is also from the 12th month of the survey (ETENURE), and the universe fer the real estate/wealth topical module is defined in wave 4 (EHREUNV).</txt>
+      <catgry access="released">
+        <catValu>0</catValu>
+        <labl>Do not own a home</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>Own a home</labl>
+      </catgry>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="Prkd72rzeaNaGsqa" access="released" dcml="11" files="F1 F2" name="own_kids_ever">
+      <location EndPos="60" StartPos="48" width="13"/>
+      <labl access="released" xml-lang="en">Number of Children Ever Born</labl>
+      <valrng access="released">
+        <range UNITS="REAL" access="released" max="20" min="0"/>
+      </valrng>
+      <txt>This variable contains the number of children ever born to a person (i.e. count of biological children).  This is taken from the wave two fertility history topical module (TM8752 and TM8754 for 1984, 1990-1993 panels; tfrchl and tmomchl for 1996-2008 panels) and is in universe for men and women ages 15-64.</txt>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="CZQjZC5wS13WiWJM" access="released" dcml="0" files="F1 F2" name="panel">
+      <location EndPos="44" StartPos="41" width="4"/>
+      <labl access="released" xml-lang="en">SIPP Panel Year</labl>
+      <valrng access="released">
+        <range UNITS="INT" access="released" max="2008" min="1984"/>
+      </valrng>
+      <txt>
+        <p>Indicates panel of source record</p>
+      </txt>
+      <catgry access="released">
+        <catValu>1984</catValu>
+      </catgry>
+      <catgry access="released">
+        <catValu>1990</catValu>
+      </catgry>
+      <catgry access="released">
+        <catValu>1991</catValu>
+      </catgry>
+      <catgry access="released">
+        <catValu>1992</catValu>
+      </catgry>
+      <catgry access="released">
+        <catValu>1993</catValu>
+      </catgry>
+      <catgry access="released">
+        <catValu>1996</catValu>
+      </catgry>
+      <catgry access="released">
+        <catValu>2001</catValu>
+      </catgry>
+      <catgry access="released">
+        <catValu>2004</catValu>
+      </catgry>
+      <catgry access="released">
+        <catValu>2008</catValu>
+      </catgry>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="iKPQQSwHgD80tgDW" access="released" dcml="0" files="F1 F2" name="pension_in_scope_empl">
+      <location EndPos="17" StartPos="17" width="1"/>
+      <labl access="released" xml-lang="en">In-Scope for Pension (Level II)</labl>
+      <valrng access="released">
+        <range UNITS="REAL" access="released" max="1" min="0"/>
+      </valrng>
+      <txt>This variable indicates that an individual was in scope for the pension questions because he or she was employed at the time of the pension topical module.  The pension topical module is conducted in the following waves by panel: wave 4 in the 1984 panel (TM8324); wave 4 in the 1990 &amp; 1992 panels (TM8324); wave 7 in 1991 panel (TM8324); wave 9 in the 1993 panel (TM6000); wave 7 in the 1996-2004 panels (EARPUNV, RMNJBBS); wave 3 in the 2008 panel (EARPUNV, RMNJBBS).</txt>
+      <catgry access="released">
+        <catValu>0</catValu>
+        <labl>Pension was not in scope</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>Pension was in scope</labl>
+      </catgry>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="j5kxHnpMDCfKPBQS" access="released" dcml="0" files="F1 F2" name="personid">
+      <location EndPos="109" StartPos="104" width="6"/>
+      <labl access="released" xml-lang="en">SIPP Gold Standard Person ID</labl>
+      <txt>Personid uniquely identifies individuals within each SSB implicate.   Personid does not link records across implicates or to the Gold Standard and Completed Data files.</txt>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="MTWRWW6yqFbohUhJ" access="released" dcml="12" files="F1 F2" name="phus_agedsp_benefit_stdate">
+      <location EndPos="448" StartPos="431" width="18"/>
+      <labl access="released" xml-lang="en">PHUS: startdate of aged spouse benefits</labl>
+      <txt>
+        <p>This start date variable tells when the first aged spouse benefit payment was recorded in the Payment History Update System, the administrative database maintained by SSA to track actual payments made to beneficiaries. This start date can differ from the MBR start date which records only eligibility and not actual payments. The PHUS began in 1984 and hence the earliest possible start date is January 1984. The latest possible start date is December 2012.</p>
+      </txt>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="Sxflt2wX03CaZwiV" access="released" dcml="13" files="F1 F2" name="phus_agedsp_benefit_totamt">
+      <location EndPos="466" StartPos="449" width="18"/>
+      <labl access="released" xml-lang="en">PHUS: total monthly benefit</labl>
+      <txt>
+        <p>Total monthly benefit payment as recorded in the Payment History Update System, the administrative database maintained by SSA to track actual payments made to beneficiaries. This benefit amount can differ from the MBR total benefit which records only eligibility and not actual payments. This benefit amount is the total amount paid in the first month of aged spouse benefits receipt. If the respondent was dually entitled in this month, this benefit amount reflects the total payment made (i.e. the sum of the amounts due to each type of benefit). For example if a person received own and aged spouse retirement benefits, this benefit amount would be the sum of those two benefits.</p>
+      </txt>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="KOn1OFkdBDKkLgSI" access="released" dcml="12" files="F1 F2" name="phus_retire_benefit_stdate">
+      <location EndPos="376" StartPos="359" width="18"/>
+      <labl access="released" xml-lang="en">PHUS: startdate of retirement benefits</labl>
+      <txt>This startdate variable tells when the first own retirement benefit payment was recorded in the Payment History Update System, the administrative database maintained by SSA to track actual payments made to beneficiaries. This startdate can differ from the MBR startdate which records only eligiblity and not actual payments.  The PHUS began in 1984 and hence the earliest possible start date is January 1984. The latest possible start date is December 2012.</txt>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="usyrNih8bSmRGveq" access="released" dcml="13" files="F1 F2" name="phus_retire_benefit_totamt">
+      <location EndPos="394" StartPos="377" width="18"/>
+      <labl access="released" xml-lang="en">PHUS: total monthly benefit</labl>
+      <txt>Total monthly benefit payment as recorded in the Payment History Update System, the administrative database maintained by SSA to track actual payments made to beneficiaries. This benefit amount can differ from the MBR total benefit which records only eligiblity and not actual payments. This benefit amount is the total amount paid in the first month of own retirement benefits receipt. If the respondent was dually entitled in this month, this benefit amount reflects the total payment made (i.e. the sum of the amounts due to each type of benefit). For example if a person received own and aged spouse retirement benefits, this benefit amount would be the sum of those two benefits.</txt>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="o8yuQSyqAllao1dt" access="released" dcml="12" files="F1 F2" name="phus_ssdi_benefit_stdate_k">
+      <location EndPos="721" StartPos="704" width="18"/>
+      <labl access="released" xml-lang="en">PHUS: SSDI benefit start date 1</labl>
+      <txt>
+        <p>This start date variable tells when the first SSDI benefit payment was recorded in the Payment History Update System, the administrative database maintained by SSA to track actual payments made to beneficiaries. This start date can differ from the MBR start date which records only eligibility and not actual payments. The PHUS began in 1984 and hence the earliest possible start date is January 1984. The latest possible start date is December 2012.</p>
+      </txt>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="XLm3bhQ85hHXMoY9" access="released" dcml="13" files="F1 F2" name="phus_ssdi_benefit_totamt_k">
+      <location EndPos="739" StartPos="722" width="18"/>
+      <labl access="released" xml-lang="en">PHUS: SSDI total monthly benefit k (where k=1 to 4)</labl>
+      <txt>
+        <p>Total monthly benefit payment as recorded in the Payment History Update System, the administrative database maintained by SSA to track actual payments made to beneficiaries. This benefit amount can differ from the MBR total benefit which records only eligibility and not actual payments. This benefit amount is the total amount paid in the month k of own SSDI benefits receipt.</p>
+      </txt>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="WO1iXQNhdREdzh0H" access="released" dcml="12" files="F1 F2" name="phus_widowsp_benefit_stdate">
+      <location EndPos="520" StartPos="503" width="18"/>
+      <labl access="released" xml-lang="en">PHUS: startdate of widowed spouse benefits</labl>
+      <txt>
+        <p>This start date variable tells when the first widowed spouse benefit payment was recorded in the Payment History Update System, the administrative database maintained by SSA to track actual payments made to beneficiaries. This start date can differ from the MBR start date which records only eligibility and not actual payments. The PHUS began in 1984 and hence the earliest possible start date is January 1984. The latest possible start date is December 2012.</p>
+      </txt>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="CRx7HWmUIv1XAVMZ" access="released" dcml="13" files="F1 F2" name="phus_widowsp_benefit_totamt">
+      <location EndPos="538" StartPos="521" width="18"/>
+      <labl access="released" xml-lang="en">PHUS: total monthly benefit</labl>
+      <txt>Total monthly benefit payment as recorded in the Payment History Update System, the administrative database maintained by SSA to track actual payments made to beneficiaries. This benefit amount can differ from the MBR total benefit which records only eligiblity and not actual payments. This benefit amount is the total amount paid in the first month of widowed spouse benefits receipt. If the respondent was dually entitled in this month, this benefit amount reflects the total payment made (i.e. the sum of the amounts due to each type of benefit). For example if a person received own and widowed spouse retirement benefits, this benefit amount would be the sum of those two benefits.</txt>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="zgf23dsU4RwTIUyJ" access="released" dcml="0" files="F1 F2" name="pos_phus_agedsp_benefit_totamt">
+      <location EndPos="23" StartPos="23" width="1"/>
+      <labl access="released" xml-lang="en">PHUS: indicator of positive benefit amount</labl>
+      <txt>Indicator that PHUS recorded a positive aged spouse benefit amount (and consequently had a non-missing PHUS startdate) at some point after the MBR eligibility start date.</txt>
+      <catgry access="released">
+        <catValu>0</catValu>
+        <labl>Does not have a positive aged spouse benefit amount</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>Has a positive aged spouse benefit amount</labl>
+      </catgry>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="c0SESR09a5wOHSJ1" access="released" dcml="0" files="F1 F2" name="pos_phus_retire_benefit_totamt">
+      <location EndPos="21" StartPos="21" width="1"/>
+      <labl access="released" xml-lang="en">PHUS: indicator of positive benefit amount</labl>
+      <txt>
+        <p>Indicator that the PHUS recorded a positive retirement benefit amount (and consequently had a non-missing PHUS start date) at some point after the MBR eligibility start date.</p>
+      </txt>
+      <catgry access="released">
+        <catValu>0</catValu>
+        <labl>Did not receive a positive retirement benefit amount at some point after MBR eligibility date</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>Received a positive retirement benefit amount at some point after MBR eligibility date</labl>
+      </catgry>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="Wg3F7xTn5vEQzKHz" access="released" dcml="0" files="F1 F2" name="pos_phus_ssdi_benefit_totamt_k">
+      <location EndPos="703" StartPos="703" width="1"/>
+      <labl access="released">PHUS: indicator of positive SSDI benefit amount in month k (where k=1 to 4)</labl>
+      <txt>
+        <p>Indicator that the PHUS recorded a positive SSDI benefit amount (and consequently had a non-missing PHUS start date) at some point after the MBR eligibility start date.</p>
+      </txt>
+      <catgry access="released">
+        <catValu>0</catValu>
+        <labl>Did not receive positive SSDI amount</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>Received positive SSDI amount</labl>
+      </catgry>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="C6E9plMxGABhozmJ" access="released" dcml="0" files="F1 F2" name="pos_phus_widowsp_benefit_totamt">
+      <location EndPos="25" StartPos="25" width="1"/>
+      <labl access="released" xml-lang="en">PHUS: indicator of positive benefit amount</labl>
+      <txt>Indicator that PHUS recorded a positive widowed spouse benefit amount (and consequently had a non-missing PHUS startdate) at some point after the MBR eligibility start date.</txt>
+      <catgry access="released">
+        <catValu>0</catValu>
+        <labl>Did not receive positive widowed spouse benefit</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>Received positive widowed spouse benefit</labl>
+      </catgry>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="HXKJfzydFldFMP05" access="released" dcml="0" files="F1 F2" name="race">
+      <location EndPos="5" StartPos="5" width="1"/>
+      <labl access="released" xml-lang="en">Race</labl>
+      <valrng access="released">
+        <range UNITS="REAL" access="released" max="3" min="1"/>
+      </valrng>
+      <txt>In the Census-internal SIPP panels, a value for race is included on each wave file.  Thus, there are actually as many race variables as there are waves of the survey and some changes occur across waves as a result of data collection error.  Race is chosen by creating an array of variables race1-race{max number of waves} and choosing the first non-missing value.  Thus race comes from the first wave in which the individual was interviewed instead of from a fixed point in the survey.</txt>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>White</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>2</catValu>
+        <labl>Black</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>3</catValu>
+        <labl>Other</labl>
+      </catgry>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="QMmtiW17fYnGw5Xo" access="released" dcml="0" files="F1 F2" name="rot">
+      <location EndPos="1" StartPos="1" width="1"/>
+      <labl access="released" xml-lang="en">Rotation Group</labl>
+      <valrng access="released">
+        <range UNITS="INT" access="released" max="4" min="1"/>
+      </valrng>
+      <txt>Each SIPP panel is divided up into four rotation groups and one rotation group is interviewed each month.  This variable classifies each SIPP respondent into a particular rotation group and enables researhers to tell which month a particular respondent was asked the topical module questions.  For example, if a person is in the first rotation group of the 1990 panel, his/her wave 1 interview covered January 1990-April 1990 and the wave 2 interview covered May 1990-August 1990.  The wave 2 topical modules would have been asked in September 1990 at the time of the wave 2 interview.  Schedules for interviewing rotation groups by panel can be found in the SIPP Users' Guide.</txt>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="DvjXqomFms2duSwJ" access="released" dcml="0" files="F1 F2" name="sipp_panel_beg_date">
+      <location EndPos="103" StartPos="99" width="5"/>
+      <labl access="released" xml-lang="en">SIPP Panel Begin Date</labl>
+      <txt>This variable is stored as a SAS date and gives the month and year of the first SIPP reference period for each individual (reference periods always begin on the first day of the month).  The start date differs even within panel due to the fact that only one rotation group (1/4 of the sample) is interviewed each month.</txt>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="rb3orNboNcZf1Gl8" access="released" dcml="0" files="F1 F2" name="sipp_panel_end_date">
+      <location EndPos="98" StartPos="94" width="5"/>
+      <labl access="released" xml-lang="en">SIPP Panel End Date</labl>
+      <txt>This variable is stored as a SAS date and gives the month and year of the last month of the last SIPP reference period for each individual (reference periods always end on the last day of the month). The end date differs even within panel due to the fact that only one rotation group (1/4 of the sample) is interviewed each month.</txt>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="dDIBZcU2LXvYDAJS" access="released" dcml="0" files="F1 F2" intrvl="contin" name="spouse_personid" xml-lang="xml-lang339">
+      <location EndPos="115" StartPos="110" width="6"/>
+      <labl access="released">Personid of spouse</labl>
+      <txt>Personid of linked spouse, defined as the first person to whom the SIPP respondent was married during the time period covered by the SIPP panel.  Individuals could enter the panel already married and then each would be linked to the other.  Individuals could also get married during the course of the panel.  If this was the first observed marriage for each member of the couple, they were linked together.  Individuals could also get divorced during the course of the panel and then remarry.  In many cases, this later marriage caused a new individual to join the panel.  This new SIPP respondent would only be linked to his or her spouse if the spouse (and original SIPP sample member) had not already been observed married to someone else.  If the original SIPP sample member had been previously linked by marriage to another SIPP sample member, this original link was maintained in spouse_personid.  However the marital history reflects the ending of this marriage and the occurrence of the next marriage for the original SIPP sample member.  Likewise, the new SIPP sample member who joins through marriage will have that marriage date recorded in his or her marital history but will have a blank spouse_personid.  In summary, this variable captures only one marriage partner and does not provide a history of marriage partners even if this history is (partially) observed in the SIPP.    The link between SIPP respondents and their spouses has not been perturbed in any way in the SSB.  The same individuals will be linked as married partners in the Gold Standard, the Completed Data, and the SSB.   In order to strengthen confidentiality protection, however, spouse_personid in the SSB does not link records across implicates or to the Gold Standard and Completed Data files, i.e. within each synthetic implicate it is a random number that can only be used for matching spouses within that implicate.</txt>
+      <varFormat formatname="Double" schema="other" type="numeric"/>
+    </var>
+    <var ID="BKmTH5vWjLVW3RWp" access="released" dcml="12" files="F1 F2" name="ssr_ssi_appl_dt">
+      <location EndPos="556" StartPos="539" width="18"/>
+      <labl access="released" xml-lang="en">SSR: Application date</labl>
+      <txt>This variable contains the date when the individual applied for SSI benefits and is stored as a SAS date variable.</txt>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="FPpfCgop7tkrCOEW" access="released" dcml="0" files="F1 F2" name="ssr_ssi_applied">
+      <location EndPos="26" StartPos="26" width="1"/>
+      <labl access="released" xml-lang="en">SSR: Applied for SSI benefits</labl>
+      <txt>An indicator for whether the individual has a recorded application for Supplemental Security Income (SSI).</txt>
+      <catgry access="released">
+        <catValu>0</catValu>
+        <labl>Does not have a recorded SSI application</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>Has a recorded SSI application</labl>
+      </catgry>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="vCsVf4TmDapNIF1O" access="released" dcml="0" files="F1 F2" name="ssr_ssi_benefit">
+      <location EndPos="28" StartPos="28" width="1"/>
+      <labl access="released" xml-lang="en">SSR: Received SSI benefits</labl>
+      <txt>An indicator for whether the applicant ever received SSI benefits.</txt>
+      <catgry access="released">
+        <catValu>0</catValu>
+        <labl>Has never received SSI benefits</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>Has received SSI benefits</labl>
+      </catgry>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="uRHcjvo7V8auN5lb" access="released" dcml="14" files="F1 F2" name="ssr_ssi_benefit_fed_totamt">
+      <location EndPos="592" StartPos="575" width="18"/>
+      <labl access="released" xml-lang="en">SSR: Total federal benefit amount</labl>
+      <txt>The total SSI benefit amount from federal sources.</txt>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="ow4POj9s5l8G8Am2" access="released" dcml="0" files="F1 F2" name="ssr_ssi_ceased">
+      <location EndPos="29" StartPos="29" width="1"/>
+      <labl access="released" xml-lang="en">SSR: Benefits ceased</labl>
+      <txt>
+        <p>SSI benefits recorded as ceased on the SSR; see SSR: last payment date.</p>
+      </txt>
+      <catgry access="released">
+        <catValu>0</catValu>
+        <labl>SSI benefit has not ceased</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>SSI benefit has ceased</labl>
+      </catgry>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="jrVQ4nuaOF8gFpMS" access="released" dcml="0" files="F1 F2" name="ssr_ssi_dig_group">
+      <location EndPos="85" StartPos="84" width="2"/>
+      <labl access="released" xml-lang="en">SSR: Diagnosis code</labl>
+      <txt>
+        <p>This variable contains the diagnostic group for the SSI recipient's primary code for mental or physical disability used in the medical determination of the individual's eligibility for disability benefits.</p>
+      </txt>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>Diseases of the blood</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>2</catValu>
+        <labl>Circulatory system</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>3</catValu>
+        <labl>Congenital anomalies</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>4</catValu>
+        <labl>Digestive system</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>5</catValu>
+        <labl>Endocrine, nutritional, and metabolic diseases</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>6</catValu>
+        <labl>Genitourinary system</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>7</catValu>
+        <labl>Infectious and parasitic diseases</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>8</catValu>
+        <labl>Injuries</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>9</catValu>
+        <labl>Mental disorders</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>10</catValu>
+        <labl>Mental retardation</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>11</catValu>
+        <labl>Musculoskeletal system</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>12</catValu>
+        <labl>Neoplasms</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>13</catValu>
+        <labl>Nervous system and sense organs</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>14</catValu>
+        <labl>Respiratory system</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>15</catValu>
+        <labl>Skin and subcutaneous tissue</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>16</catValu>
+        <labl>Other or unknown</labl>
+      </catgry>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="CDoHHoUKS8FTnuD6" access="released" dcml="12" files="F1 F2" name="ssr_ssi_first_pmt_dt">
+      <location EndPos="574" StartPos="557" width="18"/>
+      <labl access="released" xml-lang="en">SSR: First payment date</labl>
+      <txt>The date of first recorded payment of SSI benefits. This variable is saved as a SAS date.</txt>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="QFAn1WPueqhhzdf0" access="released" dcml="12" files="F1 F2" name="ssr_ssi_last_pmt_dt">
+      <location EndPos="610" StartPos="593" width="18"/>
+      <labl access="released" xml-lang="en">SSR: Last payment date</labl>
+      <txt>
+        <p>The date of last recorded payment of SSI benefits. This variable is saved as a SAS date.</p>
+      </txt>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="Rc7deHxwFSGqjmNl" access="released" dcml="0" files="F1 F2" name="ssr_ssi_type">
+      <location EndPos="27" StartPos="27" width="1"/>
+      <labl access="released" xml-lang="en">SSR: Type of benefit</labl>
+      <txt>
+        <p>Type of SSI benefit applied for or received by the individual.</p>
+      </txt>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>Aged individual</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>2</catValu>
+        <labl>Disabled or blind individual</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>3</catValu>
+        <labl>Disabled or blind child</labl>
+      </catgry>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="ioV0rrGafbajD7g5" access="released" dcml="0" files="F1 F2" name="state">
+      <location EndPos="46" StartPos="45" width="2"/>
+      <labl access="released">State of Residence: FIPS code (modified)</labl>
+      <txt>State of residence. 
+ FIPS State Code for state of residence first recorded in the SIPP. For 
+ married couples, we take the state value for both partners at the same 
+ point in the survey when we first observed the marriage. For individuals 
+ who never have an observed marriage during the panel, we take their first 
+ ever reported state value. 
+ 
+ *All panels prior to 2004 group some states together and give only one 
+ code for the group.  For these panels, the individual FIPS code will not appear for states 
+ contained in a group.</txt>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>Alabama</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>2</catValu>
+        <labl>Alaska *see description</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>4</catValu>
+        <labl>Arizona</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>5</catValu>
+        <labl>Arkansas</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>6</catValu>
+        <labl>California</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>8</catValu>
+        <labl>Colorado</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>9</catValu>
+        <labl>Connecticut</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>10</catValu>
+        <labl>Delaware</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>11</catValu>
+        <labl>DC</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>12</catValu>
+        <labl>Florida</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>13</catValu>
+        <labl>Georgia</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>15</catValu>
+        <labl>Hawaii</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>16</catValu>
+        <labl>Idaho *see description</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>17</catValu>
+        <labl>Illinois</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>18</catValu>
+        <labl>Indiana</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>19</catValu>
+        <labl>Iowa *see description</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>20</catValu>
+        <labl>Kansas</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>21</catValu>
+        <labl>Kentucky</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>22</catValu>
+        <labl>Louisiana</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>23</catValu>
+        <labl>Maine *see description</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>24</catValu>
+        <labl>Maryland</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>25</catValu>
+        <labl>Massachusetts</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>26</catValu>
+        <labl>Michigan</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>27</catValu>
+        <labl>Minnesota</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>28</catValu>
+        <labl>Mississippi *see description</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>29</catValu>
+        <labl>Missouri</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>30</catValu>
+        <labl>Montana *see description</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>31</catValu>
+        <labl>Nebraska</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>32</catValu>
+        <labl>Nevada</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>33</catValu>
+        <labl>New Hampshire</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>34</catValu>
+        <labl>New Jersey</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>35</catValu>
+        <labl>New Mexico *see description</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>36</catValu>
+        <labl>New York</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>37</catValu>
+        <labl>North Carolina</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>38</catValu>
+        <labl>North Dakota *see description</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>39</catValu>
+        <labl>Ohio</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>40</catValu>
+        <labl>Oklahoma</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>41</catValu>
+        <labl>Oregon</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>42</catValu>
+        <labl>Pennsylvania</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>44</catValu>
+        <labl>Rhode Island</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>45</catValu>
+        <labl>South Carolina</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>46</catValu>
+        <labl>South Dakota *see description</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>47</catValu>
+        <labl>Tennessee</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>48</catValu>
+        <labl>Texas</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>49</catValu>
+        <labl>Utah</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>50</catValu>
+        <labl>Vermont *see description</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>51</catValu>
+        <labl>Virginia</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>53</catValu>
+        <labl>Washington</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>54</catValu>
+        <labl>West Virginia *see description</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>55</catValu>
+        <labl>Wisconsin</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>56</catValu>
+        <labl>Wyoming *see description</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>61</catValu>
+        <labl>(1990, 1991, 1992, 1993, 1996, 2001 panels) Maine, Vermont  *see description</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>62</catValu>
+        <labl>(1990, 1991, 1992, 1993 panels) Iowa, North Dakota, South Dakota (1996, 2001 panels) North Dakota, South Dakota, Wyoming  *see description</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>63</catValu>
+        <labl>(1990, 1991, 1992, 1993 panels) Alaska, Idaho, Montana, Wyoming  *see description</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>90</catValu>
+        <labl>(1984 panel only) Idaho, New Mexico, South Dakota, Wyoming  *see description</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>91</catValu>
+        <labl>(1984 panel only) Mississippi, West Virginia  *see description</labl>
+      </catgry>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="o8NfM0U7G53kNDoG" access="released" dcml="0" files="F1 F2" name="time_arrive_usa">
+      <location EndPos="83" StartPos="82" width="2"/>
+      <labl access="released" xml-lang="en">Time Period of Arrival to US (Foreign Born)</labl>
+      <valrng access="released">
+        <range UNITS="REAL" access="released" max="10" min="1"/>
+      </valrng>
+      <txt>This variable gives the year block when a respondent immigrated in the United States and is in scope when foreign_born=1.  The year of arrival to the U.S. is from the migration history wave 2 topical module (TM8736 for 1984, 1990-1993; emoveus 1996-2008).  Year blocks are generally five years but are as wide as 9 years and as short as 2 years.  Categories are:  1=1959 or earlier; 2=1960-1964; 3=1965-1969; 4=1970-1974; 5=1974-1979; 6=1980-1981; 7=1982-1984; 8=1985-1993; 9=1994-1999; 10=2000-2004; 11=2005-2009; 12=2010-2014</txt>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>Before 1959</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>2</catValu>
+        <labl>1960-1964</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>3</catValu>
+        <labl>1965-1969</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>4</catValu>
+        <labl>1970-1974</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>5</catValu>
+        <labl>1975-1979</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>6</catValu>
+        <labl>1980-1981</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>7</catValu>
+        <labl>1982-1984</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>8</catValu>
+        <labl>1985-1993</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>9</catValu>
+        <labl>1994-1999</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>10</catValu>
+        <labl>2000-2004</labl>
+      </catgry>
+      <catgry access="released" missing="Y">
+        <catValu>Sysmiss</catValu>
+        <labl>Structurally missing, out of scope for question (foreign_born=0)</labl>
+      </catgry>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="W3m8XhfOXoQ9aaYj" access="released" dcml="0" files="F1 F2" name="total_der_fica_YYYY">
+      <location EndPos="560" StartPos="549" width="12"/>
+      <labl access="released" xml-lang="en">DER: Total earnings from FICA-covered jobs</labl>
+      <txt>Total earnings from all FICA-covered jobs with W-2 or Schedule C (self-employment) filings.  These earnings are the sum of amounts from Box 1 (Total Wages, Tips, and Bonuses) and Box 12 (earnings deferred to a 401(k) type account).  This array extends from 1978-2011.</txt>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="RjJd1SXNGhEKTEBT" access="released" dcml="0" files="F1 F2" name="total_der_nonfica_YYYY">
+      <location EndPos="572" StartPos="561" width="12"/>
+      <labl access="released" xml-lang="en">DER: Total earnings from all non-FICA jobs</labl>
+      <txt>Total earnings from all non-FICA-covered jobs with W-2 or Schedule C (self-employment) filings. These earnings are the sum of amounts from Box 1 (Total Wages, Tips, and Bonuses) and Box 12 (earnings deferred to a 401(k) type account). This array extends from 1978-2011.</txt>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="V299" access="released" dcml="0" files="F1 F2" intrvl="discrete" name="totearn_M">
+      <location width="9"/>
+      <labl access="released">Total Earnings</labl>
+      <txt>This variable contains total monthly person-level earnings as reported in the SIPP for month M. M goes from 1 to 48 and represents the month number since the start of panel_1stfullyear.  This includes both job and business (self-employment) earnings and is top-coded.  Only the first 24 months of the individual's SIPP panel are in universe. A later release of these data will add months after 24 for longer SIPP panels. Months that are outside the time frame covered by an individual's SIPP panel will always be missing and out of universe.</txt>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="V258" access="released" dcml="0" files="F1 F2" intrvl="contin" name="totearn_ser_YYYY" xml-lang="xml-lang339">
+      <location width="12"/>
+      <labl access="released">SER: Capped Earnings from all FICA-covered jobs</labl>
+      <txt>Person-level annual earnings that were taxed by FICA; these variables include earnings only up to the FICA taxable maximum and cover the years 1951-2011.  These earnings are the inputs for calculating the OASDI benefit a person and his or her spouse will receive upon retirement or disability.</txt>
+      <varFormat schema="other" type="numeric"/>
+    </var>
+    <var ID="V296" access="released" dcml="0" files="F1 F2" intrvl="discrete" name="tothours_M" xml-lang="xml-lang339">
+      <location width="9"/>
+      <labl access="released">Total Usual Weekly Hours Worked at All Jobs</labl>
+      <txt>Total number of usual weekly hours worked at all regular employment jobs in month M. M represents the month number since the start of panel_1stfullyear. Only the first 24 months of the individual's SIPP panel are in universe. A later release of these data will add months after 24 for longer SIPP panels. Months that are outside the time frame covered by an individual's SIPP panel will always be missing and out of universe.</txt>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="V295" access="released" dcml="0" files="F1 F2" intrvl="discrete" name="totinc_M" xml-lang="xml-lang339">
+      <location width="9"/>
+      <labl access="released">Total Personal Income</labl>
+      <txt>Total personal income summed from all sources in month M. M represents the month number since the start of panel_1stfullyear. Only the first 24 months of the individual's SIPP panel are in universe. A later release of these data will add months after 24 for longer SIPP panels. Months that are outside the time frame covered by an individual's SIPP panel will always be missing and out of universe.</txt>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="OGqQl8oIeixl47WW" access="released" dcml="12" files="F1 F2" name="totnetworth">
+      <location EndPos="268" StartPos="250" width="19"/>
+      <labl access="released" xml-lang="en">Total Net Worth</labl>
+      <txt>Total net worth as reported in the wealth topical module, collected in the following waves, by panel: Wave 4 in the 1984 (HHTNW) &amp; 1990-1993 (HH_TNW) panels; Wave 3 in 1996, 2001, &amp; 2004 (THHTNW) panels; Wave 4 in 2008 panel (THHTNW).</txt>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="V304" access="released" name="vcamt_M">
+      <labl access="released">Amount of veterans compensation or pension benefit</labl>
+      <txt>This variable is the amount of veterans compensation or pension benefits that a respondent received in month M. M goes from 1 to 48 and represents the month number since the start of panel_1stfullyear. The variable comes from the core file. I08AMT1-I08AMT4 in 1984; S08AMT in the 1990, 1991, 1992, and 1993 panels; T08AMT in the 1996, 2001, 2004, and 2008 panels.</txt>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="V305" access="released" name="vetrecip_M">
+      <labl access="released">Indicator for receipt of veterans compensation or pension benefits</labl>
+      <txt>This variable indicates that a respondent received veterans compensation or pension benefits in month M. M goes from 1 to 48 and represents the month number since the start of panel_1stfullyear. The variable comes from the core file. I08REC1-I08REC4 in 1984; R08 in the 1990, 1991, 1992, and 1993 panels; ER08 in the 1996, 2001, 2004, and 2008 panels.</txt>
+      <catgry access="released">
+        <catValu>0</catValu>
+        <labl>Did not receive veterans compensation or veterans benefits</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>Received veterans compensation or veterans benefits</labl>
+      </catgry>
+    </var>
+    <var ID="V306" access="released" name="wcamt_M">
+      <labl access="released">Amount of Workers Compensation Received</labl>
+      <txt>This variable is the amount of workers compensation benefits that a respondent received in this month and year. The variable comes from the core file. I10AMT1-I10AMT4 in 1984; S10AMT in the 1990, 1991, 1992, and 1993 panels; T10AMT in the 1996, 2001, 2004, and 2008 panels.</txt>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="V307" access="released" name="wkcomp_M">
+      <labl access="released">Indicator for receipt of workers compensation</labl>
+      <txt>This variable indicates that a respondent received workers compensation benefits in month M. M goes from 1 to 48 and represents the month number since the start of panel_1stfullyear. The variable comes from the core file. I10REC1-I10REC4 in 1984; R10 in the 1990, 1991, 1992, and 1993 panels; ER10 in the 1996, 2001, 2004, and 2008 panels.</txt>
+      <catgry access="released">
+        <catValu>0</catValu>
+        <labl>Did not receive workers compensation benefits</labl>
+      </catgry>
+      <catgry access="released">
+        <catValu>1</catValu>
+        <labl>Received workers compensation benefits</labl>
+      </catgry>
+    </var>
+    <var ID="V297" access="released" dcml="0" files="F1 F2" intrvl="discrete" name="wksjob_M" xml-lang="xml-lang339">
+      <location width="9"/>
+      <labl access="released">Weeks at a Job</labl>
+      <txt>Total number of weeks that the respondent held a job in month M. M represents the month number since the start of panel_1stfullyear.  Only the first 24 months of the individual's SIPP panel are in universe. A later release of these data will add months after 24 for longer SIPP panels. Months that are outside the time frame covered by an individual's SIPP panel will always be missing and out of universe.</txt>
+      <varFormat schema="other" type="numeric"/>
+    </var>
+    <var ID="V298" access="released" dcml="0" files="F1 F2" intrvl="discrete" name="wkswp_M" xml-lang="xml-lang339">
+      <location width="9"/>
+      <labl access="released">Weeks With Pay</labl>
+      <txt>Total number of weeks worked with pay in month M. M represents the month number since the start of panel_1stfullyear. Only the first 24 months of the individual's SIPP panel are in universe. A later release of these data will add months after 24 for longer SIPP panels. Months that are outside the time frame covered by an individual's SIPP panel will always be missing and out of universe.</txt>
+      <varFormat schema="other" type="numeric"/>
+    </var>
+    <var ID="V259" access="released" dcml="0" files="F1 F2" intrvl="discrete" name="wqc_yrtot_YYYY" xml-lang="xml-lang339">
+      <location width="12"/>
+      <labl access="released">SER: Annual Total Covered Quarters of Work</labl>
+      <valrng access="released">
+        <range UNITS="REAL" access="released" max="4" min="0"/>
+      </valrng>
+      <txt>Indicates the total number of quarters of FICA-covered work in year YYYY, where YYYY=1951-2011.  In 2011, an individual received credit for one quarter of coverage for every $     he/she earned at a FICA-covered job in the year.  In 1978, $250 was required in order to be credited one quarter of coverage.  This number increases automatically each year and is tied to increases in average wages.  A maximum of 4 quarters per year is possible.  Quarters of coverage are used to calculate eligibility for OASDI benefits.  For example, people who reached age 62 in 2011 were eligible to retire if they had at least 40 quarters of coverage.  The number of quarters of coverage required to be fully insured has changed over time.  See http://www.socialsecurity.gov/history/reports/crsleghist2.html for a summary of rules.
+
+Prior to 1978, a quarter of coverage was granted for every quarter of the calendar year in which the worker had at least $50 in earnings at a FICA-covered job.  Hence the portion of this array from 1951-1977 provides more detail about whether a worker was employed throughout the year. However caution should be used when looking at these earlier years as far fewer jobs were FICA-covered and hence zero quarters of coverage does not mean the person as not employed but rather that the person was not employed by a job that required FICA taxes or made the person eligible for OASDI benefits.</txt>
+      <catgry access="released">
+        <catValu>0</catValu>
+      </catgry>
+      <catgry access="released">
+        <catValu>1</catValu>
+      </catgry>
+      <catgry access="released">
+        <catValu>2</catValu>
+      </catgry>
+      <catgry access="released">
+        <catValu>3</catValu>
+      </catgry>
+      <catgry access="released">
+        <catValu>4</catValu>
+      </catgry>
+      <varFormat schema="other" type="numeric"/>
+    </var>
+    <var ID="Nl8jGisFEO22KnUR" access="released" dcml="0" files="F1 F2" name="year_bach">
+      <location EndPos="73" StartPos="70" width="4"/>
+      <labl access="released" xml-lang="en">Year of Bachelors Degree</labl>
+      <txt>This variable contains the year the respondent finished his/her bachelor's degree.  This information comes from the education history topical module, conducted in wave 2 of each panel.  Individuals must have educ_5cat=4 to be in scope for this variable.</txt>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="yShOKO9zClYbvmND" access="released" dcml="0" files="F1 F2" name="year_beg_posths">
+      <location EndPos="69" StartPos="66" width="4"/>
+      <labl access="released" xml-lang="en">Year Began Post-HS Education</labl>
+      <txt>This variable gives the year that post-high school education began and comes from the wave 2 Education and Training History topical module (variable TM8420 for 1984, 1990-1993 panels; variable tcollstr for 1996-2008 panels).  This variable is in scope if educ_5cat is 3 or greater.</txt>
+      <catgry access="released" missing="Y">
+        <catValu>Sysmiss - Structurally missing (educ_5cat=1 or educ_5cat=2)</catValu>
+      </catgry>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="S7hdUfax6ch81aCn" access="released" dcml="0" files="F1 F2" name="year_end_hs">
+      <location EndPos="65" StartPos="62" width="4"/>
+      <labl access="released" xml-lang="en">Year Ended HS (or less) Education</labl>
+      <txt>This variable gives the year that high school education ended and comes from the wave 2 Education and Training History topical module (variable TM8404 and TM8412 for 1984, 1990-1993 panels; variable tlstschl and thsyr for 1996-2008 panels). This variable is in scope for all levels of educ_5cat.</txt>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+    <var ID="xluwVor6i93iyEdk" access="released" dcml="0" files="F1 F2" name="year_end_posths">
+      <location EndPos="79" StartPos="76" width="4"/>
+      <labl access="released" xml-lang="en">Year Ended Post-HS Education</labl>
+      <txt>This variable gives the year that post-high school education ended and comes from the wave 2 Education and Training History topical module (variables TM8426 and TM8440 for 1984, 1990-1993 panels; variables tlastcol, tvocyr, tassocyr, tbachyr, and tadvncyr for 1996-2008 panels). This variable is in scope if educ_5cat is 3 or greater.</txt>
+      <catgry access="released" missing="Y">
+        <catValu>Sysmiss - Structurally missing (educ_5cat=1 or educ_5cat=2)</catValu>
+      </catgry>
+      <varFormat formatname="Double" schema="other" type="numeric">%12.0g</varFormat>
+    </var>
+  </dataDscr>
+</codeBook>

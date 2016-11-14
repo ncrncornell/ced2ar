@@ -456,8 +456,6 @@ public class CodebookData {
 		} else {
 			variables = convertContent(variables,mediaType);
 		}
-		System.out.println("[CodebookData]::");
-		System.out.println(variables);
 		return variables;
 	}
 	

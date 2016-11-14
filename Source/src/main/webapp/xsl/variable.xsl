@@ -191,6 +191,17 @@
 			</div>
 		</xsl:if>
 		
+		<xsl:if test="codeBook/var/anlysUnit != ''">
+			<p>
+				<span class="staticHeader">Analysis Unit</span>
+			</p>
+			<div class="value2">
+				<span itemprop="description">
+					<xsl:copy-of select="codeBook/var/anlysUnit/node()" />
+				</span>
+			</div>
+		</xsl:if>
+		
 		<xsl:if test="count(codeBook/groups/group) gt 0">
 			<p>
 				<span class="staticHeader">Groups</span>

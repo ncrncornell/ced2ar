@@ -425,7 +425,6 @@ public class CodebookData {
 	 * @return List of Codebook variables in the format requested.
 	 */
 	public String getCodebookVariables(String handle, String mediaType, String format) {
-		
 		String returnShort = "return $codebook/dataDscr";
 		if(format.equalsIgnoreCase("name")){
 			returnShort = "let $vars := for $var in $codebook/dataDscr/var"
@@ -457,6 +456,8 @@ public class CodebookData {
 		} else {
 			variables = convertContent(variables,mediaType);
 		}
+		System.out.println("[CodebookData]::");
+		System.out.println(variables);
 		return variables;
 	}
 	

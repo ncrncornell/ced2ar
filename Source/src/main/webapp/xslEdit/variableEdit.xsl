@@ -336,6 +336,25 @@
 		<div class="value2">
 			<xsl:copy-of select="/codeBook/var/universe/node()" />
 		</div>
+		<p class="lb2">
+			<span class="staticHeader">Analysis Unit</span>
+			<a title="Edit field" class="editIcon2">
+				<xsl:choose>
+					<xsl:when test="/codeBook/var/anlysUnit != ''">
+						<xsl:attribute name="href"><xsl:value-of select="$varname" />/edit?f=anlysUnit</xsl:attribute>
+						<i class="fa fa-pencil"></i>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:attribute name="href"><xsl:value-of select="$varname" />/edit?f=anlysUnit&amp;a=true</xsl:attribute>
+						<i class="fa fa-plus"></i>
+					</xsl:otherwise>
+				</xsl:choose>
+			</a>
+			<xsl:copy-of select="cdr:schemaDoc('anlysUnit')" />	
+		</p>
+		<div class="value2">
+			<xsl:copy-of select="/codeBook/var/anlysUnit/node()" />
+		</div>
 		<xsl:if test="count(/codeBook/groups/group) gt 0">
 			<p>
 				<span class="staticHeader">Groups</span>

@@ -138,13 +138,14 @@ public class PDFGenerator {
 			if(!StringUtils.isEmpty(vars)) input.add(vars);
 
 			OutputStream os = null;
-			String str = "file://"+this.getPdfDirectory()+ handle+ ".pdf";
+			String str = "file:///"+this.getPdfDirectory()+ handle+ ".pdf";
+
 			logger.info("Printing PDF to " + str);
 			
 			URI uri;
 			try{
 				pdfDirectoryExistanceCheck();
-				uri = new URI(str);
+				uri = new URI(str.replace("\\", "/"));
 				logger.info("Created uri="+ uri);
 				File outputFile = new File(uri);
 				os = new FileOutputStream(outputFile);

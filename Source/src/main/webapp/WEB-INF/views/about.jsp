@@ -110,7 +110,7 @@
 			<h3>Current Version</h3>
 			<p>
 				<%--TODO: Would be nice to automate this somehow --%>
-				CED<sup>2</sup>AR version <span itemprop="version">2.8.1.1</span> 
+				CED<sup>2</sup>AR version <span itemprop="version">2.8.1.2</span>
 			</p>
 			<c:if test="${initParam.buildTimeStamp ne '${maven.build.timestamp}'}">
 				<p>

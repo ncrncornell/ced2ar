@@ -826,7 +826,7 @@ public class EditCodebookData {
 		+" else insert node element varGrp {"
 		+" attribute ID {'"+id+"'},"
 		+" attribute name {'"+name+"'},"
-		+" element label {'"+labl+"'},"
+		+" element labl {'"+labl+"'},"
 		+" element txt {'"+txt+"'}"
 		+" } as first into $d";
 		BaseX.write(xquery);

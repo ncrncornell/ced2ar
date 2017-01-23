@@ -70,6 +70,25 @@ public class Config {
 	
 	private String remoteURL;
 	private String crowdSourcingRole;
+
+	// UI Navbar customization
+	private boolean uiNavBarBrowseCodebook;
+	private String uiNavBarBrowseCodebookLabel;
+	private boolean uiNavBarBrowseStudy;
+	private String uiNavBarBrowseStudyLabel;
+	
+	// UI Tab customization (DDI tabs)
+	private boolean uiNavTabDoc;
+	private String uiNavTabDocLabel;
+	private boolean uiNavTabStdy;
+	private String uiNavTabStdyLabel;
+	private boolean uiNavTabFile;
+	private String uiNavTabFileLabel;
+	private boolean uiNavTabData;
+	private String uiNavTabDataLabel;
+	private boolean uiNavTabOtherMat;
+	private String uiNavTabOtherMatLabel;
+	
 	
 //Getters and setters
 	
@@ -457,6 +476,236 @@ public class Config {
 		this.neo4jHash = s;
 	}
 
+	// UI Navbar customization
+
+	/**
+	 * Method getUiNavBarBrowseCodebook.
+	 * @return boolean
+	 */
+	public boolean getUiNavBarBrowseCodebook() {
+		return this.uiNavBarBrowseCodebook;
+	}
+
+	/**
+	 * Method setUiNavBarBrowseCodebook.
+	 * @param uiNavBarBrowseCodebook boolean
+	 */
+	public void setUiNavBarBrowseCodebook(boolean uiNavBarBrowseCodebook) {
+		this.uiNavBarBrowseCodebook = uiNavBarBrowseCodebook;
+	}
+
+	/**
+	 * Method getUiNavBarBrowseCodebookLabel.
+	 * @return String
+	 */
+	public String getUiNavBarBrowseCodebookLabel() {
+		return this.uiNavBarBrowseCodebookLabel;
+	}
+
+	/**
+	 * Method setUiNavBarBrowseCodebookLabel.
+	 * @param uiNavBarBrowseCodebookLabel String
+	 */
+	public void setUiNavBarBrowseCodebookLabel(String uiNavBarBrowseCodebookLabel) {
+		this.uiNavBarBrowseCodebookLabel = uiNavBarBrowseCodebookLabel;
+	}	
+
+	/**
+	 * Method getUiNavBarBrowseStudy.
+	 * @return boolean
+	 */
+	public boolean getUiNavBarBrowseStudy() {
+		return this.uiNavBarBrowseStudy;
+	}
+	
+	/**
+	 * Method setUiNavBarBrowseStudy.
+	 * @param uiNavBarBrowseStudy boolean
+	 */
+	public void setUiNavBarBrowseStudy(boolean uiNavBarBrowseStudy) {
+		this.uiNavBarBrowseStudy = uiNavBarBrowseStudy;
+	}
+
+	/**
+	 * Method getUiNavBarBrowseStudyLabel.
+	 * @return String
+	 */
+	public String getUiNavBarBrowseStudyLabel() {
+		return this.uiNavBarBrowseStudyLabel;
+	}
+	
+	/**
+	 * Method setUiNavBarBrowseStudyLabel.
+	 * @param uiNavBarBrowseStudyLabel String
+	 */
+	public void setUiNavBarBrowseStudyLabel(String uiNavBarBrowseStudyLabel) {
+		this.uiNavBarBrowseStudyLabel = uiNavBarBrowseStudyLabel;
+	}
+	
+	// UI Tab customization (DDI tabs)
+
+	/**
+	 * Method getUiNavTabDoc.
+	 * @return boolean
+	 */
+	public boolean getUiNavTabDoc() {
+		return this.uiNavTabDoc;
+	}
+
+	/**
+	 * Method setUiNavTabDoc.
+	 * @param uiNavTabDoc boolean
+	 */
+	public void setUiNavTabDoc(boolean uiNavTabDoc) {
+		this.uiNavTabDoc = uiNavTabDoc;
+	}
+
+	/**
+	 * Method getUiNavTabDocLabel.
+	 * @return String
+	 */
+	public String getUiNavTabDocLabel() {
+		return this.uiNavTabDocLabel;
+	}
+	
+	/**
+	 * Method setUiNavTabDocLabel.
+	 * @param uiNavTabDocLabel String
+	 */
+	public void setUiNavTabDocLabel(String uiNavTabDocLabel) {
+		this.uiNavTabDocLabel = uiNavTabDocLabel;
+	}
+	
+	/**
+	 * Method getUiNavTabStdy.
+	 * @return boolean
+	 */
+	public boolean getUiNavTabStdy() {
+		return this.uiNavTabStdy;
+	}
+
+	/**
+	 * Method setUiNavTabStdy.
+	 * @param uiNavTabStdy boolean
+	 */
+	public void setUiNavTabStdy(boolean uiNavTabStdy) {
+		this.uiNavTabStdy = uiNavTabStdy;
+	}
+
+	/**
+	 * Method getUiNavTabStdyLabel.
+	 * @return String
+	 */
+	public String getUiNavTabStdyLabel() {
+		return this.uiNavTabStdyLabel;
+	}
+
+	/**
+	 * Method setUiNavTabStdyLabel.
+	 * @param uiNavTabStdyLabel String
+	 */
+	public void setUiNavTabStdyLabel(String uiNavTabStdyLabel) {
+		this.uiNavTabStdyLabel = uiNavTabStdyLabel;
+	}
+	
+	/**
+	 * Method getUiNavTabFile.
+	 * @return boolean
+	 */
+	public boolean getUiNavTabFile() {
+		return this.uiNavTabFile;
+	}
+
+	/**
+	 * Method setUiNavTabFile.
+	 * @param uiNavTabFile boolean
+	 */
+	public void setUiNavTabFile(boolean uiNavTabFile) {
+		this.uiNavTabFile = uiNavTabFile;
+	}
+	
+	/**
+	 * Method getUiNavTabFileLabel.
+	 * @return String
+	 */
+	public String getUiNavTabFileLabel() {
+		return this.uiNavTabFileLabel;
+	}
+
+	/**
+	 * Method setUiNavTabFileLabel.
+	 * @param uiNavTabFileLabel String
+	 */
+	public void setUiNavTabFileLabel(String uiNavTabFileLabel) {
+		this.uiNavTabFileLabel = uiNavTabFileLabel;
+	}
+
+	/**
+	 * Method getUiNavTabData.
+	 * @return boolean
+	 */
+	public boolean getUiNavTabData() {
+		return this.uiNavTabData;
+	}
+
+	/**
+	 * Method setUiNavTabData.
+	 * @param uiNavTabData boolean
+	 */
+	public void setUiNavTabData(boolean uiNavTabData) {
+		this.uiNavTabData = uiNavTabData;
+	}
+
+	/**
+	 * Method getUiNavTabDataLabel.
+	 * @return String
+	 */
+	public String getUiNavTabDataLabel() {
+		return this.uiNavTabDataLabel;
+	}
+	
+	/**
+	 * Method setUiNavTabDataLabel.
+	 * @param uiNavTabDataLabel String
+	 */
+	public void setUiNavTabDataLabel(String uiNavTabDataLabel) {
+		this.uiNavTabDataLabel = uiNavTabDataLabel;
+	}
+
+	/**
+	 * Method getUiNavTabOtherMat.
+	 * @return boolean
+	 */
+	public boolean getUiNavTabOtherMat() {
+		return this.uiNavTabOtherMat;
+	}
+
+	/**
+	 * Method setUiNavTabOtherMat.
+	 * @param uiNavTabOtherMat boolean
+	 */
+	public void setUiNavTabOtherMat(boolean uiNavTabOtherMat) {
+		this.uiNavTabOtherMat = uiNavTabOtherMat;
+	}
+
+	/**
+	 * Method getUiNavTabOtherMatLabel.
+	 * @return String
+	 */
+	public String getUiNavTabOtherMatLabel() {
+		return this.uiNavTabOtherMatLabel;
+	}
+
+	/**
+	 * Method setUiNavTabOtherMatLabel.
+	 * @param uiNavTabOtherMatLabel String
+	 */
+	public void setUiNavTabOtherMatLabel(String uiNavTabOtherMatLabel) {
+		this.uiNavTabOtherMatLabel = uiNavTabOtherMatLabel;
+	}
+
+
+	
 	public static Config getInstance(){		
 		ClassPathXmlApplicationContext appContext = null;
 		try{

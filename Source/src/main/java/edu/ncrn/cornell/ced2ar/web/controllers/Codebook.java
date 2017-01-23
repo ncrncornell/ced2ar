@@ -792,4 +792,221 @@ public class Codebook {
 		}
 		return data;
 	}
+
+
+	/**
+	 * Returns a page listing all codebooks and the studies within them.
+	 * @param model Model the current model
+	 * @return String the studies jsp 
+	 */
+	@RequestMapping(value = "/codebooks/studies", method = RequestMethod.GET)
+	public String showStudies(Model model){
+		model.addAttribute("subTitl","All Codebook Studies");
+		String baseURI = loader.getPath() + "/rest/";
+		try{			
+			TreeMap<String,String[]>  studies = loader.getStudies(baseURI);
+			session.setAttribute("studies", studies);
+		}catch(Exception e){
+			model.addAttribute("error","Error retrieving data");	
+			model.addAttribute("type","error");				
+			return "/WEB-INF/views/view.jsp";
+		}	
+		return "/WEB-INF/views/studies.jsp";	
+	}
+
+	/**
+	 * Returns a page displaying the contents of a codebook in a horizontal tabbed layout.  
+	 * The tabs are the complex elements in the DDI codeBookType (/docDscr, /stdyDscr, /fileDscr, /dataDscr, /otherMat).
+	 * The Study tab is active/displayed because the user selected a Study from the list on the previous page 
+	 * (instead of the usual docDscr...titl). 
+	 *   
+	 * This method is based on the showCodebook and showCodebookV methods.  I tried to keep the code as close as 
+	 * possible to both methods.
+	 * 
+	 * @param model current model
+	 * @param baseHandle base handle of the codebook
+	 * @param version version of the codebook
+	 * @param print print option
+	 * @return the codebook tabbed study jsp
+	 */
+	@RequestMapping(value = "/codebooks/{c}/v/{v}/study", method = RequestMethod.GET)
+	public String showStudyV(Model model, @PathVariable(value = "c") String baseHandle,
+		@PathVariable(value = "v") String version, 
+		@RequestParam(value = "print", defaultValue = "n") String print, 
+		HttpServletResponse response){
+		 model.addAttribute("baseHandle", baseHandle);
+		 model.addAttribute("version", version);
+		 
+		 String handle = baseHandle+version;	
+		 /**
+		  * We already have the version, so just put it in handle to keep the code as close as possible to showCodebook()
+		  * The showCodebook code below uses: handle + version.  
+		  * set handle to baseHandle to keep the code as close as possible to showCodebook()
+		  */
+
+		 		/**
+		 		 * This may need work.  I was not able to test it out.  I just added "/study" to two redirects
+		 		 * fetchDefault only really gets the version number.  We should have it by the time we get here.
+		 		 */
+				if(!loader.hasCodebook(handle)){
+					String latest = loader.fetchDefault(handle);
+					if(!latest.equals("")){
+						logger.debug("Found latest version of handle "+handle+" version "+latest);
+						String usedURL = (String) request.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE);
+						//TODO: Find more elegant solution. Trailing slash causes circular view path exception and results in 302
+						if(usedURL.endsWith("/")){
+							logger.debug("Adding study to redirect");
+							return "redirect:/codebooks/"+handle+"/v/"+latest+"/study";
+						}else{
+							//needs absolute url
+							String reURL = context.getContextPath() +"/codebooks/"+handle+"/v/"+latest+"/study";
+							response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
+							response.setHeader("Location", reURL);
+							logger.debug("Redirecting to url " + reURL + "\n");
+							return "";
+						}
+					}
+					session.setAttribute("error","Codebook with handle '"+handle+"' does not exist");			
+					return "redirect:/";
+				}	
+				try{
+					 model.addAttribute("hasMath", true);
+					 // Returns codebook's: handle, variables (count), /docDscr, /stdyDscr, /fileDscr
+					 String xml = getTitlePage(handle);
+					 
+					 //Adds download pdf link
+					 String baseURI = loader.getPath() + "/rest/";
+					 String[] indexInfo = loader.getCodebooks(baseURI).get(handle);
+
+					 // Keep the same codebook pdf per Lars.
+					 String docTestURI = baseURI +"codebooks/"+handle+"/haspdf";
+					 String hasDoc = Fetch.get(docTestURI).trim();	
+					 if(hasDoc.equals("1")){
+						 model.addAttribute("pdf", loader.getBuildName() + "/pdf/"+handle+".pdf");
+					 } 
+
+					 String path = context.getRealPath("/xsl/codebook.xsl");//Local file path to find XSL doc
+					 
+					 // Removed, commented out namespace...
+
+					 Parser xp = new Parser(xml, path, 0);
+					 // New DDI parses.  dataDscr is skipped because use a link the codebook page does today.
+
+					 // For now, keep the study logic the same as the showCodebook logic, for this if block.
+					 String count = xp.getAttrValue("/codeBook", "variables");
+					 if(count != null){
+						 
+						 if(indexInfo[3].equals("deprecated")){
+							 String latest = loader.fetchDefault(indexInfo[0]);
+							 model.addAttribute("newVersion",latest);
+						 }
+						 model.addAttribute("baseHandle",indexInfo[0]);
+						 
+						 String title = xp.getValue("/codeBook/docDscr/citation/titlStmt/titl");
+						 String stdyTitle = xp.getValue("/codeBook/stdyDscr/citation/titlStmt/titl");
+
+						 //Crowdsourcing
+						 model.addAttribute("crowdsourceSwitch",Config.getInstance().getCrowdSourcingRole());
+						 String remoteURL = Config.getInstance().getRemoteURL() 
+						 + "/codebooks/"+indexInfo[0]+"/v/"+indexInfo[1];
+						 model.addAttribute("remoteServerURL",remoteURL);
+						 
+						 model.addAttribute("handle", handle);
+						 model.addAttribute("codebook", xp.getData());
+						 
+						 model.addAttribute("codebookUse",indexInfo[2]);
+						 model.addAttribute("count", count);
+						 model.addAttribute("codebookTitl",title);
+						 model.addAttribute("subTitl",stdyTitle);
+						 model.addAttribute("metaDesc","Study page for the " + title + " codebook");
+						 model.addAttribute("metaKeywords",","+title);	 
+						 String[][] crumbs = new String[][] {{title,"codebooks/"+baseHandle+"/v/"+version}};
+						 model.addAttribute("crumbs", crumbs);
+
+						 /**
+						  * Adding tabs in the jsp to break out the codebook into the main complex types for the DDI codeBookType:
+						  *   docDscr	- /docDscr returned by getTitlePage()
+						  *   stdyDscr	- /stdyDscr returned by getTitlePage()
+						  *   fileDscr	- /fileDscr returned by getTitlePage()
+						  *   dataDscr	- Only a variable COUNT is returned by getTitlePage() today.
+						  *   			  Put the View Variables link in the Data tab to make it work like the current codebook page.
+						  *   otherMat	- Not found in any source code.  (Only mentioned .xsd's)
+						  *   			  1/18/17 - Lars wants to keep the tab, but possibly balance out tab content 
+						  *   				via .xsl's.  Added otherMat.xsl with only a count expression, so they can add 
+						  *   				content to the .xsl if they want.
+						  *   			  Remember the current underlying code does not return any /otherMat elements.
+						  *
+						  * If the tab has been disabled, skip processing it to improve performance.
+						  * 
+						  * For each tab: 
+						  * 	Set the stylesheet, parse the xml to get the tab content, put the html content into the model.
+						  * 	Also, pass into the model weather the tab is enbabled (true) and the label to dispaly on the tab.
+						  */				 	 
+
+						if(config.getUiNavTabDoc()) {
+							String pathDocDscr = context.getRealPath("/xsl/doc.xsl");
+							Parser xpDocDscr = new Parser(xml, pathDocDscr, 0);
+							model.addAttribute("codebookDocDscr", xpDocDscr.getData());
+							model.addAttribute("uiNavTabDoc",config.getUiNavTabDoc());
+							model.addAttribute("uiNavTabDocLabel",config.getUiNavTabDocLabel());
+						}
+
+						 /**
+						  * Do NOT set the Study tab to false (in the config file.)
+						  * The user gets to this page by selecting a Study Title on the studies.jsp page.
+						  * The Study tab content is displayed when the study.jsp page is opened.
+						  */
+						if(config.getUiNavTabStdy()) {
+							String pathStdyDscr = context.getRealPath("/xsl/study.xsl");
+							Parser xpStdyDscr = new Parser(xml, pathStdyDscr, 0);
+							model.addAttribute("codebookStdyDscr", xpStdyDscr.getData());
+							model.addAttribute("uiNavTabStdy",config.getUiNavTabStdy());
+							model.addAttribute("uiNavTabStdyLabel",config.getUiNavTabStdyLabel()); 
+						}
+
+						if(config.getUiNavTabFile()) {
+							String pathFileDscr = context.getRealPath("/xsl/file.xsl");
+							Parser xpFileDscr = new Parser(xml, pathFileDscr, 0);
+							model.addAttribute("codebookFileDscr", xpFileDscr.getData());
+							model.addAttribute("uiNavTabFile",config.getUiNavTabFile());
+							model.addAttribute("uiNavTabFileLabel",config.getUiNavTabFileLabel());
+
+						}
+
+						if(config.getUiNavTabData()) {
+							// dataDscr is skipped.  The current codebook jsp page displays a link to the View Variables page.
+							model.addAttribute("uiNavTabData",config.getUiNavTabData());
+							model.addAttribute("uiNavTabDataLabel",config.getUiNavTabDataLabel());
+						}
+						 
+						if(config.getUiNavTabOtherMat()) {
+							String pathOtherMat = context.getRealPath("/xsl/otherMat.xsl");
+							Parser xpOtherMat = new Parser(xml, pathOtherMat, 0);
+							model.addAttribute("codebookOtherMat", xpOtherMat.getData());
+							model.addAttribute("uiNavTabOtherMat",config.getUiNavTabOtherMat());
+							model.addAttribute("uiNavTabOtherMatLabel",config.getUiNavTabOtherMatLabel());
+						}
+
+
+						 if(print.equals("y")){
+							DateFormat dateFormat = new SimpleDateFormat("MMMM d, yyyy 'at' h:mm a");
+							Date dateStamp = new Date();
+							String timeStamp = dateFormat.format(dateStamp);
+							model.addAttribute("timeStamp", timeStamp);
+							model.addAttribute("print", true);
+						 }	
+
+						 return "/WEB-INF/views/study.jsp";
+					 }
+				 }catch(NullPointerException | NumberFormatException e){		
+						response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+						model.addAttribute("error","Error retrieving data");	
+						model.addAttribute("type","error");
+						logger.error(e.getMessage());
+						return "redirect:/";
+					}
+				 return "redirect:/";
+	}
+
+
 }

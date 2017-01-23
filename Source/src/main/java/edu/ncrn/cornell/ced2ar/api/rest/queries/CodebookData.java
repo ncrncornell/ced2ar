@@ -97,6 +97,19 @@ public class CodebookData {
 				+" order by $codebook/fullName "
 				+" return data($codebook/fullName) ";
 			break;
+
+			//Retrieves codebook studies list (handle, version, fullname (codebook), study title
+			case "studies":
+				xquery ="for $c in collection('index')/codeBooks/codeBook"
+				+" for $v in $c/version"
+				+" let $h := string-join(($c/@handle,$v/@v),'')"
+				+" let $a := for $da in collection(string-join(('CED2AR/',$h,'')))/codeBook/stdyDscr/citation/titlStmt/titl"
+				+"   return  $da"
+				+" let $accs := string-join($a,',')"
+				+" order by $h"
+				+" return string-join(($c/@handle,',',$v/@v,',',$v/fullName,',',$accs,';&#xa;'),'')";			
+				break;
+			
 			case "json":
 				xquery = "let $codebooks := for $c in collection('index')/codeBooks/codeBook"
 				+" for $v in $c/version"

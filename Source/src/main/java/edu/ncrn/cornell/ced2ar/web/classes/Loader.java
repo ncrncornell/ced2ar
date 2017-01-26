@@ -79,6 +79,19 @@ public class Loader implements InitializingBean{
 		if(config.isBugReportEnable()) {
 			context.setAttribute("bugReportEnabled", true);
 		}
+		
+		//Tests if Nav Bar item Browse by Codebook should be enabled and sets Label name for item
+		if(config.getUiNavBarBrowseCodebook()) {
+			context.setAttribute("uiNavBarBrowseCodebook", true);
+			context.setAttribute("uiNavBarBrowseCodebookLabel", config.getUiNavBarBrowseCodebookLabel());
+		}
+
+		//Tests if Nav Bar item Browse by Study should be enabled and sets Label name for item
+		if(config.getUiNavBarBrowseStudy()) {
+			context.setAttribute("uiNavBarBrowseStudy", true);
+			context.setAttribute("uiNavBarBrowseStudyLabel", config.getUiNavBarBrowseStudyLabel());
+		}
+
 	}
 	
 	/**
@@ -246,4 +259,52 @@ public class Loader implements InitializingBean{
 		}
 		return version;
 	}
+
+
+	/**
+	 * Retrieves listing of codebook studies
+	 * @param baseURI - url of server
+	 * @return ArrayList<String[]> the studies
+	 */	
+	@SuppressWarnings("unchecked")
+	public TreeMap<String,String[]> getStudies(String baseURI){
+		TreeMap<String,String[]> studies = null;
+		if((studies = (TreeMap<String,String[]>) context.getAttribute("studies")) == null){
+			refreshStudies(baseURI);
+			studies = (TreeMap<String,String[]>) context.getAttribute("studies");
+			if(studies == null || studies.size() == 0){
+				String currentError = (String) session.getAttribute("error");
+				String connectionError = "Could not connect to BaseX";
+				if(BaseX.testConnection())
+					connectionError = "CED2AR has no codebook studies";
+				if(currentError == null){
+					currentError = "";
+				}else if(currentError.equals(connectionError)){
+					return studies;
+				}else{
+					connectionError = "<p>"+connectionError+"</p>";
+				}		
+				session.setAttribute("error",currentError + connectionError);		
+			}
+		}
+		return studies;
+	}
+
+	/**
+	 * Updates list of codebook studies
+	 * @param baseURI location to retrieve codebook studies from
+	 */
+	public void refreshStudies(String baseURI){
+		logger.debug("Codebook studies refresh called.");
+		try{
+			TreeMap<String, String[]> studies = Fetch.getStudies(baseURI);
+			context.setAttribute("studies", studies);
+			if(config.getDevFeatureProv()){
+				//TODO: Add Switch to disable
+				//TODO: Why is this even being called?
+				//loadProvCodebooks(codebooks);
+			}
+		}catch(NullPointerException e){}
+	}
+	
 }

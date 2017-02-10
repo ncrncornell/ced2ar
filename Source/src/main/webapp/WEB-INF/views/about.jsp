@@ -43,6 +43,7 @@
 				Warren Brown - <span class='sh'>Cornell Institute for Social and Economic Research, Cornell University</span><br />
 				Kyle Brumsted - <span class='sh'>Cornell Institute for Social and Economic Research, Cornell University</span><br />
 				Carl Lagoze - <span class='sh'>School of Information, University of Michigan</span><br />
+				Chuck Simmer - <span class='sh'>Cornell Institute for Social and Economic Research, Cornell University</span><br />
 				Lars Vilhuber - <span class='sh'>Labor Dynamics Institute, Cornell University</span><br />
 			</p>
 		</div>

@@ -15,23 +15,24 @@ The patch files are on github at [Patches/CDR-157](https://github.com/ncrncornel
 ## Configuration File (target) Location
 
 Both of the files that need to be patched are located in a Tomcat deployment directory.  Here is an Ubuntu (linux) directory example:
+  ```
+    /var/lib/tomcat7/webapps/ced2ar-web/WEB-INF/classes/
+  ```
 
-  /var/lib/tomcat7/webapps/ced2ar-web/WEB-INF/classes/
-
-It is highly recommended that you make a backup copy of the files that need to be patched.  The files are:
-     * WEB-INF/classes/ced2ar-web-beans.xml
-     * WEB-INF/classes/ced2ar-web-config.properties
+**NOTE:** It is highly recommended that you make a backup copy of the files that need to be patched.  The files are:
+* WEB-INF/classes/ced2ar-web-beans.xml
+* WEB-INF/classes/ced2ar-web-config.properties
 
 ## Steps:
 1. Insert the contents of ced2ar-web-beans-CDR-157.xml INTO ced2ar-web-beans.xml
      * Edit ced2ar-web-beans.xml
      * Find the following code section.
-```
+    ```
     <property name="openAccess" value="${openAccess}" />
 
   </bean>
-```
-     * Insert the contents of ced2ar-web-beans-CDR-157.xml just below "<property name="  and above "</bean>"
+    ```
+     * Insert the contents of ced2ar-web-beans-CDR-157.xml just below <property name=  and above </bean>
      * Save the changes.
 
 2. Insert the contents of ced2ar-web-config-CDR-157.properties at the bottom of ced2ar-web-config.properties
@@ -41,4 +42,3 @@ It is highly recommended that you make a backup copy of the files that need to b
      * Save the changes.
 
 3. Stop and restart the CED2AR application OR the Tomcat server.
-

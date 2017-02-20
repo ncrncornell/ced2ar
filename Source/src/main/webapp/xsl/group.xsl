@@ -8,7 +8,7 @@
 			<xsl:value-of select="codeBook/dataDscr/varGrp/@name" />
 		</h2>
 		<p class="lb2">
-			<xsl:value-of select="codeBook/dataDscr/varGrp/txt" />
+			<xsl:copy-of select="codeBook/dataDscr/varGrp/txt" />
 		</p>
 		<xsl:variable name='handle'>
 			<xsl:value-of select="codeBook/@handle" />

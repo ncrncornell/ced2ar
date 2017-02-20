@@ -66,19 +66,29 @@
 					</xsl:for-each>
 				</p>
 			</xsl:if>
+			<xsl:if test="codeBook/stdyDscr/citation/prodStmt/producer != ''">
+				<p class="value4">
+					Data prepared by:
+					<xsl:for-each select="codeBook/stdyDscr/citation/prodStmt/producer">
+						<span itemprop="author">
+							<xsl:value-of select="current()" />
+							<xsl:if test="count(/codeBook/stdyDscr/citation/prodStmt/producer) gt 1">
+								<xsl:if test="position() lt count(/codeBook/stdyDscr/citation/prodStmt/producer) -1">
+									,
+								</xsl:if>
+								<xsl:if test="position() eq count(/codeBook/stdyDscr/citation/prodStmt/producer) -1">
+									,&#160;and&#160;
+								</xsl:if>
+							</xsl:if>
+						</span>
+					</xsl:for-each>
+				</p>
+			</xsl:if>
 			<div class="lb" />
-			<xsl:if test="codeBook/stdyDscr/citation/distStmt/distrbtr != ''">
-				<p class="staticHeader2">Data Distributed by:</p>
-				<xsl:for-each select="codeBook/stdyDscr/citation/distStmt/distrbtr">
-					<p class="value2">
-						<xsl:value-of select="current()" />
-						<br />
-						<a>
-							<xsl:attribute name="href"><xsl:value-of
-								select="current()/@URI" /></xsl:attribute>
-							<xsl:value-of select="current()/@URI" />
-						</a>
-					</p>
+			<xsl:if test="/codeBook/stdyDscr/citation/rspStmt/AuthEnty != ''">
+				<p class="value4">Principal Investigator(s):</p>
+				<xsl:for-each select="codeBook/stdyDscr/citation/rspStmt/AuthEnty">
+					<p><xsl:value-of select="." /></p>
 				</xsl:for-each>
 			</xsl:if>
 		</div>

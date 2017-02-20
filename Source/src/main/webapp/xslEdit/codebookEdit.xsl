@@ -223,6 +223,14 @@
 					<xsl:copy-of select="cdr:fieldAdd('docProducer','','Add producer',count(codeBook/docDscr/citation/prodStmt/producer)+1)" />
 					<xsl:copy-of select="cdr:schemaDoc('producer')" />
 				</p>
+				<p id="PrincipalInvestigator" class="value4">
+					Principle Investigator(s):
+					<xsl:for-each select="/codeBook/stdyDscr/citation/rspStmt/AuthEnty">
+						<xsl:copy-of select="cdr:field(current(),'','investigator',position(),false())" />
+					</xsl:for-each>
+					<xsl:copy-of select="cdr:fieldAdd('investigator','','Add investgator',count(/codeBook/stdyDscr/citation/rspStmt/AuthEnty)+1)" />
+					<xsl:copy-of select="cdr:schemaDoc('investigator')" />
+				</p>
 				<p id="Study Producer" class="value4">
 					Data prepared by:
 					<xsl:for-each select="codeBook/stdyDscr/citation/prodStmt/producer">

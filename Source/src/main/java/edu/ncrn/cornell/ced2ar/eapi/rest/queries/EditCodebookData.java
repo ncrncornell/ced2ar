@@ -503,6 +503,8 @@ public class EditCodebookData {
 			new String[] {"1","/docDscr/docSrc/biblCit","Document Source Citation"});
 		validFields.put("accessCond",
             new String[] {"1","/stdyDscr/dataAccs[1]/useStmt/conditions","Access Conditions"});
+		validFields.put("investigator", 
+			new String[] {"3", "/stdyDscr/citation/rspStmt/AuthEnty["+index+"]", "Principal Investigator"});
 		
 		//New fields to get
 		validFields.put("titl",

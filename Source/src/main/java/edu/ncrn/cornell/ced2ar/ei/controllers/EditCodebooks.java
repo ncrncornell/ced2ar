@@ -207,6 +207,8 @@ public class EditCodebooks {
 		new String[] {"3","/codeBook/stdyDscr/othrStdyMat/relStdy["+index+"]","Related Studies","0"});				
 		validFields.put("docSrcBib",
 		new String[] {"1","/codeBook/docDscr/docSrc/biblCit","Document Source Citation","0"});
+		validFields.put("investigator",
+		new String[] {"3", "/codeBook/stdyDscr/citation/rspStmt/AuthEnty["+index+"]","Principal Investigator", "1"});
 		
 		//New as of Oct 2014		
 		validFields.put("titl",

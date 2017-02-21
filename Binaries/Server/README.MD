@@ -8,7 +8,7 @@
 2. Install Tomcat. See the [Tomcat Docs](https://tomcat.apache.org/tomcat-7.0-doc/setup.html).
 3. Configure the Tomcat manager, and [create an account](http://tomcat.apache.org/tomcat-7.0-doc/manager-howto.html#Configuring_Manager_Application_Access) to access it. 
 4. Login into the manager page using a browser at localhost:{port}/manager
-5. Upload the [BaseX war file](BaseXTemplate/BaseX.war).
+5. Upload the [BaseX war file](/BaseXTemplate/BaseX.war).
 6. Download the ced2ar-web.war file from [this directory](https://github.com/ncrncornell/ced2ar/edit/master/Binaries/Server/).
 7. Open the ced2ar-web.war archive with archive tool<sup>[1](#footnote1)</sup>. (7Zip, winzip, etc. should be able to open it).
 8. Extract the configuration file of interest, e.g. /WEB-INF/classes/ced2ar-web-config.properties

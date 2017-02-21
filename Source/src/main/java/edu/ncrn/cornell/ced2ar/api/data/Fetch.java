@@ -264,7 +264,30 @@ public class Fetch {
 		}
 		return out;
 	}		
+
+	/**
+	 *Gets a list of all codebook studies by handle, fullname and shortname 
+	 *Returns a csv format
+	 * @param baseURI String the location to request content from
+	 * @return ArrayList<String[]> the data returned as a list with: handle, fullname and shortname of each codebook
+	 */
+	public static TreeMap<String,String[]> getStudies(String baseURI){
+		CodebookData codebookData = new CodebookData();
+		TreeMap<String,String[]> out = new TreeMap<String,String[]>();
+		String data = codebookData.getCodebooks("studies").trim();
+		String[] codeBooks = data.split(";");	
+		try{
+			for(String codeBook:codeBooks){
+				String[] c = codeBook.split(",");		
+				out.put(c[0].trim()+c[1], new String[] {c[0].trim(),c[1],c[2],c[3]});	
+			}
+		}catch(ArrayIndexOutOfBoundsException e){
+				return null;
+		}
+		return out;	
+	}
 	
+
 //Editing Functions
 	
 	/**
@@ -446,4 +469,5 @@ public class Fetch {
 			c.close();
 		}
 	}
+
 }

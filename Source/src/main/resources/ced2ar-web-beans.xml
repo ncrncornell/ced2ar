@@ -58,6 +58,25 @@
 		<property name="crowdSourcingRole" value="${crowdsourcing.role}" />
 		<property name="openAccess" value="${openAccess}" />
 
+		<!-- UI Navbar customization -->
+		<property name="uiNavBarBrowseCodebook" value="${uiNavBarBrowseCodebook}" />
+		<property name="uiNavBarBrowseCodebookLabel" value="${uiNavBarBrowseCodebookLabel}" />
+		<property name="uiNavBarBrowseStudy" value="${uiNavBarBrowseStudy}" />
+		<property name="uiNavBarBrowseStudyLabel" value="${uiNavBarBrowseStudyLabel}" />
+
+		<!-- UI Tab customization (DDI tabs) -->
+		<property name="uiNavTabDoc" value="${uiNavTabDoc}" />
+		<property name="uiNavTabDocLabel" value="${uiNavTabDocLabel}" />
+		<property name="uiNavTabStdy" value="${uiNavTabStdy}" />
+		<property name="uiNavTabStdyLabel" value="${uiNavTabStdyLabel}" />
+		<property name="uiNavTabFile" value="${uiNavTabFile}" />
+		<property name="uiNavTabFileLabel" value="${uiNavTabFileLabel}" />
+		<property name="uiNavTabData" value="${uiNavTabData}" />
+		<property name="uiNavTabDataLabel" value="${uiNavTabDataLabel}" />
+		<property name="uiNavTabOtherMat" value="${uiNavTabOtherMat}" />
+		<property name="uiNavTabOtherMatLabel" value="${uiNavTabOtherMatLabel}" />
+
+
 	</bean>
 
 	<!-- Config location -->

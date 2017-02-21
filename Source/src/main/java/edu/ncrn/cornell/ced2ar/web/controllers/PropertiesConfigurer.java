@@ -379,8 +379,43 @@ public class PropertiesConfigurer {
        		if(StringUtils.isNotBlank(devFeatureGoogleAnalytics))
        			propertiesForm.getPropertiesMap().put("devFeatureGoogleAnalytics","true");
 
+       		// Adding here: Booleans to set value used
+       		/**
+       		 * 	FYI: This is returning Form properties or NOT.
+       		 * 		IF it is a boolean AND true, this is what gets returned:  Ex: uiNavBarBrowseStudy=on
+       		 * 		IF it is a boolean AND false, NOTHING is returned.
+       		 */
+       		String uiNavBarBrowseCodebook = (String)propertiesForm.getPropertiesMap().get("uiNavBarBrowseCodebook");
+       		if(StringUtils.isNotBlank(uiNavBarBrowseCodebook))
+       			propertiesForm.getPropertiesMap().put("uiNavBarBrowseCodebook","true");
+
+       		String uiNavBarBrowseStudy = (String)propertiesForm.getPropertiesMap().get("uiNavBarBrowseStudy");
+       		if(StringUtils.isNotBlank(uiNavBarBrowseStudy))
+       			propertiesForm.getPropertiesMap().put("uiNavBarBrowseStudy","true");
+
+       		String uiNavTabDoc = (String)propertiesForm.getPropertiesMap().get("uiNavTabDoc");
+       		if(StringUtils.isNotBlank(uiNavTabDoc))
+       			propertiesForm.getPropertiesMap().put("uiNavTabDoc","true");
+
+       		// uiNavTabStdy is ALWAYS true because it is displayed when the /study page is displayed.  See comments below.
+       		// Make sure it always true.
+       		propertiesForm.getPropertiesMap().put("uiNavTabStdy","true");
+
+       		String uiNavTabFile = (String)propertiesForm.getPropertiesMap().get("uiNavTabFile");
+       		if(StringUtils.isNotBlank(uiNavTabFile))
+       			propertiesForm.getPropertiesMap().put("uiNavTabFile","true");
+
+       		String uiNavTabData = (String)propertiesForm.getPropertiesMap().get("uiNavTabData");
+       		if(StringUtils.isNotBlank(uiNavTabData))
+       			propertiesForm.getPropertiesMap().put("uiNavTabData","true");
+
+       		String uiNavTabOtherMat = (String)propertiesForm.getPropertiesMap().get("uiNavTabOtherMat");
+       		if(StringUtils.isNotBlank(uiNavTabOtherMat))
+       			propertiesForm.getPropertiesMap().put("uiNavTabOtherMat","true");
+
     		return new ModelAndView("/WEB-INF/views/configurationProperties.jsp","propertiesForm",propertiesForm);
     	}
+
     	
    		//configurationProperties.addProperty("configLocation", (String)propertiesForm.getPropertiesMap().get("configLocation"));
     	configurationProperties.addProperty("baseXDB", (String)propertiesForm.getPropertiesMap().get("baseXDB"));
@@ -392,8 +427,16 @@ public class PropertiesConfigurer {
    		
 		configurationProperties.addProperty("timeout", (String)propertiesForm.getPropertiesMap().get("timeout"));
 		configurationProperties.addProperty("restricted", (String)propertiesForm.getPropertiesMap().get("restricted"));
-   		
-   		
+
+		// Adding here: Labels to config
+		configurationProperties.addProperty("uiNavBarBrowseCodebookLabel", (String)propertiesForm.getPropertiesMap().get("uiNavBarBrowseCodebookLabel"));
+		configurationProperties.addProperty("uiNavBarBrowseStudyLabel", (String)propertiesForm.getPropertiesMap().get("uiNavBarBrowseStudyLabel"));
+		configurationProperties.addProperty("uiNavTabDocLabel", (String)propertiesForm.getPropertiesMap().get("uiNavTabDocLabel"));
+		configurationProperties.addProperty("uiNavTabStdyLabel", (String)propertiesForm.getPropertiesMap().get("uiNavTabStdyLabel"));
+		configurationProperties.addProperty("uiNavTabFileLabel", (String)propertiesForm.getPropertiesMap().get("uiNavTabFileLabel"));
+		configurationProperties.addProperty("uiNavTabDataLabel", (String)propertiesForm.getPropertiesMap().get("uiNavTabDataLabel"));
+		configurationProperties.addProperty("uiNavTabOtherMatLabel", (String)propertiesForm.getPropertiesMap().get("uiNavTabOtherMatLabel"));
+
    		String devFeatureProv = (String)propertiesForm.getPropertiesMap().get("devFeatureProv");
    		if(StringUtils.isNotBlank(devFeatureProv))
    			devFeatureProv="true";
@@ -411,15 +454,77 @@ public class PropertiesConfigurer {
    			devFeatureGoogleAnalytics="true";
    		else
    			devFeatureGoogleAnalytics="false";
-   		
+
+   		// Adding here: Booleans to set value used
+   		String uiNavBarBrowseCodebook = (String)propertiesForm.getPropertiesMap().get("uiNavBarBrowseCodebook");
+   		if(StringUtils.isNotBlank(uiNavBarBrowseCodebook))
+   			uiNavBarBrowseCodebook="true";
+   		else
+   			uiNavBarBrowseCodebook="false";
+
+   		String uiNavBarBrowseStudy = (String)propertiesForm.getPropertiesMap().get("uiNavBarBrowseStudy");
+   		if(StringUtils.isNotBlank(uiNavBarBrowseStudy))
+   			uiNavBarBrowseStudy="true";
+   		else
+   			uiNavBarBrowseStudy="false";
+
+   		String uiNavTabDoc = (String)propertiesForm.getPropertiesMap().get("uiNavTabDoc");
+   		if(StringUtils.isNotBlank(uiNavTabDoc))
+   			uiNavTabDoc="true";
+   		else
+   			uiNavTabDoc="false";
+
+   		// uiNavTabStdy is ALWAYS true because it is displayed when the /study page is displayed.
+   	   	// On line 185, in the configurationProperties.jsp page, the uiNavTabStdy checkbox is set to disabled=true
+   	   	// Looks like this checkbox is NOT sent back to the server.
+   	   	//    See: "quirk in HTML" on http://docs.spring.io/spring/docs/3.2.x/spring-framework-reference/html/view.html#view-jsp-formtaglib-checkboxtag
+   		// Make sure it always true.
+   		String uiNavTabStdy = "true";
+
+   		String uiNavTabFile = (String)propertiesForm.getPropertiesMap().get("uiNavTabFile");
+   		if(StringUtils.isNotBlank(uiNavTabFile))
+   			uiNavTabFile="true";
+   		else
+   			uiNavTabFile="false";
+
+   		String uiNavTabData = (String)propertiesForm.getPropertiesMap().get("uiNavTabData");
+   		if(StringUtils.isNotBlank(uiNavTabData))
+   			uiNavTabData="true";
+   		else
+   			uiNavTabData="false";
+
+   		String uiNavTabOtherMat = (String)propertiesForm.getPropertiesMap().get("uiNavTabOtherMat");
+   		if(StringUtils.isNotBlank(uiNavTabOtherMat))
+   			uiNavTabOtherMat="true";
+   		else
+   			uiNavTabOtherMat="false";
+
    		configurationProperties.addProperty("devFeatureProv", devFeatureProv);
    		configurationProperties.addProperty("devFeatureCommentSystem", devFeatureCommentSystem);
    		configurationProperties.addProperty("devFeatureGoogleAnalytics", devFeatureGoogleAnalytics);
 
+   		// Adding here: Booleans to config
+   		configurationProperties.addProperty("uiNavBarBrowseCodebook", uiNavBarBrowseCodebook);
+   		configurationProperties.addProperty("uiNavBarBrowseStudy", uiNavBarBrowseStudy);
+   		configurationProperties.addProperty("uiNavTabDoc", uiNavTabDoc);
+   		configurationProperties.addProperty("uiNavTabStdy", uiNavTabStdy);
+   		configurationProperties.addProperty("uiNavTabFile", uiNavTabFile);
+   		configurationProperties.addProperty("uiNavTabData", uiNavTabData);
+   		configurationProperties.addProperty("uiNavTabOtherMat", uiNavTabOtherMat);
+
    		propertiesForm.getPropertiesMap().put("devFeatureProv",devFeatureProv);
    		propertiesForm.getPropertiesMap().put("devFeatureCommentSystem",devFeatureCommentSystem);
    		propertiesForm.getPropertiesMap().put("devFeatureGoogleAnalytics",devFeatureGoogleAnalytics);
-   		
+
+   		// Adding here: Booleans to Form
+   		propertiesForm.getPropertiesMap().put("uiNavBarBrowseCodebook",uiNavBarBrowseCodebook);
+   		propertiesForm.getPropertiesMap().put("uiNavBarBrowseStudy",uiNavBarBrowseStudy);
+   		propertiesForm.getPropertiesMap().put("uiNavTabDoc",uiNavTabDoc);
+   		propertiesForm.getPropertiesMap().put("uiNavTabStdy",uiNavTabStdy);
+   		propertiesForm.getPropertiesMap().put("uiNavTabFile",uiNavTabFile);
+   		propertiesForm.getPropertiesMap().put("uiNavTabData",uiNavTabData);
+   		propertiesForm.getPropertiesMap().put("uiNavTabOtherMat",uiNavTabOtherMat);
+
    		session.invalidate();
    		request.getSession(true).setAttribute("info_splash", "Configuration changes are successfully saved and applied to the application.");
    		

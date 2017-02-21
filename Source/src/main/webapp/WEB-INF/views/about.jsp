@@ -43,6 +43,7 @@
 				Warren Brown - <span class='sh'>Cornell Institute for Social and Economic Research, Cornell University</span><br />
 				Kyle Brumsted - <span class='sh'>Cornell Institute for Social and Economic Research, Cornell University</span><br />
 				Carl Lagoze - <span class='sh'>School of Information, University of Michigan</span><br />
+				Chuck Simmer - <span class='sh'>Cornell Institute for Social and Economic Research, Cornell University</span><br />
 				Lars Vilhuber - <span class='sh'>Labor Dynamics Institute, Cornell University</span><br />
 			</p>
 		</div>
@@ -110,7 +111,7 @@
 			<h3>Current Version</h3>
 			<p>
 				<%--TODO: Would be nice to automate this somehow --%>
-				CED<sup>2</sup>AR version <span itemprop="version">2.8.1.1</span> 
+				CED<sup>2</sup>AR version <span itemprop="version">2.8.1.2</span>
 			</p>
 			<c:if test="${initParam.buildTimeStamp ne '${maven.build.timestamp}'}">
 				<p>

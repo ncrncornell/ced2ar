@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
@@ -52,10 +53,38 @@ public class PropertiesValidator implements Validator{
 		
 		PropertiesForm form = (PropertiesForm) obj;
 		 
-
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "propertiesMap['eAPI']", "eAPI.required", "A value is required for eAPI field.");
+		// 
+//		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "propertiesMap['eAPI']", "eAPI.required", "A value is required for eAPI field.");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "propertiesMap['timeout']", "timeout.required", "A value for Timeout is required.");
-		  
+		
+		// UI customization
+		// If a UI tab is enabled (checkbox is checked), then make sure there is a value in the corresponding label field.
+   	   	if(StringUtils.isNotBlank((String)form.getPropertiesMap().get("uiNavBarBrowseCodebook")))
+   			ValidationUtils.rejectIfEmptyOrWhitespace(errors, "propertiesMap['uiNavBarBrowseCodebookLabel']", "uiNavBarBrowseCodebookLabel.required", "A Label value is required. (Tab is checked.)");
+
+   	   	if(StringUtils.isNotBlank((String)form.getPropertiesMap().get("uiNavBarBrowseStudy")))
+   			ValidationUtils.rejectIfEmptyOrWhitespace(errors, "propertiesMap['uiNavBarBrowseStudyLabel']", "uiNavBarBrowseStudyLabel.required", "A Label value is required. (Tab is checked.)");
+
+   	   	if(StringUtils.isNotBlank((String)form.getPropertiesMap().get("uiNavTabDoc")))
+   			ValidationUtils.rejectIfEmptyOrWhitespace(errors, "propertiesMap['uiNavTabDocLabel']", "uiNavTabDocLabel.required", "A Label value is required. (Tab is checked.)");
+
+   	   	// uiNavTabStdy is ALWAYS true because it is displayed when the /study page is displayed.
+   	   	// On line 185, in the configurationProperties.jsp page, the uiNavTabStdy checkbox is set to disabled=true
+   	   	// Looks like this checkbox is NOT sent back to the server.
+   	   	//    See: "quirk in HTML" on http://docs.spring.io/spring/docs/3.2.x/spring-framework-reference/html/view.html#view-jsp-formtaglib-checkboxtag
+   	   	// Make sure it always has a label.
+   	//   	if(StringUtils.isNotBlank((String)form.getPropertiesMap().get("uiNavTabStdy")))
+   			ValidationUtils.rejectIfEmptyOrWhitespace(errors, "propertiesMap['uiNavTabStdyLabel']", "uiNavTabStdyLabel.required", "A Label value is required. (Tab is checked.)");
+
+   	   	if(StringUtils.isNotBlank((String)form.getPropertiesMap().get("uiNavTabFile")))
+   			ValidationUtils.rejectIfEmptyOrWhitespace(errors, "propertiesMap['uiNavTabFileLabel']", "uiNavTabFileLabel.required", "A Label value is required. (Tab is checked.)");
+
+   	   	if(StringUtils.isNotBlank((String)form.getPropertiesMap().get("uiNavTabData")))
+   			ValidationUtils.rejectIfEmptyOrWhitespace(errors, "propertiesMap['uiNavTabDataLabel']", "uiNavTabDataLabel.required", "A Label value is required. (Tab is checked.)");
+
+		if(StringUtils.isNotBlank((String)form.getPropertiesMap().get("uiNavTabOtherMat")))
+   			ValidationUtils.rejectIfEmptyOrWhitespace(errors, "propertiesMap['uiNavTabOtherMatLabel']", "uiNavTabOtherMatLabel.required", "A Label value is required. (Tab is checked.)");
+
 		// Validate only if the bug report radio button is enabled.
 		if(shouldBugReportFieldsValidated(form)) {
 			ValidationUtils.rejectIfEmptyOrWhitespace(errors, "propertiesMap['bugReportEmail']", "bugReportEmail.required", "Valid email address is required.");

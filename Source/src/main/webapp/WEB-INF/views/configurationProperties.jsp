@@ -119,6 +119,120 @@
 					name="propertiesMap['devFeatureGoogleAnalytics']" ${checkedGA}>
 				</td>
 			</tr>
+
+			<%-- UI Navbar customization --%>
+			<tr>
+				<td>UI Navbar Tabs</td>
+			</tr>
+			<tr>
+				<td align="right" >
+					<c:if
+						test="${propertiesForm.propertiesMap['uiNavBarBrowseCodebook'] eq  'true' }">
+						<c:set var="checkedBarBrowseCodebook" value="checked" />
+					</c:if> <label for="propertiesMap['uiNavBarBrowseCodebook']">Codebook</label>
+				</td>
+				<td>
+					<input type="checkbox" name="propertiesMap['uiNavBarBrowseCodebook']" ${checkedBarBrowseCodebook}>
+
+					<input type="text" name="propertiesMap['uiNavBarBrowseCodebookLabel']"
+						value="${propertiesForm.propertiesMap['uiNavBarBrowseCodebookLabel']}"> <form:errors
+						class='configError' path="propertiesMap[uiNavBarBrowseCodebookLabel]" />
+				</td>
+			</tr>
+			<tr>
+				<td align="right" ><c:if
+						test="${propertiesForm.propertiesMap['uiNavBarBrowseStudy'] eq  'true' }">
+						<c:set var="checkedBarBrowseStudy" value="checked" />
+					</c:if> <label for="propertiesMap['uiNavBarBrowseStudy']">Study</label>
+				</td>
+				<td> <input type="checkbox"
+						name="propertiesMap['uiNavBarBrowseStudy']" ${checkedBarBrowseStudy}>
+
+					<input type="text" name="propertiesMap['uiNavBarBrowseStudyLabel']"
+						value="${propertiesForm.propertiesMap['uiNavBarBrowseStudyLabel']}"> <form:errors
+						class='configError' path="propertiesMap[uiNavBarBrowseStudyLabel]" />
+				</td>
+			</tr>
+
+			<%-- UI Tab customization (DDI tabs) --%>
+			<tr>
+				<td>UI Study Page Tabs</td>
+			</tr>
+			<tr>
+				<td align="right" >
+					<c:if
+						test="${propertiesForm.propertiesMap['uiNavTabDoc'] eq  'true' }">
+						<c:set var="checkedTabDoc" value="checked" />
+					</c:if> <label for="propertiesMap['uiNavTabDoc']">Doc</label>
+				</td>
+				<td>
+					<input type="checkbox" name="propertiesMap['uiNavTabDoc']" ${checkedTabDoc}>
+
+					<input type="text" name="propertiesMap['uiNavTabDocLabel']"
+						value="${propertiesForm.propertiesMap['uiNavTabDocLabel']}"> <form:errors
+						class='configError' path="propertiesMap[uiNavTabDocLabel]" />
+				</td>
+			</tr>
+			<tr>
+				<td align="right" >
+					<c:if
+						test="${propertiesForm.propertiesMap['uiNavTabStdy'] eq  'true' }">
+						<c:set var="checkedTabStdy" value="checked" />
+					</c:if> <label for="propertiesMap['uiNavTabStdy']">Study</label>
+				</td>
+				<td>
+					<input type="checkbox" name="propertiesMap['uiNavTabStdy']" ${checkedTabStdy} disabled=true>
+
+					<input type="text" name="propertiesMap['uiNavTabStdyLabel']"
+						value="${propertiesForm.propertiesMap['uiNavTabStdyLabel']}"> <form:errors
+						class='configError' path="propertiesMap[uiNavTabStdyLabel]" />
+				</td>
+			</tr>
+			<tr>
+				<td align="right" >
+					<c:if
+						test="${propertiesForm.propertiesMap['uiNavTabFile'] eq  'true' }">
+						<c:set var="checkedTabFile" value="checked" />
+					</c:if> <label for="propertiesMap['uiNavTabFile']">File</label>
+				</td>
+				<td>
+					<input type="checkbox" name="propertiesMap['uiNavTabFile']" ${checkedTabFile}>
+
+					<input type="text" name="propertiesMap['uiNavTabFileLabel']"
+						value="${propertiesForm.propertiesMap['uiNavTabFileLabel']}"> <form:errors
+						class='configError' path="propertiesMap[uiNavTabFileLabel]" />
+				</td>
+			</tr>
+			<tr>
+				<td align="right" >
+					<c:if
+						test="${propertiesForm.propertiesMap['uiNavTabData'] eq  'true' }">
+						<c:set var="checkedTabData" value="checked" />
+					</c:if> <label for="propertiesMap['uiNavTabData']">Data</label>
+				</td>
+				<td>
+					<input type="checkbox" name="propertiesMap['uiNavTabData']" ${checkedTabData}>
+
+					<input type="text" name="propertiesMap['uiNavTabDataLabel']"
+						value="${propertiesForm.propertiesMap['uiNavTabDataLabel']}"> <form:errors
+						class='configError' path="propertiesMap[uiNavTabDataLabel]" />
+				</td>
+			</tr>
+			<tr>
+				<td align="right" > <c:if
+						test="${propertiesForm.propertiesMap['uiNavTabOtherMat'] eq  'true' }">
+						<c:set var="checkedTabOtherMat" value="checked" />
+					</c:if> <label for="propertiesMap['uiNavTabOtherMat']">OtherMat</label>
+				</td>
+				<td>
+					<input type="checkbox" name="propertiesMap['uiNavTabOtherMat']" ${checkedTabOtherMat}>
+
+					<input type="text" name="propertiesMap['uiNavTabOtherMatLabel']"
+						value="${propertiesForm.propertiesMap['uiNavTabOtherMatLabel']}"> <form:errors
+						class='configError' path="propertiesMap[uiNavTabOtherMatLabel]" />
+				</td>
+			</tr>
+
 			<tr>
 				<td><input type="submit" class="btn" value='Update Properties'></td>		
 			</tr>

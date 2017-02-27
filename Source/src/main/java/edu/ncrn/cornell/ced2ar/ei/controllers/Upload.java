@@ -161,16 +161,11 @@ public class Upload {
 				session.removeAttribute("error");
 				clearCodebookCache(model);		
 			}else{
-				String rep = editCodebookData.getError();
-				//Why are we parsing a an error string with the xml parser??
-				String path = context.getRealPath("/xsl/apiError.xsl");//Local file path to find XSL doc
-				Parser xp = new Parser(rep,path,1);
-				String error = xp.getData();
-				//error will appear as "message" is an http directly from BaseX, not API
+				String error = editCodebookData.getError();
 				if(error == null || error.trim().startsWith("message")){
 					session.setAttribute("error", "An error has occurred while attempting to upload this codebook. The XML may be malformed.");						
 				}else{
-					session.setAttribute("error", xp.getData());
+					session.setAttribute("error", error);
 				}	
 				
 			}	

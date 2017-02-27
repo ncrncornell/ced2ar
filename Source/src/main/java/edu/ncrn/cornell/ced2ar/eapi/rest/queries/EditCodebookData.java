@@ -82,20 +82,20 @@ public class EditCodebookData {
 		String handle = baseHandle+version;
 		try{		
 			//Handles must be 20 alphanumeric chars or fewer 
-		    if(baseHandle.length() > 15 | !baseHandle.matches("^[a-zA-Z0-9\\-]*$")){
-		    	setError("File handle must be alphanumeric and atmost 15 characters."); 
+		    if(baseHandle.length() > 20 | !baseHandle.matches("^[a-zA-Z0-9\\-]*$")){
+		    	setError("File handle must be alphanumeric and at most 20 characters."); 
 		    	return 400;
 		    }
 		    
 		    //Version must be 20 alphanumeric chars or fewer 
-		    if(version.length() > 15 | version.matches(".*-\\W+.*")){
-		    	setError("Version must be alphanumeric and atmost 15 characters."); 
+		    if(version.length() > 20 | version.matches(".*-\\W+.*")){
+		    	setError("Version must be alphanumeric and at most 20 characters."); 
 		    	return 400;
 		    }
 		    
 		    //label must be 15 alphanumeric chars or fewer 
-		    if(label!= null && label.length() > 15 | label.matches(".*-\\W+ .*")){
-		    	setError("Label must be alphanumeric and atmost 15 characters."); 
+		    if(label!= null && label.length() > 20 | label.matches(".*-\\W+ .*")){
+		    	setError("Label must be alphanumeric and at most 20 characters."); 
 		    	return 400;
 		    }
 

@@ -516,6 +516,19 @@ public class VersionControl {
 	                    }
 	                }
 	            }
+	            /**
+	             * Getting a SimpleAsyncUncaughtExceptionHandler...ArrayIndexOutOfBoundsException Error. 
+	             * This prevented some of the git tasks from being done.
+	             * The error was occurring during the scheduled run of VersionControl.taskCommitRepo().
+	             * The underlying cause of the error was that a commit message fragment/part had a type=var and no variable name.
+	             * 
+	             * Rules:
+	             *   1) For this to work properly, a type=var MUST have a variable name.
+	             *   2) A var name is required, but having an empty string is still considered valid xml.
+	             * 
+	             * Behavior:
+	             *   Not updating the variable in git and logging a message.  
+	             */
 				Pattern pattern = Pattern.compile("\\{(.+?)?\\}");
 				Matcher matcher = pattern.matcher(fullMessage);
 				Map<String,List<String>> commitVars = new HashMap<String,List<String>>();
@@ -524,11 +537,19 @@ public class VersionControl {
 				while (matcher.find()) {
 				   String[] data = matcher.group(1).split(",");
 				   	try{
+				   		/**
+				   		 * Prevent the ArrayIndexOutOfBoundsException Error.
+				   		 * Check the length of the data array to see if we have a var name in the array.
+				   		 * If length > 3 
+				   		 *   then do the normal processing.
+				   		 *   else Skip the normal processing and log a message with references to offending commit message part/fragment.
+				   		 */
 					   if(data[2].equals("var")){
+						 if(data.length > 3){
 						   String handle = data[0];
 						   if(!handles.contains(handle))
 							   handles.add(handle);
-						   String name = data[3];
+						   String name = data[3];                // was line 531 before v2.8.2.0
 						   if(commitVars.containsKey(handle)){
 							   List<String> vars = commitVars.get(handle);
 							   if(!vars.contains(name)){
@@ -541,7 +562,13 @@ public class VersionControl {
 							   commitVars.put(handle, vars);
 							   logger.debug(handle + " "+name);
 						   } 
-					   }
+						  }else{
+							  // var type with no variable name
+							  String warningMesssage = "git commit message part not processed. var type does not have a variable name.  ";
+							  logger.warn(warningMesssage + "commit Id: " + hash + "   matcher.group (handle, user, type): " + matcher.group(1));
+							   }
+						 }
+					   // end if(data[2]
 					   user = data[1];
 				   	}catch(NullPointerException e){
 				   		logger.error("Null pointer for git log"+matcher.group(1));

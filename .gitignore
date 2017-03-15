@@ -13,7 +13,8 @@ buildNumber.properties
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 #profiles (config)
-Source/profiles/localtemp/config.properties
+#Source/profiles/localtemp/config.properties
+Source/profiles/localtemp/config_local.properties
 
 # Mac file system stuff:
 *.DS_Store

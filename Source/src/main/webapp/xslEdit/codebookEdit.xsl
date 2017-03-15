@@ -205,15 +205,13 @@
 				</p>
 				<p id="DocumentDate" class="value4">
 					Document Date:
-					<xsl:value-of select="codeBook/docDscr/citation/prodStmt/prodDate" />
-					<a title="Edit field" class="editIcon2">
-						<xsl:attribute name="href">edit?f=version</xsl:attribute>
-						<i class="fa fa-pencil"></i>
-					</a>
-					<a title="Schema Documentation" class="schemaDocLink baseURIa">
-						<xsl:attribute name="href">/schema/doc/prodDate</xsl:attribute>
-						<i class="fa fa-info-circle"></i>
-					</a>
+					<xsl:for-each select="codeBook/docDscr/citation/prodStmt/prodDate">
+						<xsl:copy-of select="cdr:field(current(),'','version',position(),false())" />
+					</xsl:for-each>
+					<xsl:if test="count(codeBook/docDscr/citation/prodStmt/prodDate) eq 0">
+						<xsl:copy-of select="cdr:fieldAdd('version','','Add version',1)" />
+					</xsl:if>
+					<xsl:copy-of select="cdr:schemaDoc('version')" />
 				</p>	
 				<p id="DocumentProducer" class="value4">
 					Codebook prepared by:

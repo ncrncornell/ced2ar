@@ -548,9 +548,11 @@ public class EditCodebookData {
 		XMLHandle xh = null;
 		try{
 			
+			/*
 			if(field.equals("version")){
-				doesAppend = true;
+				doesAppend = false;
 			}
+			*/
 
 			//Remove node
 			if(delete){

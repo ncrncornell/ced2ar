@@ -59,7 +59,13 @@ public class Config {
 	private String pwdHash;
 	private boolean basexGenerateRandomPasswords;
 	private String openAccess;
-	
+
+	//
+	// Access mode (private server, etc);
+	//
+	// Supported options: AdminOnly, UserDefault (default)
+	private String accessMode;
+
 	//Git added so other classes have access
 	private boolean isGitEnabled;
 	private String remoteRepoURL;
@@ -350,6 +356,9 @@ public class Config {
 		this.openAccess = s;
 	}
 
+	public String getAccessMode() { return this.accessMode; }
+
+	public void setAccessMode(String s) { this.accessMode = s; }
 	
 	public String geteAPI() {
 		return EAPI;

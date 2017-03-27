@@ -145,7 +145,7 @@ public class Security extends WebSecurityConfigurerAdapter {
 	 */
     private void configureGoogleOAuth2Authentication(HttpSecurity http) throws Exception {
 		
-			http.authorizeRequests()
+		http.authorizeRequests()
 			.antMatchers("/config").access("hasRole('ROLE_ADMIN')")
 	 		.antMatchers("/edit").access("hasRole('ROLE_ADMIN')")
 	 		.antMatchers("/edit/codebooks").access("hasRole('ROLE_ADMIN')")
@@ -153,21 +153,6 @@ public class Security extends WebSecurityConfigurerAdapter {
 	 		.antMatchers("/google_oauth2_login").anonymous()
 	 		.antMatchers("/login").anonymous() 		
 	 		.antMatchers("/edit/**").access("hasRole('ROLE_USER')")
-
-			//TODO: add args for select specific paths, this is for the ces-dev server
-	 		
-	 		/*
-	 		.antMatchers("/search").access("hasRole('ROLE_ADMIN')")
-			.antMatchers("/search/**").access("hasRole('ROLE_ADMIN')")
-			.antMatchers("/codebooks").access("hasRole('ROLE_ADMIN')")
-			.antMatchers("/codebooks/**").access("hasRole('ROLE_ADMIN')")
-			.antMatchers("/groups").access("hasRole('ROLE_ADMIN')")
-			.antMatchers("/groups/**").access("hasRole('ROLE_ADMIN')")
-			.antMatchers("/all").access("hasRole('ROLE_ADMIN')")
-			.antMatchers("/all/**").access("hasRole('ROLE_ADMIN')")
-			.antMatchers("/browse").access("hasRole('ROLE_ADMIN')")
-			.antMatchers("/browse/**").access("hasRole('ROLE_ADMIN')")
-			*/
 	 		
 	 		.and()
 			.formLogin()
@@ -181,6 +166,21 @@ public class Security extends WebSecurityConfigurerAdapter {
 			.addFilterAfter(oAuth2ClientContextFilter,ExceptionTranslationFilter.class)
 			.addFilterBefore(googleOAuth2ClientAuthenticationProcessingFilter,FilterSecurityInterceptor.class)
 			.authenticationProvider(authProvider);
+
+			if (config.getAccessMode().equals("AdminOnly")) {
+				System.out.println("Running system in AdminOnly mode"); // DEBUG
+				http.authorizeRequests()
+						.antMatchers("/search").access("hasRole('ROLE_ADMIN')")
+						.antMatchers("/search/**").access("hasRole('ROLE_ADMIN')")
+						.antMatchers("/codebooks").access("hasRole('ROLE_ADMIN')")
+						.antMatchers("/codebooks/**").access("hasRole('ROLE_ADMIN')")
+						.antMatchers("/groups").access("hasRole('ROLE_ADMIN')")
+						.antMatchers("/groups/**").access("hasRole('ROLE_ADMIN')")
+						.antMatchers("/all").access("hasRole('ROLE_ADMIN')")
+						.antMatchers("/all/**").access("hasRole('ROLE_ADMIN')")
+						.antMatchers("/browse").access("hasRole('ROLE_ADMIN')")
+						.antMatchers("/browse/**").access("hasRole('ROLE_ADMIN')");
+			}
     }
     
     private void configureOrcidOAuth2Authentication(HttpSecurity http) throws Exception {		

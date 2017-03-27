@@ -58,6 +58,10 @@
 		<property name="crowdSourcingRole" value="${crowdsourcing.role}" />
 		<property name="openAccess" value="${openAccess}" />
 
+		<!-- Access Mode: configure private servers -->
+		<property name="accessMode" value="${accessMode}" />
+
+
 		<!-- UI Navbar customization -->
 		<property name="uiNavBarBrowseCodebook" value="${uiNavBarBrowseCodebook}" />
 		<property name="uiNavBarBrowseCodebookLabel" value="${uiNavBarBrowseCodebookLabel}" />

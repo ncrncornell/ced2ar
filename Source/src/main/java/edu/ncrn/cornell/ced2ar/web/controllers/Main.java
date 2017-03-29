@@ -4,6 +4,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import edu.ncrn.cornell.ced2ar.api.data.Config;
 import edu.ncrn.cornell.ced2ar.web.classes.Loader;
+
+import java.io.IOException;
+import java.util.Properties;
 
 /**
  *Handles requests for the home page and static pages
@@ -35,7 +39,9 @@ public class Main {
 
 	@Autowired
 	private Loader loader;
-	
+
+
+	private static final Logger logger = Logger.getLogger(Main.class);
 	/**
 	 * Method home.
 	 * Redirects to the search page
@@ -63,6 +69,19 @@ public class Main {
 	 */
 	@RequestMapping(value = "/about", method = RequestMethod.GET)
     public String info(Model model) {
+		String mainVer = "0.0.0";
+		java.io.InputStream in = request.getServletContext().getResourceAsStream(
+			"META-INF/maven/edu.ncrn.ced2ar.web/ced2ar-web/pom.properties"
+		);
+		Properties mProps = new Properties();
+		try {
+			mProps.load(in);
+			mainVer = (String) mProps.get("version");
+		} catch(IOException ex) {
+			logger.error("Error parsing JSON from internal database: "+ex.getMessage());
+		}
+
+		model.addAttribute("mainVer", mainVer);
 		model.addAttribute("subTitl","About");
 		model.addAttribute("metaDesc","Information about the CED2AR project.");
         return "/WEB-INF/views/about.jsp";

@@ -1,4 +1,5 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page import="java.util.*"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <c:set var="css" scope='request'>info</c:set>
@@ -110,8 +111,7 @@
 		<div class="lb">
 			<h3>Current Version</h3>
 			<p>
-				<%--TODO: Would be nice to automate this somehow --%>
-				CED<sup>2</sup>AR version <span itemprop="version">2.8.1.2</span>
+				CED<sup>2</sup>AR version <span itemprop="version">${mainVer}</span>
 			</p>
 			<c:if test="${initParam.buildTimeStamp ne '${maven.build.timestamp}'}">
 				<p>

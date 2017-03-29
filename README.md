@@ -3,7 +3,7 @@ compile builds. The development team recommends Eclipse or IntelliJ
 for Java EE, which comes with Maven and Tomcat plugins for the newer 
 versions.
 
-##Building the Source Code
+## Building the Source Code
 
 1. Clone the CED2AR source code to your local environment. 
 2. Using Eclipse, import the existing Maven project. 
@@ -23,11 +23,11 @@ profile you created. If desired, save this configuration for later.
 After building, CED2AR should produce a WAR archive in the target folder. 
 For deploying the war, some of the [notes linked below](#installing-a-server-binary) may be helpful.
 
-##Installing a Server Binary
+## Installing a Server Binary
 To install a precompiled server binary please see:
 https://github.com/ncrncornell/ced2ar/tree/master/Binaries/Server
 
-##Installing a Desktop Binary
+## Installing a Desktop Binary
 To run the desktop version, please see:
 https://github.com/ncrncornell/ced2ar/tree/master/Binaries/Local
 

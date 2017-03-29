@@ -78,7 +78,7 @@ public class Main {
 			mProps.load(in);
 			mainVer = (String) mProps.get("version");
 		} catch(IOException ex) {
-			logger.error("Error parsing JSON from internal database: "+ex.getMessage());
+			logger.error("Error reading version from pom.properties: " + ex.getMessage());
 		}
 
 		model.addAttribute("mainVer", mainVer);

@@ -1,6 +1,6 @@
 # Overview
 
-These patch files are needed to **upgrade** an existing CED2AR environment to 2.8.2.0.  If you upgrade and the Browse by Codebook tab is missing, you need to install these patches.
+IF you are **upgrading** an existing installation of CED2AR to 2.8.2.0 **AND you back up and restore your config files** (like we do) THEN you need to apply these two post install patch files.
 
 New installs do not need these patch files.
 

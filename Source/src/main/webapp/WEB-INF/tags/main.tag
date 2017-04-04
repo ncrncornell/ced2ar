@@ -92,6 +92,10 @@
 	<div id="wrapper" class="container-fluid">
 		<%--Chooses banner color based off server location --%>
 		<c:choose>
+			<c:when test="${fn:contains(pageContext.request.serverName,'wiki-census.ncrn.cornell.edu')}">
+				<c:set var="tagLine" scope="application">Community Development Server (Crowdsourced)</c:set>
+				<c:set var="hC" scope="application">hC0</c:set>
+			</c:when>
 			<c:when test="${fn:contains(pageContext.request.serverName,'wiki.ncrn.cornell.edu')}">
 				<c:set var="demoMode" scope="application" value="true" />
 				<c:set var="tagLine" scope="application">Community Development Server (Beta)</c:set>

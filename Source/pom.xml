@@ -416,8 +416,8 @@
 						<exclude>${basedir}/src/main/webapp/less/**</exclude>
 						<exclude>${basedir}/node_modules/**</exclude>
 					</excludes>
-					<source>1.8</source>
-					<target>1.8</target>
+					<source>1.7</source>
+					<target>1.7</target>
 				</configuration>
 			</plugin>
 			<plugin>

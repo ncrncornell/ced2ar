@@ -1,4 +1,8 @@
-Copyright 2012-2015 Cornell University. All rights reserved. CED2AR is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License. (See http://creativecommons.org/licenses/by-nc-sa/4.0/legalcode.txt)  Permission to copy, modify, and distribute all or any part of CED2AR, officially docketed at Cornell as D-6801, titled "The Comprehensive Extensible Data Documentation and Access Repository" ("WORK") and its associated copyrights for educational, research and non-profit purposes, without fee, and without a written agreement is hereby granted, provided that the above copyright notice and the four paragraphs of this document appear in all copies.
+Copyright 2012-2017 Cornell University. All rights reserved. 
+
+CED2AR is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License. (See http://creativecommons.org/licenses/by-nc-sa/4.0/legalcode.txt)
+
+Permission to copy, modify, and distribute all or any part of CED2AR, officially docketed at Cornell as D-6801, titled "The Comprehensive Extensible Data Documentation and Access Repository" ("WORK") and its associated copyrights for educational, research and non-profit purposes, without fee, and without a written agreement is hereby granted, provided that the above copyright notice and the four paragraphs of this document appear in all copies.
 
 Those desiring to incorporate WORK into commercial products or use WORK and its associated copyrights for commercial purposes should contact the Cornell Center for Technology Enterprise and Commercialization at 395 Pine Tree Road, Suite 310, Ithaca, NY 14850; email:cctecconnect@cornell.edu; Tel: 607-254-4698; FAX: 607-254-5454 for a commercial license.
 

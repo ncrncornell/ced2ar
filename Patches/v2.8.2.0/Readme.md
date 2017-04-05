@@ -37,7 +37,7 @@ The files that need to be patched are located under the Tomcat deployment direct
         </bean>
         ```
 
-     * Insert the contents of ced2ar-web-beans-v2.8.2.0.xml just below <property name=  and above </bean>
+     * Insert the contents of ced2ar-web-beans-v2.8.2.0.xml just below `<property name=`  and above `</bean>`.
      * Save the changes.
 2. Insert the contents of ced2ar-web-config-v2.8.2.0.properties at the bottom of ced2ar-web-config.properties
      * Edit ced2ar-web-config.properties

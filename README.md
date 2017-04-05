@@ -1,4 +1,4 @@
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.494998.svg)](https://doi.org/10.5281/zenodo.494998)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.495191.svg)](https://doi.org/10.5281/zenodo.495191)
 
 Looking for more information? Please take a look at our [Wiki](/ncrncornell/ced2ar/wiki).
 * _Users_ can find the [User Guide](/ncrncornell/ced2ar/wiki/User's-Guide) with how to videos and [FAQs](/ncrncornell/ced2ar/wiki/FAQs).

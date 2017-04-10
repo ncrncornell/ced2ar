@@ -134,7 +134,9 @@
 						<p>
 							<c:if test="${not empty tagLine}">${tagLine} - </c:if>
 							The Comprehensive Extensible Data Documentation and Access Repository
+						<%--  restricted is indeed just using local css.  Commented out for CDR-193
 							<c:if test="${restricted}">(Restricted Network Mode)</c:if>
+						--%>
 							<c:if test="${hC eq 'hC1'}">(Local Access)</c:if>
 						</p>
 					</div>

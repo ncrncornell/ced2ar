@@ -37,7 +37,26 @@
 					</xsl:for-each>
 				</p>
 			</xsl:if>	
-			
+			<div class="lb2" />
+			<xsl:if test="/codeBook/stdyDscr/citation/rspStmt/AuthEnty != ''">
+				<p class="value4">
+					Principal Investigator(s):
+				<xsl:for-each select="codeBook/stdyDscr/citation/rspStmt/AuthEnty">
+						<span itemprop="authE">
+							<xsl:value-of select="current()" />
+							<xsl:if test="count(/codeBook/stdyDscr/citation/rspStmt/AuthEnty) gt 1">
+								<xsl:if test="position() lt count(/codeBook/stdyDscr/citation/rspStmt/AuthEnty) -1">
+									,
+								</xsl:if>
+								<xsl:if test="position() eq count(/codeBook/stdyDscr/citation/rspStmt/AuthEnty) -1">
+									,&#160;and&#160;
+								</xsl:if>
+							</xsl:if>
+						</span>
+				</xsl:for-each>
+				</p>
+			</xsl:if>
+
 			<div class="lb" />
 			<xsl:if test="codeBook/stdyDscr/citation/distStmt/distrbtr != ''">
 				<p class="staticHeader2">Data Distributed by:</p>

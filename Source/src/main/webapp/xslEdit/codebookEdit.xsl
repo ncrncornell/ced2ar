@@ -222,7 +222,7 @@
 					<xsl:copy-of select="cdr:schemaDoc('producer')" />
 				</p>
 				<p id="PrincipalInvestigator" class="value4">
-					Principle Investigator(s):
+					Principal Investigator(s):
 					<xsl:for-each select="/codeBook/stdyDscr/citation/rspStmt/AuthEnty">
 						<xsl:copy-of select="cdr:field(current(),'','investigator',position(),true())" />
 					</xsl:for-each>

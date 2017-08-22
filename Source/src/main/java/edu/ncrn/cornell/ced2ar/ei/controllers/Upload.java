@@ -10,6 +10,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import edu.ncrn.cornell.ced2ar.api.data.Connector;
 import edu.ncrn.cornell.ced2ar.api.data.FileUpload;
 import edu.ncrn.cornell.ced2ar.api.data.Connector.RequestType;
+//import edu.ncrn.cornell.ced2ar.ced2ardata2ddi.web.controllers.DataFileRestController;
 import edu.ncrn.cornell.ced2ar.eapi.rest.queries.EditCodebookData;
 import edu.ncrn.cornell.ced2ar.web.classes.Loader;
 import edu.ncrn.cornell.ced2ar.web.classes.Parser;
@@ -50,7 +52,10 @@ public class Upload {
 	
 	@Autowired
 	private Loader loader;
-	
+
+	private static final Logger logger = Logger
+			.getLogger(Upload.class);
+
 //Utilities
 	/**
 	 * Resets session data after codebook list is modified
@@ -323,6 +328,23 @@ public class Upload {
 		return "/WEB-INF/workflowViews/convert.jsp";
 	}
 	
+	/**
+	 * Takes a dataset (Stata .dta file versions 8-14). Converts it to a DDI-C codebook using a web service.  Then it uploads the codebook to ced2ar.
+	 *  
+	 * June 2017 - Converting this over to the new protype Lars wants to create codebooks from datasets and/or a SWORD2 interface.
+	 * 
+	 *  	Looks like this method has not worked for at least the past 9 months.  
+	 *  	The dev.ncrn.cornell.edu/ced2ardata2ddi/data2ddi endpoint has not existed since I started work.  
+	 *  	ced2ar/Source/src/main/webapp/WEB-INF/workflowViews/convert.jsp references '/edit/data'.
+	 *  	BUT it cannot be in use because the following would error out.  
+	 *    		Connector conn = new Connector("http://dev.ncrn.cornell.edu/ced2ardata2ddi/data2ddi");      ~ line 394 in Upload.java
+	 *    
+	 * @param model
+	 * @param fileUpload
+	 * @param handle
+	 * @param version
+	 * @return
+	 */
 	@RequestMapping(value = "/edit/data", method = RequestMethod.POST)
 	public String convertData(Model model,
 	@ModelAttribute("f") FileUpload fileUpload,
@@ -335,7 +357,7 @@ public class Upload {
 				codebooks = loader.getCodebooks(baseURI);
 			}catch(Exception e){
 				model.addAttribute("error","Could not establish a connection to the database");	
-				return "redirect:/edit/data";
+				return "redirect:/edit/codebooks#t6";
 			}
 		}else{
 			codebooks = (TreeMap<String,String[]>) session.getAttribute("codebooks");
@@ -344,10 +366,10 @@ public class Upload {
 		handle = handle.trim().toLowerCase();
 		if(handle.equals("")){
 			session.setAttribute("error", "A handle is required");
-			return "redirect:/edit/data";
+			return "redirect:/edit/codebooks#t6";
 		}else if(!handle.matches("^[a-zA-Z0-9\\-]*$")){
 			session.setAttribute("error", "A handle can only contain alphanumeric characters, or hyphens");
-			return "redirect:/edit/data";
+			return "redirect:/edit/codebooks#t6";
 		}
 		
 		String label = handle;
@@ -355,10 +377,10 @@ public class Upload {
 		version.trim().toLowerCase();
 		if(version.equals("")){
 			session.setAttribute("error", "A version is required");
-			return "redirect:/edit/data";
+			return "redirect:/edit/codebooks#t6";
 		}else if(!version.matches("^[a-zA-Z0-9\\-]*$")){
 			session.setAttribute("error", "A version can only contain alphanumeric characters, or hyphens");
-			return "redirect:/edit/data";
+			return "redirect:/edit/codebooks#t6";
 		}
 
 		//Checks to make sure codebook does not exist already
@@ -366,7 +388,7 @@ public class Upload {
 		if(codebooks != null){   
 			if(codebooks.containsKey(handle+version)){
 				session.setAttribute("error", "A codebook with that handle and version already exists");
-				return "redirect:/edit/data";
+				return "redirect:/edit/codebooks#t6";
 			}		
 		}
 		
@@ -377,18 +399,55 @@ public class Upload {
 		
 		//Send API request to?
 		//http://dev.ncrn.cornell.edu/ced2ardata2ddi/data2ddi	
-		//TODO: check type before sending?
 		
 		InputStream ins = null;
 		try{
 			EditCodebookData editCodebookData = new EditCodebookData();
 			MultipartFile file = fileUpload.getFile();	
 			ins = file.getInputStream();
+			String originalFilename = file.getOriginalFilename();
+			logger.debug("originalFilename: " + originalFilename);
 			//TODO:Remove hard coding
-			Connector conn = new Connector("http://dev.ncrn.cornell.edu/ced2ardata2ddi/data2ddi");
+			//TODO:Replace localhost
+			/**
+			 * Since this is a prototype, do the quick and dirty.  Swap between connector statements for dev.ncrn
+			 * and your local development box (localhost)
+			 */
+			// dev.ncrn 
+			//Connector conn = new Connector("http://dev.ncrn.cornell.edu/ced2ardata2ddi/data2ddi");
+			// dev.ncrn with httpS
+			// Connector conn = new Connector("https://dev.ncrn.cornell.edu/ced2ardata2ddi/data2ddi");
+			//
+			// 8080 works on my localhost (MBP)
+			//Connector conn = new Connector("http://localhost:8080/ced2ardata2ddi/data2ddi");
+			// Change the following line to suit your needs
+			Connector conn = new Connector("https://dev.ncrn.cornell.edu/ced2ardata2ddi/data2ddi");
+			
 			conn.buildRequest(RequestType.POST);
-			conn.setPostFile(ins, "file");
+		//	conn.setPostFile(ins, "file");
+			conn.setPostFile(ins, originalFilename);
 			String response = conn.execute();
+			/**
+			 * Check response code to see if the file was converted/parsed.  If not, error out.
+			 */
+			int responseCode = conn.getResponseCode();
+			logger.debug("responseCode: " + responseCode);
+
+			if(responseCode == 200){
+				logger.debug("Got a 200 back from ced2ardata2ddi");
+				if(response == null){
+					logger.debug("response is null");
+					session.setAttribute("error", "Response is empty.  Nothing to load. " + "  [" + responseCode +"]");
+					return "redirect:/edit/codebooks#t6";
+				}
+			}else{
+				// Service: ced2ardata2ddi/data2ddi sets http header message IF status != 200
+				String responseMessage = conn.getHeader("message");
+				logger.debug("responseMessage: " + responseMessage);
+				session.setAttribute("error", "Converting data file. " + responseMessage + "  [" + responseCode +"]");
+				return "redirect:/edit/codebooks#t6";
+			}
+
 			InputStream stream = new ByteArrayInputStream(response.getBytes(StandardCharsets.UTF_8));
 			int code = editCodebookData.postCodebook(stream, handle, version, label, user, false);
 			if(code == 200){
@@ -420,6 +479,6 @@ public class Upload {
 				ins = null;
 			}
 		}
-		return "redirect:/edit/data";
+		return "redirect:/edit/codebooks#t6";
 	}	
 }

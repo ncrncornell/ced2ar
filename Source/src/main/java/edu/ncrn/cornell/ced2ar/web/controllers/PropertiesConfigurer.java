@@ -413,6 +413,11 @@ public class PropertiesConfigurer {
        		if(StringUtils.isNotBlank(uiNavTabOtherMat))
        			propertiesForm.getPropertiesMap().put("uiNavTabOtherMat","true");
 
+       		String data2ddiSvc = (String)propertiesForm.getPropertiesMap().get("data2ddiSvc");
+       		if(StringUtils.isNotBlank(data2ddiSvc))
+       			propertiesForm.getPropertiesMap().put("data2ddiSvc","true");
+
+
     		return new ModelAndView("/WEB-INF/views/configurationProperties.jsp","propertiesForm",propertiesForm);
     	}
 
@@ -524,6 +529,22 @@ public class PropertiesConfigurer {
    		propertiesForm.getPropertiesMap().put("uiNavTabFile",uiNavTabFile);
    		propertiesForm.getPropertiesMap().put("uiNavTabData",uiNavTabData);
    		propertiesForm.getPropertiesMap().put("uiNavTabOtherMat",uiNavTabOtherMat);
+
+   		// Service: Check and set Booleans
+   		String data2ddiSvc = (String)propertiesForm.getPropertiesMap().get("data2ddiSvc");
+   		if(StringUtils.isNotBlank(data2ddiSvc))
+   			data2ddiSvc="true";
+   		else
+   			data2ddiSvc="false";
+
+   		// Service: Booleans to config
+   		configurationProperties.addProperty("data2ddiSvc", data2ddiSvc);
+
+   		// Service: Booleans to Form
+   		propertiesForm.getPropertiesMap().put("data2ddiSvc",data2ddiSvc);
+
+   		// Service: Strings to config
+		configurationProperties.addProperty("data2ddiUrl", (String)propertiesForm.getPropertiesMap().get("data2ddiUrl"));
 
    		session.invalidate();
    		request.getSession(true).setAttribute("info_splash", "Configuration changes are successfully saved and applied to the application.");

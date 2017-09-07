@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import edu.ncrn.cornell.ced2ar.api.data.Config;
 import edu.ncrn.cornell.ced2ar.api.data.Connector;
 import edu.ncrn.cornell.ced2ar.api.data.FileUpload;
 import edu.ncrn.cornell.ced2ar.api.data.Connector.RequestType;
@@ -49,6 +50,9 @@ public class Upload {
 	
 	@Autowired
 	private HttpServletRequest request;
+	
+	@Autowired
+	private Config config;
 	
 	@Autowired
 	private Loader loader;
@@ -400,6 +404,14 @@ public class Upload {
 		//Send API request to?
 		//http://dev.ncrn.cornell.edu/ced2ardata2ddi/data2ddi	
 		
+		// Get the data2ddiUrl from the config file.
+		String data2ddiUrl = Config.getInstance().getData2ddiUrl(); 
+		logger.debug("data2ddiUrl: " + data2ddiUrl);
+		if(data2ddiUrl.equals("")){
+			session.setAttribute("error", "The data2ddiUrl is empty.  Cannot connect.");
+			return "redirect:/edit/codebooks#t6";
+		}
+				
 		InputStream ins = null;
 		try{
 			EditCodebookData editCodebookData = new EditCodebookData();
@@ -407,21 +419,20 @@ public class Upload {
 			ins = file.getInputStream();
 			String originalFilename = file.getOriginalFilename();
 			logger.debug("originalFilename: " + originalFilename);
-			//TODO:Remove hard coding
-			//TODO:Replace localhost
 			/**
-			 * Since this is a prototype, do the quick and dirty.  Swap between connector statements for dev.ncrn
-			 * and your local development box (localhost)
+			 * Now using endpoint url contained in config file.
+			 * Commented out the older connector statements.  Kept them in case you need for your local development box (localhost)
 			 */
 			// dev.ncrn 
-			//Connector conn = new Connector("http://dev.ncrn.cornell.edu/ced2ardata2ddi/data2ddi");
+			//   Connector conn = new Connector("http://dev.ncrn.cornell.edu/ced2ardata2ddi/data2ddi");
 			// dev.ncrn with httpS
-			// Connector conn = new Connector("https://dev.ncrn.cornell.edu/ced2ardata2ddi/data2ddi");
+			//   Connector conn = new Connector("https://dev.ncrn.cornell.edu/ced2ardata2ddi/data2ddi");
 			//
-			// 8080 works on my localhost (MBP)
-			//Connector conn = new Connector("http://localhost:8080/ced2ardata2ddi/data2ddi");
-			// Change the following line to suit your needs
-			Connector conn = new Connector("https://dev.ncrn.cornell.edu/ced2ardata2ddi/data2ddi");
+			//8080 works on my localhost (laptop)
+			//  Connector conn = new Connector("http://localhost:8080/ced2ardata2ddi/data2ddi");
+			//Prototype service on dev using https
+			//  Connector conn = new Connector("https://dev.ncrn.cornell.edu/ced2ardata2ddi/data2ddi");
+			Connector conn = new Connector(data2ddiUrl);
 			
 			conn.buildRequest(RequestType.POST);
 		//	conn.setPostFile(ins, "file");
@@ -434,7 +445,6 @@ public class Upload {
 			logger.debug("responseCode: " + responseCode);
 
 			if(responseCode == 200){
-				logger.debug("Got a 200 back from ced2ardata2ddi");
 				if(response == null){
 					logger.debug("response is null");
 					session.setAttribute("error", "Response is empty.  Nothing to load. " + "  [" + responseCode +"]");

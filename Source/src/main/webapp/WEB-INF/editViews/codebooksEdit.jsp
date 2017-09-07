@@ -17,7 +17,9 @@
 				<c:if test="${git}">
 					<li role="presentation"><a href="#t5" aria-controls="t5" role="tab" data-toggle="tab" title="Git"><i class="fa fa-git largeIcon"></i> Versions</a></li>
 				</c:if>
-				<li role="presentation"><a href="#t6" aria-controls="t6" role="tab" data-toggle="tab" title="Create a new codebook"><i class="fa fa-plus largeIcon"></i> Create</a></li>
+				<c:if test="${data2ddiSvc eq  'true' }">
+					<li role="presentation"><a href="#t6" aria-controls="t6" role="tab" data-toggle="tab" title="Create a new codebook"><i class="fa fa-plus largeIcon"></i> Create</a></li>
+				</c:if>
 			</ul>
 			<div class="tab-content">		  
 				<div class="tab-pane active" role="tabpanel" id="t1">

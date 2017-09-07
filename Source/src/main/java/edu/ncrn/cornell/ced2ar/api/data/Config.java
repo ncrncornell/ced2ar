@@ -95,6 +95,10 @@ public class Config {
 	private boolean uiNavTabOtherMat;
 	private String uiNavTabOtherMatLabel;
 	
+	// data2ddi service
+	private boolean data2ddiSvc;
+	private String data2ddiUrl;
+	
 	
 //Getters and setters
 	
@@ -711,6 +715,38 @@ public class Config {
 	 */
 	public void setUiNavTabOtherMatLabel(String uiNavTabOtherMatLabel) {
 		this.uiNavTabOtherMatLabel = uiNavTabOtherMatLabel;
+	}
+
+	/**
+	 * Method getData2ddiSvc.
+	 * @return boolean
+	 */
+	public boolean getData2ddiSvc() {
+		return this.data2ddiSvc;
+	}
+
+	/**
+	 * Method setData2ddiSvc.
+	 * @param data2ddiSvc boolean
+	 */
+	public void setData2ddiSvc(boolean data2ddiSvc) {
+		this.data2ddiSvc = data2ddiSvc;
+	}
+
+	/**
+	 * Method getData2ddiUrl.
+	 * @return String
+	 */
+	public String getData2ddiUrl() {
+		return this.data2ddiUrl;
+	}
+
+	/**
+	 * Method setData2ddiUrl.
+	 * @param data2ddiUrl String
+	 */
+	public void setData2ddiUrl(String data2ddiUrl) {
+		this.data2ddiUrl = data2ddiUrl;
 	}
 
 

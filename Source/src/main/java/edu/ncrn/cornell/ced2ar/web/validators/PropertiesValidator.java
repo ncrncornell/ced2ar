@@ -85,6 +85,10 @@ public class PropertiesValidator implements Validator{
 		if(StringUtils.isNotBlank((String)form.getPropertiesMap().get("uiNavTabOtherMat")))
    			ValidationUtils.rejectIfEmptyOrWhitespace(errors, "propertiesMap['uiNavTabOtherMatLabel']", "uiNavTabOtherMatLabel.required", "A Label value is required. (Tab is checked.)");
 
+		// Services
+   	   	if(StringUtils.isNotBlank((String)form.getPropertiesMap().get("data2ddiSvc")))
+   			ValidationUtils.rejectIfEmptyOrWhitespace(errors, "propertiesMap['data2ddiUrl']", "data2ddiUrl.required", "A URL is required. (Tab is checked.)");
+
 		// Validate only if the bug report radio button is enabled.
 		if(shouldBugReportFieldsValidated(form)) {
 			ValidationUtils.rejectIfEmptyOrWhitespace(errors, "propertiesMap['bugReportEmail']", "bugReportEmail.required", "Valid email address is required.");

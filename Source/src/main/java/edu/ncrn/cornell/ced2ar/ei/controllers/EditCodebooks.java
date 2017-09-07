@@ -556,6 +556,7 @@ public class EditCodebooks {
 			model.addAttribute("indexSettings",xp.getData());
 			model.addAttribute("subTitl","Edit Settings");
 			model.addAttribute("baseHandles",baseHandles);
+			model.addAttribute("data2ddiSvc",config.getData2ddiSvc());
 		}catch(Exception e){
 			logger.error(e.getMessage());
 			model.addAttribute("error","Could not establish a connection to the database");	

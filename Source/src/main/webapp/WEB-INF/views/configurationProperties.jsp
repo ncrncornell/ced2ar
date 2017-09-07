@@ -233,6 +233,26 @@
 				</td>
 			</tr>
 
+			<%-- Service URL/Endpoints --%>
+			<tr>
+				<td>Services</td>
+			</tr>
+			<tr>
+				<td> <c:if
+						test="${propertiesForm.propertiesMap['data2ddiSvc'] eq  'true' }">
+						<c:set var="checkedData2ddiSvc" value="checked" />
+					</c:if> <input type="checkbox" name="propertiesMap['data2ddiSvc']" ${checkedData2ddiSvc}>
+					<label for="propertiesMap['data2ddiSvc']">data2ddi</label>
+				</td>
+				<td>
+					<label for="propertiesMap['data2ddiUrl']">URL</label>
+					<input type="text" name="propertiesMap['data2ddiUrl']"
+						value="${propertiesForm.propertiesMap['data2ddiUrl']}"> <form:errors
+						class='configError' path="propertiesMap[data2ddiUrl]" />
+				</td>
+			</tr>
+
+
 			<tr>
 				<td><input type="submit" class="btn" value='Update Properties'></td>		
 			</tr>

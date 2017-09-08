@@ -1,0 +1,3 @@
+		<!-- data2ddi service -->
+		<property name="data2ddiSvc" value="${data2ddiSvc}" />
+		<property name="data2ddiUrl" value="${data2ddiUrl}" />

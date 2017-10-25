@@ -378,7 +378,7 @@ public class Upload {
 		
 		String label = handle;
 		
-		version.trim().toLowerCase();
+		version = version.trim().toLowerCase();
 		if(version.equals("")){
 			session.setAttribute("error", "A version is required");
 			return "redirect:/edit/codebooks#t6";
@@ -437,6 +437,8 @@ public class Upload {
 			conn.buildRequest(RequestType.POST);
 		//	conn.setPostFile(ins, "file");
 			conn.setPostFile(ins, originalFilename);
+			conn.setPostFormContent("handle", handle);
+			conn.setPostFormContent("version", version);
 			String response = conn.execute();
 			/**
 			 * Check response code to see if the file was converted/parsed.  If not, error out.
@@ -458,7 +460,8 @@ public class Upload {
 				return "redirect:/edit/codebooks#t6";
 			}
 
-			InputStream stream = new ByteArrayInputStream(response.getBytes(StandardCharsets.UTF_8));
+			//InputStream stream = new ByteArrayInputStream(response.getBytes(StandardCharsets.UTF_8));
+			InputStream stream = new ByteArrayInputStream(response.getBytes(StandardCharsets.UTF_16)); 
 			int code = editCodebookData.postCodebook(stream, handle, version, label, user, false);
 			if(code == 200){
 				String message = "Upload complete, "+handle+" ("+version+") was sucessfully added.&nbsp;"

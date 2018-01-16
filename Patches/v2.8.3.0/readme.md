@@ -6,11 +6,11 @@ New installs do not need these patch files.
 
 ## Patch File (source) Location
 
-The patch files are on github at [Patches/v2.8.3.0](https://github.com/ncrncornell/ced2ar/tree/master/Patches/v2.8.3.0).
+The patch files are on github at [Patches/v2.9.0.0](https://github.com/ncrncornell/ced2ar/tree/master/Patches/v2.9.0.0).
 
-* **ced2ar-web-beans-v2.8.3.0.xml** - Updates the existing ced2ar-web-beans.xml file.  Adds 2 new properties to the config bean.
+* **ced2ar-web-beans-v2.9.0.0.xml** - Updates the existing ced2ar-web-beans.xml file.  Adds 2 new properties to the config bean.
 
-* **ced2ar-web-config-v2.8.3.0.properties** - Updates the existing ced2ar-web-config.properties.  Adds values for the 2 new properties.
+* **ced2ar-web-config-v2.9.0.0.properties** - Updates the existing ced2ar-web-config.properties.  Adds values for the 2 new properties.
 
 ## Configuration File (target) Location
 
@@ -26,7 +26,7 @@ The files that need to be patched are located under the Tomcat deployment direct
 
 ## Steps:
 
-1. Insert the contents of ced2ar-web-beans-v2.8.3.0.xml INTO ced2ar-web-beans.xml:
+1. Insert the contents of ced2ar-web-beans-v2.9.0.0.xml INTO ced2ar-web-beans.xml:
      * Edit ced2ar-web-beans.xml
      * Find the following code section.
 
@@ -36,12 +36,12 @@ The files that need to be patched are located under the Tomcat deployment direct
         </bean>
         ```
 
-     * Insert the contents of ced2ar-web-beans-v2.8.3.0.xml just below `<property name=`  and above `</bean>`.
+     * Insert the contents of ced2ar-web-beans-v2.9.0.0.xml just below `<property name=`  and above `</bean>`.
      * Save the changes.
-2. Insert the contents of ced2ar-web-config-v2.8.3.0.properties at the bottom of ced2ar-web-config.properties
+2. Insert the contents of ced2ar-web-config-v2.9.0.0.properties at the bottom of ced2ar-web-config.properties
      * Edit ced2ar-web-config.properties
      * Go to the bottom of the file.
-     * Insert the contents of ced2ar-web-config-v2.8.3.0.properties at the bottom of ced2ar-web-config.properties
+     * Insert the contents of ced2ar-web-config-v2.9.0.0.properties at the bottom of ced2ar-web-config.properties
      * Save the changes.
 3. Stop and restart the CED2AR application OR the Tomcat server.
 

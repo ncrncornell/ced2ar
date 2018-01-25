@@ -238,12 +238,14 @@ public class Fetch {
 		String[] codeBooks = data.split(";");	
 		try{
 			for(String codeBook:codeBooks){
-				logger.debug("found codebook "+ codeBook);
+			//	logger.debug("found codebook "+ codeBook);
+				logger.debug("found codebook: "+ codeBook.trim());
 				String[] c = codeBook.split(",");	
 				out.put(c[0].trim()+c[1], new String[] {c[0].trim(),c[1],c[2],c[3],c[4]});		
 			}
 		}catch(ArrayIndexOutOfBoundsException e){
-				logger.error("No codebooks found in BaseXDB");
+			//	logger.error("No codebooks found in BaseXDB");
+				logger.error("No codebooks found in BaseXDB.  hit ArrayIndexOutOfBoundsException in getCodebooks().  Returning null");
 				return null;
 		}
 		return out;	
@@ -278,10 +280,13 @@ public class Fetch {
 		String[] codeBooks = data.split(";");	
 		try{
 			for(String codeBook:codeBooks){
+			//	logger.debug("found codebook studies: "+ codeBook);
+				logger.debug("found codebook studies: "+ codeBook.trim());
 				String[] c = codeBook.split(",");		
 				out.put(c[0].trim()+c[1], new String[] {c[0].trim(),c[1],c[2],c[3]});	
 			}
 		}catch(ArrayIndexOutOfBoundsException e){
+				logger.error("hit ArrayIndexOutOfBoundsException in getStudies().  Returning null");
 				return null;
 		}
 		return out;	

@@ -271,19 +271,47 @@ public class Fetch {
 	 *Gets a list of all codebook studies by handle, fullname and shortname 
 	 *Returns a csv format
 	 * @param baseURI String the location to request content from
-	 * @return ArrayList<String[]> the data returned as a list with: handle, fullname and shortname of each codebook
+	 * @return ArrayList<String[]> the data returned as a list with: handle, version, <docDscr...titl>, <stdyDscr...titl> of each codebook
 	 */
 	public static TreeMap<String,String[]> getStudies(String baseURI){
 		CodebookData codebookData = new CodebookData();
 		TreeMap<String,String[]> out = new TreeMap<String,String[]>();
 		String data = codebookData.getCodebooks("studies").trim();
 		String[] codeBooks = data.split(";");	
+		/**
+		 * Getting an ArrayIndexOutOfBoundsException Error.
+		 * This prevented the list of studies from being displayed (and selected).
+		 * The /studies page would display: "ERROR: CED2AR has no codebook studies" or "ERROR: Error retrieving data"
+		 * 
+		 * The two underlying causes of the error are:
+		 *   1) One or more codebooks have an empty study description title tag.
+		 *      Example:  /stdyDscr/citation/titlStmt/<titl/>
+		 *   2) The getStudies() method caught the exception, but did nothing with it.
+		 *   
+		 * Rules:
+		 *   1) An empty study title tag <titl/> should be treated as having NO study title.
+		 *      i.e. Do NOT add it to the study list.
+		 */
 		try{
+			/**
+			 * Prevent the ArrayIndexOutOfBoundsException Error.
+			 * Check the length of the c string array to see if a study title was returned.
+			 *   If length > 3
+			 *     then do the normal processing.
+			 *     else Skip normal processing and log a debug message.
+			 * 
+			 * c usually returns:
+			 *   <handle>,<version>,<docDscr...titl>,<stdyDscr...titl>
+			 */
 			for(String codeBook:codeBooks){
 			//	logger.debug("found codebook studies: "+ codeBook);
 				logger.debug("found codebook studies: "+ codeBook.trim());
 				String[] c = codeBook.split(",");		
-				out.put(c[0].trim()+c[1], new String[] {c[0].trim(),c[1],c[2],c[3]});	
+				if(c.length > 3){
+					out.put(c[0].trim()+c[1], new String[] {c[0].trim(),c[1],c[2],c[3]});
+				}else{
+					logger.debug("      NO study title (value). Not added to list.");
+				}
 			}
 		}catch(ArrayIndexOutOfBoundsException e){
 				logger.error("hit ArrayIndexOutOfBoundsException in getStudies().  Returning null");

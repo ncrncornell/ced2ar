@@ -237,6 +237,14 @@
 					<xsl:copy-of select="cdr:fieldAdd('stdyProducer','','Add producer',count(codeBook/stdyDscr/citation/prodStmt/producer)+1)" />
 					<xsl:copy-of select="cdr:schemaDoc('producer')" />
 				</p>	
+				<p id="StudyTitle" class="value4">
+					Study Title:
+					<xsl:for-each select="codeBook/stdyDscr/citation/titlStmt/titl">
+						<xsl:copy-of select="cdr:field(current(),'','stdyTitl',position(),false())" />
+					</xsl:for-each>
+					<xsl:copy-of select="cdr:schemaDoc('titl')" />
+				</p>
+
 			</div>
 		
 			<!-- Data Distributed by: -->

@@ -219,7 +219,10 @@ public class EditCodebooks {
 		//New as of May 2015
 		validFields.put("fileDscrURL",
 		new String[] {"4","/codeBook/fileDscr["+index+"]/@URI","Dataset URL","1"});
-		
+
+		//New as of Jan 2018
+		 validFields.put("stdyTitl", new String[] {"1","/codeBook/stdyDscr/citation/titlStmt/titl","Study Title","1"});
+
 		return validFields;
 	}
 	

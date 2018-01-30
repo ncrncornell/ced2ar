@@ -515,7 +515,10 @@ public class EditCodebookData {
 		//New May 2015
 		validFields.put("fileDscrURL",
 				new String[] {"4","/fileDscr["+index+"]/@URI","Dataset URL","1"});
-		
+
+		//New as of Jan 2018
+		validFields.put("stdyTitl",new String[] {"1","/stdyDscr/citation/titlStmt/titl","Study Title"});
+
 		if(!validFields.containsKey(field)){
 			setError("Bad field given");
 			return 400;

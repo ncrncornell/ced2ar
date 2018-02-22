@@ -1,11 +1,11 @@
 # Server Binary Installation
 ## Requirements
-- Java 7+
+- Java 8
 - Tomcat 7+
 
-1. Setup Java 7 or Java 8 (recommended).  Java 8<sup>[2](#footnote2)</sup> is not _fully_ tested.
-2. Install Tomcat. See the [Tomcat Docs](https://tomcat.apache.org/tomcat-7.0-doc/setup.html).
-3. Configure the Tomcat manager, and [create an account](http://tomcat.apache.org/tomcat-7.0-doc/manager-howto.html#Configuring_Manager_Application_Access) to access it. 
+1. Setup Java 8<sup>[2](#footnote2)</sup>.  (Java 8 is not _fully_ tested.)
+2. Install Tomcat. (Tomcat 8 recomended.)  See the [Tomcat Docs](https://tomcat.apache.org/tomcat-8.0-doc/setup.html).
+3. Configure the Tomcat manager, and [create an account](http://tomcat.apache.org/tomcat-8.0-doc/manager-howto.html#Configuring_Manager_Application_Access) to access it. 
 4. Login into the manager page using a browser at localhost:{port}/manager
 5. Upload the [BaseX war file](/BaseXTemplate/BaseX.war).
 6. Download the ced2ar-web.war file from [this directory](https://github.com/ncrncornell/ced2ar/edit/master/Binaries/Server/).
@@ -13,7 +13,7 @@
 8. Extract the configuration file of interest, e.g. /WEB-INF/classes/ced2ar-web-config.properties
 9. Edit this file using a text editor. We suggest that you [update the default passwords] (https://github.com/ncrncornell/ced2ar/wiki/The-CED2AR-Configuration-Files).
 10. Replace the default configuration file in the ced2ar-web.war  archive with the edited copy
-11. Upload the ced2ar-web.war file via the Tomcat 7 manager, or copy the war file directly into the Tomcat7 webapps directory (by default, tomcat will autodeploy any new war files copied in). A direct copy may prevent premature deployment of large war files, but this generally shouldn't be an issue. If you have problems, particularly if the war file isn't being extracted in webapps due to a manual copy of the war file into webapps, you may need to `chmod 755 ced2ar-web.war`, and restart.
+11. Upload the ced2ar-web.war file via the Tomcat manager, or copy the war file directly into the Tomcat webapps directory (by default, tomcat will autodeploy any new war files copied in). A direct copy may prevent premature deployment of large war files, but this generally shouldn't be an issue. If you have problems, particularly if the war file isn't being extracted in webapps due to a manual copy of the war file into webapps, you may need to `chmod 755 ced2ar-web.war`, and restart.
 12. Wait 20 seconds or so; else you may get a 404 error as ced2ar takes some time to start.
 
 13. _New for v2.9:_ Services are optional components, designed to be updated independently of ced2ar-web.
@@ -31,7 +31,7 @@ _Footnotes_
 2. Edit properties as described above. 
 3. Archive again without having a `ced2ar-web` top-level directory: `jar -cvf ced2ar-web.war -C ced2ar-web .`
 
-<a name="footnote2">2</a>: Most of our development servers run Tomcat 8 and Java 8.  Java 7 & Tomcat 7 are still in the instructions because a few organizations are required to run in a Java 7 environmment.
+<a name="footnote2">2</a>: All of our development servers run Java 8.  Most of our development servers run Tomcat 8, one runs Tomcat 7.  (Our desktop binary runs Tomcat 7. A few organizations may still have a Java 7 environmment requirement.)
 
 ## Other configuration notes
 

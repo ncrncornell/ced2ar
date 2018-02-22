@@ -1,6 +1,9 @@
 FROM ubuntu:16.04
 
-ADD BaseX867.tar.xz /
+
+ENV CED2AR_HOME /ced2ar
+RUN mkdir $CED2AR_HOME
+ADD Source/target/ced2ar-local.jar /ced2ar/
 
 # UTF-8 by default
 #
@@ -20,5 +23,10 @@ RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 0x219BD9C9
   apt-get -qqy install zulu-8=8.23.0.3 && \
   apt-get clean
 
-EXPOSE 8984
-CMD ["/basex/bin/basexhttp"]
+# Default http port
+EXPOSE 8080
+# https port
+EXPOSE 443
+
+WORKDIR $CED2AR_HOME
+CMD ["/usr/bin/java", "-jar", "/ced2ar-local.jar"]

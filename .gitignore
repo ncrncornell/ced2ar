@@ -61,3 +61,6 @@ hs_err_pid*
 
 #.classpath files
 *.classpath
+
+\#*
+*.\#*

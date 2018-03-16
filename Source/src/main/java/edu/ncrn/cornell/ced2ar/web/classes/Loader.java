@@ -268,25 +268,62 @@ public class Loader implements InitializingBean{
 	 */	
 	@SuppressWarnings("unchecked")
 	public TreeMap<String,String[]> getStudies(String baseURI){
+		/**
+		 * FYI: This method is a copy of the getCodebooks above.
+		 * 
+		 * Having a hard time tracking down error "CED2AR has no codebook studies".
+		 * Added a lot of debug statements to help track down issue.
+		 */
+		logger.debug("getStudies() called");
 		TreeMap<String,String[]> studies = null;
 		if((studies = (TreeMap<String,String[]>) context.getAttribute("studies")) == null){
+			logger.debug("getStudies() 1: studies attribute == null");
 			refreshStudies(baseURI);
 			studies = (TreeMap<String,String[]>) context.getAttribute("studies");
+			logger.debug("getStudies() 2: after refreshStudies size: " + studies.size());
 			if(studies == null || studies.size() == 0){
 				String currentError = (String) session.getAttribute("error");
 				String connectionError = "Could not connect to BaseX";
-				if(BaseX.testConnection())
+				
+				if(currentError == null) {
+					logger.debug("getStudies() 3: currentError == null");
+				}else{
+					logger.debug("getStudies() 3a: currentError: " + currentError);
+				}
+				logger.debug("getStudies() 3: connectionError: "+ connectionError);
+				
+				/**
+				 * This logic here seems a little strange.  I THINK they were trying to say:
+				 *   IF the studies (codebooks) list is empty AND we can connect to BaseX, 
+				 *   THEN that means that there are no studies in BaseX.
+				 *   
+				 * The initial 2.9.0 (and 2.8.3) version was returning the error
+				 * "CED2AR has no codebook studies".  That's why all debug lines are here.
+				 */
+				if(BaseX.testConnection()) {
+					logger.debug("getStudies() 4: connectionError: "+ connectionError);
 					connectionError = "CED2AR has no codebook studies";
+					logger.debug("getStudies() 4a: connectionError: "+ connectionError);
+				}else{
+					logger.warn("getStudies() testConnection() returned false.  Could not connect to BaseX");					
+					logger.debug("getStudies() 4b: connectionError: "+ connectionError);
+				}
+				
 				if(currentError == null){
 					currentError = "";
+					logger.debug("getStudies() 5: currentError == null  currentError set to empty string");
 				}else if(currentError.equals(connectionError)){
+					logger.debug("getStudies() 5a: currentError.equals(connectionError)  returning studies");
 					return studies;
 				}else{
 					connectionError = "<p>"+connectionError+"</p>";
+					logger.debug("getStudies() 5b: connectionError: " + connectionError);
 				}		
-				session.setAttribute("error",currentError + connectionError);		
+				session.setAttribute("error",currentError + connectionError);	
+				logger.debug("getStudies() 6: error attribute: " + currentError + connectionError);
 			}
 		}
+		logger.debug("getStudies() return studies size: " + studies.size());
 		return studies;
 	}
 
@@ -295,10 +332,11 @@ public class Loader implements InitializingBean{
 	 * @param baseURI location to retrieve codebook studies from
 	 */
 	public void refreshStudies(String baseURI){
-		logger.debug("Codebook studies refresh called.");
+		logger.debug("refreshStudies() called");
 		try{
 			TreeMap<String, String[]> studies = Fetch.getStudies(baseURI);
 			context.setAttribute("studies", studies);
+			logger.debug("refreshStudies(): refreshed studies size: " + studies.size());
 			if(config.getDevFeatureProv()){
 				//TODO: Add Switch to disable
 				//TODO: Why is this even being called?

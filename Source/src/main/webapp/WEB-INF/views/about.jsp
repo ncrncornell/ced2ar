@@ -19,6 +19,21 @@
 			</p>
 		</div>
 		<div class="lb">
+			<h3>Current Version</h3>
+			<p>
+				CED<sup>2</sup>AR version <span itemprop="version">${mainVer}</span>
+			</p>
+			<c:if test="${initParam.buildTimeStamp ne '${maven.build.timestamp}'}">
+				<p>
+					This instance was built on <span itemprop="dateModified">${initParam.buildTimeStamp}</span>
+				</p>
+			</c:if>	
+			<p>
+				For those interested in collaboration, please email us at
+				<a class="emailContact2"></a>
+			</p>
+		</div>
+		<div class="lb">
 			<h3>Supported By</h3>
 			<a href='http://www.ncrn.cornell.edu/' target="_blank"><img class="imgLogo" src="images/cornell.png" alt="NRCN Cornell" width="155" height ="150"/></a>
 			<a href='http://www.nsf.gov/' target="_blank"><img class="imgLogo" src="images/nsf.png" alt="NSF" width="150" height ="150"/></a>
@@ -42,7 +57,6 @@
 				Brandon Barker - <span class='sh'>Center for Advanced Computing, Cornell University</span><br />
 				William Block - <span class='sh'>Cornell Institute for Social and Economic Research, Cornell University</span><br />
 				Warren Brown - <span class='sh'>Cornell Institute for Social and Economic Research, Cornell University</span><br />
-				Kyle Brumsted - <span class='sh'>Cornell Institute for Social and Economic Research, Cornell University</span><br />
 				Carl Lagoze - <span class='sh'>School of Information, University of Michigan</span><br />
 				Chuck Simmer - <span class='sh'>Cornell Institute for Social and Economic Research, Cornell University</span><br />
 				Lars Vilhuber - <span class='sh'>Labor Dynamics Institute, Cornell University</span><br />
@@ -50,6 +64,10 @@
 		</div>
 		<div class="lb">
 			<h3>Previous Collaborators</h3>
+			<p class="past lb">
+				<span class="ph">2015 - 2017</span><br />
+				Kyle Brumsted - <span class='sh'>Cornell Institute for Social and Economic Research, Cornell University</span><br />
+			</p>
 			<p class="past lb">
 				<span class="ph">Spring/Summer 2015</span><br />
 				Venky Kambhampaty - <span class='sh'>Cornell Institute for Social and Economic Research, Cornell University</span><br />
@@ -107,21 +125,6 @@
 				of merchantability or fitness for a particular purpose, or that the use of work 
 				and its associated copyrights will not infringe any patent, trademark or other rights.
 			</p>	
-		</div>
-		<div class="lb">
-			<h3>Current Version</h3>
-			<p>
-				CED<sup>2</sup>AR version <span itemprop="version">${mainVer}</span>
-			</p>
-			<c:if test="${initParam.buildTimeStamp ne '${maven.build.timestamp}'}">
-				<p>
-					This instance was built on <span itemprop="dateModified">${initParam.buildTimeStamp}</span>
-				</p>
-			</c:if>	
-			<p>
-				For those interested in collaboration, please email us at
-				<a class="emailContact2"></a>
-			</p>
 		</div>
 	</div>
 </t:main>

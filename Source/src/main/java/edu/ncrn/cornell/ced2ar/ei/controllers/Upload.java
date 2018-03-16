@@ -65,6 +65,7 @@ public class Upload {
 	 * Resets session data after codebook list is modified
 	 */
 	public void clearCodebookCache(Model model){
+		logger.debug("Resetting codebooks, studies session attributes. Removing others...");
 		String baseURI = loader.getPath() + "/rest/";
 		session.removeAttribute("fL");
 		session.removeAttribute("filter");
@@ -76,6 +77,11 @@ public class Upload {
 		loader.refreshCodebooks(baseURI);	
 		TreeMap<String, String[]> codebooks = loader.getCodebooks(baseURI);
 		model.addAttribute("codebooks", codebooks);
+		// Reset studies attribute
+		session.removeAttribute("studies");
+		loader.refreshStudies(baseURI);	
+		TreeMap<String, String[]> studies = loader.getStudies(baseURI);
+		model.addAttribute("studies", studies);
 	}
 
 //Endpoints	

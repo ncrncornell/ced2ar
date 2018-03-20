@@ -30,8 +30,4 @@ EXPOSE 443
 
 WORKDIR /
 
-#
-# TODO: run a script (Docker-deps/CED2AR/run-ced2ar.sh) that creates a modified jar from
-# volume-mounted config files
-#
-# CMD ["/usr/bin/java", "-jar", "/ced2ar-local.jar"]
+CMD ["/usr/bin/java", "-jar", "/ced2ar-local.jar"]

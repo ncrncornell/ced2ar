@@ -3,7 +3,7 @@
 # Assumes updated ced2ar-web.war is in current directory.
 #
 # Define CED2AR_HOME and run like:
-# CED2AR_HOME=/var/lib/tomcat7/webapps/ced2ar-web ./redeploy_ced2ar_v2.sh
+# CED2AR_HOME=/opt/tomcat/webapps/ced2ar-web ./redeploy_ced2ar_v2.sh
 #
 
 if [ -z "${CED2AR_HOME+xxx}" ]; then echo "CED2AR_HOME not set!"; exit; fi

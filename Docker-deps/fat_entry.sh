@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#TODO: add an arg to see if we want to pull or build
+#TODO: add an arg to see if we want to pull or builds
 DOCKER=docker
 
 CMD="${DOCKER} run --detach=false \

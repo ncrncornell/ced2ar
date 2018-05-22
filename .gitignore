@@ -22,6 +22,7 @@ Source/profiles/localtemp/config_local.properties
 # User-specific stuff:
 .idea
 ced2ar-web.iml
+*~
 
 ## File-based project format:
 *.iws
@@ -60,3 +61,6 @@ hs_err_pid*
 
 #.classpath files
 *.classpath
+
+\#*
+*.\#*

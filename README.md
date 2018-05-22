@@ -29,6 +29,22 @@ profile you created. If desired, save this configuration for later.
 After building, CED2AR should produce a WAR archive in the target folder. 
 For deploying the war, some of the [notes linked below](#installing-a-server-binary) may be helpful.
 
+## Installing with Docker
+
+### Standalone System
+
+This is similar to installing a desktop binary configuration, in that it is
+intended to be a self-contained CED2AR installation. Run the following
+from the root of the repository directory:
+
+1. `source ./Docker-deps/fat_build.sh` (Only needed once)
+2. `./Docker-deps/standalone.sh`
+
+To stop, press `Ctrl-C` or do `docker stop ced2ar`; resume again with `docker start ced2ar`.
+
+Remove the container with `docker rm -f ced2ar`; data should be persisted at 
+`../ced2ar-standalone-store/` by default even if the container is removed.
+
 ## Installing a Server Binary
 To install a precompiled server binary please see:
 https://github.com/ncrncornell/ced2ar/tree/master/Binaries/Server

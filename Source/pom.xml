@@ -6,8 +6,32 @@
 	<artifactId>ced2ar-web</artifactId>
 	<packaging>war</packaging>
 	<version>2.10.0-SNAPSHOT</version>
+ <!--
 	<name>CED2AR</name>
 	<url>http://maven.apache.org</url>
+ -->
+  <name>${project.groupId}:${project.artifactId}</name>
+  <description>Comprehensive Extensible Data Documentation and Access Repository (CED2AR) was designed to improve the documentation and discoverability of both public and restricted data.  https://www.ncrn.cornell.edu/projects/#Metadata_Standards_and_Tools</description>
+  <url>https://github.com/ncrncornell/ced2ar</url>
+  <licenses>
+    <license>
+      <name>Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</name>
+      <url>http://creativecommons.org/licenses/by-nc-sa/4.0/legalcode.txt</url>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <name>Ced2ar Development</name>
+      <email>ced2ar-devs-l@list.cornell.edu</email>
+      <organization>NSF Census Research Network (NCRN) - Cornell node</organization>
+      <organizationUrl>https://www.ncrn.cornell.edu/projects/</organizationUrl>
+    </developer>
+  </developers>
+  <scm>
+    <connection>scm:git:git://github.com/ncrncornell/ced2ar.git</connection>
+    <developerConnection>scm:git:ssh://github.com/ncrncornell/ced2ar.git</developerConnection>
+    <url>https://github.com/ncrncornell/ced2ar/tree/master</url>
+  </scm>
 	<!-- Profiles properties are read from /profiles/* -->
 	<profiles>
 		<profile>

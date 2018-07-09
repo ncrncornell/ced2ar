@@ -5,6 +5,7 @@ MAINTAINER brandon.barker@cornell.edu
 
 ADD BaseXTemplate/BaseX.war $CATALINA_HOME/webapps/
 ADD Source/target/ced2ar-web.war $CATALINA_HOME/webapps/
+ADD https://github.com/ncrncornell/ced2ardata2ddi/releases/download/1.2.0/ced2ardata2ddi.war $CATALINA_HOME/webapps/
 ADD Docker-deps/deploy_and_run_tomcat.sh /usr/local/bin/
 
 WORKDIR $CATALINA_HOME/webapps/

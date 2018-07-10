@@ -1,4 +1,4 @@
-Copyright 2012-2017 Cornell University. All rights reserved. 
+Copyright 2012-2018 Cornell University. All rights reserved. 
 
 CED2AR is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License. (See http://creativecommons.org/licenses/by-nc-sa/4.0/legalcode.txt)
 

@@ -39,6 +39,8 @@ from the root of the repository directory:
 
 1. `source ./Docker-deps/fat_build.sh` (Only needed once)
 2. `./Docker-deps/standalone.sh`
+3. Browse to http://localhost:8888/ced2ar-web for the CED2AR app or http://localhost:8888 for the Tomcat manager.
+
 
 To stop, press `Ctrl-C` or do `docker stop ced2ar`; resume again with `docker start ced2ar`.
 

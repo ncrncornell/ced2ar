@@ -3,12 +3,17 @@ package edu.ncrn.cornell.ced2ar.eapi.rest.endpoints;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import edu.ncrn.cornell.ced2ar.web.classes.Loader;
 import org.apache.log4j.Logger;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,6 +43,32 @@ public class EditCodebooksEndpoints {
 	private final static Logger logger = Logger.getLogger(EditCodebooksEndpoints.class.getName());
 	private final static String API_PREFIX = "/erest";//TODO: put somewhere else
 
+    @Autowired
+    private HttpSession session;
+
+    @Autowired
+    private Loader loader;
+
+    public void clearCodebookCache(Model model){
+        logger.debug("Resetting codebooks, studies session attributes. Removing others...");
+        String baseURI = loader.getPath() + "/rest/";
+        session.removeAttribute("fL");
+        session.removeAttribute("filter");
+        session.removeAttribute("filterShow");
+        session.removeAttribute("filterHeader");
+        session.removeAttribute("verboseFilter");
+        session.removeAttribute("codebooks");
+        session.removeAttribute("searchCache");
+        loader.refreshCodebooks(baseURI);
+        TreeMap<String, String[]> codebooks = loader.getCodebooks(baseURI);
+        model.addAttribute("codebooks", codebooks);
+        // Reset studies attribute
+        session.removeAttribute("studies");
+        loader.refreshStudies(baseURI);
+        TreeMap<String, String[]> studies = loader.getStudies(baseURI);
+        model.addAttribute("studies", studies);
+    }
+
 //Endpoints //TODO: Document endpoint methods
 	
 	/**
@@ -56,7 +87,8 @@ public class EditCodebooksEndpoints {
 	public String postCodebook(HttpServletRequest request, HttpServletResponse response,
 	@PathVariable("baseHandle") String baseHandle, @PathVariable("version") String version, 
 	@ModelAttribute("file") FileUpload uploadForm, @RequestParam(value="label",required = false)  String label,
-	@RequestParam(value="user") String user, @RequestParam(value="master", defaultValue = "0") boolean master) {
+	@RequestParam(value="user") String user, @RequestParam(value="master", defaultValue = "0") boolean master,
+    Model model) {
 		InputStream ins = null;
 		try {
 			EditCodebookData codebookData = new EditCodebookData();
@@ -66,7 +98,10 @@ public class EditCodebooksEndpoints {
 			response.setStatus(responseCode);
 			if(responseCode != 200){
 				return codebookData.getError();
-			}
+			} else {
+			    logger.info("clearing codebook cache");
+			    clearCodebookCache(model);
+            }
 		} catch (IOException|NullPointerException e) {
 			response.setStatus(400);
 			return "Error reading input stream.";

@@ -176,8 +176,10 @@ public class EditCodebookData {
 			    }catch(NullPointerException e){
 			    	fullName = handle;
 			    }
-				    
-			    //Checks to see if any version of codebook exists, if not add parent element
+                logger.info("Made it past shortName/fullName handling...");
+
+
+                //Checks to see if any version of codebook exists, if not add parent element
 			    if(!QueryUtil.hasCodebookIndex(baseHandle)){
 			    	if(label == null || label.equals("")){
 			    		setError("Handle does not exist, so a label is required"); 
@@ -194,12 +196,14 @@ public class EditCodebookData {
 		    	//Calls prov generator to write to prov db
 		    	ProvGenerator provGenerator = new ProvGenerator();
 		    	provGenerator.updateProvFromCodebook(xh.getRepoXML());//Change to access string directly
-		    }
+                logger.info("Made it past provGen...");
+            }
 		      
 		    //Uploads codebook
 		    BaseX.put(handle, xh.getRepoXML());
-		    
-		    //New BaseX config
+            logger.info("Put codebook into BaseX...");
+
+            //New BaseX config
 		    //BaseX.put2(handle, xh.getRepoXML());
 		   
 		    if(Config.getInstance().isGitEnabled()){
@@ -208,8 +212,9 @@ public class EditCodebookData {
 		    	 }else{
 		    		 QueryUtil.insertPending(handle, "edit", "/codeBook",user);
 		    	 }
-			}    
-		    return 200;
+			}
+            logger.info("Performed any pending git actions, returning 200...");
+            return 200;
 		}finally{	
 			try{
 				ins.close();

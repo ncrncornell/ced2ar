@@ -64,6 +64,31 @@ public class EditCodebooksEndpoints {
 		return returnValue;
 	}
 
+    /**
+     * The RESTful version of upload; can be used from e.g. cURL like:
+     *
+     * curl -v -L -i \
+     *      --user "admin:admin" \
+     *      -F "user=beb82@cornell.edu" \
+     *      -F "handle=acs2009" \
+     *      -F "label=ACS_2009" \
+     *      -F "file=@ACS_2009_Public_Use_File.xml" \
+     *      -X POST http://localhost:8888/ced2ar-web/erest/codebooks/acs2009/v1
+     *
+     *      In the above example it is assumed that 'ACS_2009_Public_Use_File.xml' is a file
+     *      in the current directory.
+     *
+     * @param request
+     * @param response
+     * @param baseHandle
+     * @param version
+     * @param uploadForm
+     * @param label
+     * @param user
+     * @param master
+     * @param model
+     * @return
+     */
 	@RequestMapping(value = API_PREFIX + "/codebooks/{baseHandle}/{version}", method = RequestMethod.POST)
 	public String postCodebook(HttpServletRequest request, HttpServletResponse response,
 	@PathVariable("baseHandle") String baseHandle, @PathVariable("version") String version, 

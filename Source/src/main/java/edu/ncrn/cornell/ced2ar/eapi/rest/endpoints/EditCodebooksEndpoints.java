@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import edu.ncrn.cornell.ced2ar.ei.controllers.Upload;
 import edu.ncrn.cornell.ced2ar.web.classes.Loader;
 import org.apache.log4j.Logger;
 
@@ -49,26 +50,6 @@ public class EditCodebooksEndpoints {
     @Autowired
     private Loader loader;
 
-    public void clearCodebookCache(Model model){
-        logger.debug("Resetting codebooks, studies session attributes. Removing others...");
-        String baseURI = loader.getPath() + "/rest/";
-        session.removeAttribute("fL");
-        session.removeAttribute("filter");
-        session.removeAttribute("filterShow");
-        session.removeAttribute("filterHeader");
-        session.removeAttribute("verboseFilter");
-        session.removeAttribute("codebooks");
-        session.removeAttribute("searchCache");
-        loader.refreshCodebooks(baseURI);
-        TreeMap<String, String[]> codebooks = loader.getCodebooks(baseURI);
-        model.addAttribute("codebooks", codebooks);
-        // Reset studies attribute
-        session.removeAttribute("studies");
-        loader.refreshStudies(baseURI);
-        TreeMap<String, String[]> studies = loader.getStudies(baseURI);
-        model.addAttribute("studies", studies);
-    }
-
 //Endpoints //TODO: Document endpoint methods
 	
 	/**
@@ -100,7 +81,7 @@ public class EditCodebooksEndpoints {
 				return codebookData.getError();
 			} else {
 			    logger.info("clearing codebook cache");
-			    clearCodebookCache(model);
+			    Upload.clearCodebookCache(model, this.session, this.loader);
             }
 		} catch (IOException|NullPointerException e) {
 			response.setStatus(400);
@@ -111,13 +92,16 @@ public class EditCodebooksEndpoints {
 	
 	@RequestMapping(value = API_PREFIX + "/codebooks/{baseHandle}/{version}", method = RequestMethod.DELETE)
 	public String deleteCodebook(HttpServletRequest request, HttpServletResponse response,
-	@PathVariable("baseHandle") String baseHandle, @PathVariable("version") String version) {
+	@PathVariable("baseHandle") String baseHandle, @PathVariable("version") String version, Model model) {
 		EditCodebookData codebookData = new EditCodebookData();
 		int responseCode =codebookData.deleteCodebook(baseHandle, version);
 		response.setStatus(responseCode);
 		if(responseCode != 200){
 			return "Error deleting codebook - "+baseHandle+ " "+version;
 		}
+		else {
+            Upload.clearCodebookCache(model, this.session, this.loader);
+        }
 		return "Successfully deleted codebook - "+baseHandle+ " "+version;
 	}	
 	

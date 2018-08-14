@@ -64,7 +64,7 @@ public class Upload {
 	/**
 	 * Resets session data after codebook list is modified
 	 */
-	public void clearCodebookCache(Model model){
+	public static void clearCodebookCache(Model model, HttpSession session, Loader loader){
 		logger.debug("Resetting codebooks, studies session attributes. Removing others...");
 		String baseURI = loader.getPath() + "/rest/";
 		session.removeAttribute("fL");
@@ -174,7 +174,7 @@ public class Upload {
 				+"<a href='"+loader.getBuildName()+"/codebooks/"+handle+"/v/"+version+"'>View codebook</a>";
 				session.setAttribute("info_splash", message);
 				session.removeAttribute("error");
-				clearCodebookCache(model);		
+				clearCodebookCache(model, this.session, this.loader);
 			}else{
 				String error = editCodebookData.getError();
 				if(error == null || error.trim().startsWith("message")){
@@ -237,8 +237,9 @@ public class Upload {
 				+"<a href='"+loader.getBuildName()+"/codebooks/"+handleInfo[0]+"/v/"+handleInfo[1]+"'>View codebook</a>";
 				session.setAttribute("info_splash", message);
 				session.removeAttribute("error");
-				clearCodebookCache(model);		
-			}else{
+                clearCodebookCache(model, this.session, this.loader);
+
+            }else{
 				String rep = editCodebookData.getError();
 				
 				String path = context.getRealPath("/xsl/apiError.xsl");//Local file path to find XSL doc
@@ -277,7 +278,7 @@ public class Upload {
 		if(rep == 200){
 			session.setAttribute("info_splash", "Deleted "+handleInfo[0]+ " (" + handleInfo[1]+ ")");
 			session.removeAttribute("error");
-			clearCodebookCache(model);
+            clearCodebookCache(model, this.session, this.loader);
 		}else{
 			session.setAttribute("error", "An error has occured while attemtping to delete "+handleInfo[0]+handleInfo[1]);										
 		}					
@@ -299,7 +300,7 @@ public class Upload {
 		String version = handleInfo[1];
 		EditCodebookData editCodebookData = new EditCodebookData();
 		editCodebookData.editCodebookUse(baseHandle, version, "default");
-		clearCodebookCache(model);
+        clearCodebookCache(model, this.session, this.loader);
 		return 200;
 	}
 	
@@ -309,7 +310,7 @@ public class Upload {
 	 */
 	@RequestMapping(value = "/update/refresh", method = RequestMethod.GET)
 	public String updateCodebook(Model model){
-		clearCodebookCache(model);
+        clearCodebookCache(model, this.session, this.loader);
 		session.setAttribute("info_splash", "Codebook cache refreshed");
 		return "redirect:/";
 	}	
@@ -321,7 +322,7 @@ public class Upload {
 	@RequestMapping(value = "/update/cache", method = RequestMethod.GET)
 	@ResponseBody
 	public String clearCache(Model model){
-		clearCodebookCache(model);
+        clearCodebookCache(model, this.session, this.loader);
 		return "";
 	}	
 	
@@ -474,7 +475,7 @@ public class Upload {
 				+"<a href='"+loader.getBuildName()+"/codebooks/"+handle+"/v/"+version+"'>View codebook</a>";
 				session.setAttribute("info_splash", message);
 				session.removeAttribute("error");
-				clearCodebookCache(model);		
+                clearCodebookCache(model, this.session, this.loader);
 			}else{
 				String rep = editCodebookData.getError();
 				

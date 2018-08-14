@@ -3,12 +3,18 @@ package edu.ncrn.cornell.ced2ar.eapi.rest.endpoints;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import edu.ncrn.cornell.ced2ar.ei.controllers.Upload;
+import edu.ncrn.cornell.ced2ar.web.classes.Loader;
 import org.apache.log4j.Logger;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,6 +44,12 @@ public class EditCodebooksEndpoints {
 	private final static Logger logger = Logger.getLogger(EditCodebooksEndpoints.class.getName());
 	private final static String API_PREFIX = "/erest";//TODO: put somewhere else
 
+    @Autowired
+    private HttpSession session;
+
+    @Autowired
+    private Loader loader;
+
 //Endpoints //TODO: Document endpoint methods
 	
 	/**
@@ -52,11 +64,37 @@ public class EditCodebooksEndpoints {
 		return returnValue;
 	}
 
+    /**
+     * The RESTful version of upload; can be used from e.g. cURL like:
+     *
+     * curl -v -L -i \
+     *      --user "admin:admin" \
+     *      -F "user=beb82@cornell.edu" \
+     *      -F "handle=acs2009" \
+     *      -F "label=ACS_2009" \
+     *      -F "file=@ACS_2009_Public_Use_File.xml" \
+     *      -X POST http://localhost:8888/ced2ar-web/erest/codebooks/acs2009/v1
+     *
+     *      In the above example it is assumed that 'ACS_2009_Public_Use_File.xml' is a file
+     *      in the current directory.
+     *
+     * @param request
+     * @param response
+     * @param baseHandle
+     * @param version
+     * @param uploadForm
+     * @param label
+     * @param user
+     * @param master
+     * @param model
+     * @return
+     */
 	@RequestMapping(value = API_PREFIX + "/codebooks/{baseHandle}/{version}", method = RequestMethod.POST)
 	public String postCodebook(HttpServletRequest request, HttpServletResponse response,
 	@PathVariable("baseHandle") String baseHandle, @PathVariable("version") String version, 
 	@ModelAttribute("file") FileUpload uploadForm, @RequestParam(value="label",required = false)  String label,
-	@RequestParam(value="user") String user, @RequestParam(value="master", defaultValue = "0") boolean master) {
+	@RequestParam(value="user") String user, @RequestParam(value="master", defaultValue = "0") boolean master,
+    Model model) {
 		InputStream ins = null;
 		try {
 			EditCodebookData codebookData = new EditCodebookData();
@@ -66,7 +104,10 @@ public class EditCodebooksEndpoints {
 			response.setStatus(responseCode);
 			if(responseCode != 200){
 				return codebookData.getError();
-			}
+			} else {
+			    logger.info("clearing codebook cache");
+			    Upload.clearCodebookCache(model, this.session, this.loader);
+            }
 		} catch (IOException|NullPointerException e) {
 			response.setStatus(400);
 			return "Error reading input stream.";
@@ -76,13 +117,16 @@ public class EditCodebooksEndpoints {
 	
 	@RequestMapping(value = API_PREFIX + "/codebooks/{baseHandle}/{version}", method = RequestMethod.DELETE)
 	public String deleteCodebook(HttpServletRequest request, HttpServletResponse response,
-	@PathVariable("baseHandle") String baseHandle, @PathVariable("version") String version) {
+	@PathVariable("baseHandle") String baseHandle, @PathVariable("version") String version, Model model) {
 		EditCodebookData codebookData = new EditCodebookData();
 		int responseCode =codebookData.deleteCodebook(baseHandle, version);
 		response.setStatus(responseCode);
 		if(responseCode != 200){
 			return "Error deleting codebook - "+baseHandle+ " "+version;
 		}
+		else {
+            Upload.clearCodebookCache(model, this.session, this.loader);
+        }
 		return "Successfully deleted codebook - "+baseHandle+ " "+version;
 	}	
 	

@@ -37,7 +37,7 @@ This is similar to installing a desktop binary configuration, in that it is
 intended to be a self-contained CED2AR installation. Run the following
 from the root of the repository directory:
 
-1. `source ./Docker-deps/fat_build.sh` (Only needed once)
+1. `source ./Docker-deps/fat_build.sh` (Only needed once per build)
 2. `./Docker-deps/standalone.sh`
 3. Browse to http://localhost:8888/ced2ar-web for the CED2AR app or http://localhost:8888 for the Tomcat manager.
 

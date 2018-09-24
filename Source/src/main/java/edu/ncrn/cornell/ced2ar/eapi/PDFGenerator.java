@@ -50,6 +50,7 @@ public class PDFGenerator {
 	public HtmlCleaner htmlCleaner;
 	private boolean pdfEnabled;
 	private String baseURL;
+	private boolean xrLogEnabled;
 	
 	public static void main(String a[]) throws Exception{
 
@@ -96,6 +97,12 @@ public class PDFGenerator {
 	public void generatePDF(){
 		Collection<String[]> codebooks = Fetch.getCodebooks(getBaseURL()+"rest/").values();
 		logger.info("Found " + codebooks.size() + " Codebooks");
+
+		/*
+		 * FYI: To turn on org.xhtmlrenderer.* logging, for the flying saucer jar file, use:
+		 *   setXrLogEnabled(true);
+		 */
+
 		for(String[] codebook : codebooks){
 			String handle = codebook[0] + codebook[1];
 			logger.info("Generating PDF for Codebook: " + handle);
@@ -106,6 +113,10 @@ public class PDFGenerator {
 				logger.warn("Error in generating PDF for Codebook: " + handle + ". Proceeding to the next Codebook. Specific Exception ... " + ex.getMessage(), ex);
 			}
 		}
+		/*
+		 * Make sure we turn off the XRLog logger.
+		 */
+		setXrLogEnabled(false);
 		logger.info("Done Generating Codebook PDFs");
 	}
 	
@@ -125,21 +136,39 @@ public class PDFGenerator {
 	protected void generatePDF(String handle) throws DocumentException, 
 	URISyntaxException, FileNotFoundException, UnsupportedEncodingException,IOException{
 			List<String> input = new ArrayList<String>();
-		
+
+			/*
+			 * This is a quick workaround to bypass the NullPointerException in the ced2ar.log, which is really an IOException being thrown when you have debugging on.
+			 *   org.xhtmlrenderer.exception WARNING:: IO problem for http://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/../fonts/fontawesome-webfont.eot?v=4.4.0
+			 *
+			 * Replace:
+			 *     <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
+			 *  with:
+			 *     <link rel="stylesheet" type="text/css" href="/ced2ar-web/font-awesome/css/font-awesome.min.css" />
+			 *
+			 * So we can generate out part of the pdf file.  (The funding runs out in 10 days.)
+			 */
+			String findStr = "/maxcdn.bootstrapcdn.com/font-awesome/4.4.0";
+			String replaceStr = "ced2ar-web/font-awesome";
+			logger.info("WORKAROUND: "+ findStr + "  REPLACED WITH: " + replaceStr);
+
 			//Add the title page
-			input.add(fetchPage("codebooks/" + handle));
+		//	input.add(fetchPage("codebooks/" + handle));
+			String codebookTitle = fetchPage("codebooks/" + handle);
+			input.add(codebookTitle.replace(findStr, replaceStr));
 
 			// Add Variable Groups Page	task5859.
 			String groups = fetchPage("codebooks/"+ handle+"/groups/");
-			
-			if(!StringUtils.isEmpty(groups)) input.add(groups);
-			
+		//	if(!StringUtils.isEmpty(groups)) input.add(groups);
+			if(!StringUtils.isEmpty(groups)) input.add(groups.replace(findStr, replaceStr));
+
 			String vars = fetchPage("codebooks/" + handle + "/allvars");
-			if(!StringUtils.isEmpty(vars)) input.add(vars);
+		//	if(!StringUtils.isEmpty(vars)) input.add(vars);
+			if(!StringUtils.isEmpty(vars)) input.add(vars.replace(findStr, replaceStr));
 
 			OutputStream os = null;
 			String str = "file:///"+this.getPdfDirectory()+ handle+ ".pdf";
-
+			
 			logger.info("Printing PDF to " + str);
 			
 			URI uri;
@@ -273,5 +302,29 @@ public class PDFGenerator {
 	}
 	public void setpdfEnabled(boolean enabled) {
 		this.pdfEnabled = enabled;
+	}
+
+	public void setXrLogEnabled(boolean enabled) {
+		/*
+		 * Only set the property if the value has changed.
+		 */
+		if(this.xrLogEnabled != enabled) {
+			if(enabled) {
+				/**
+				 * Turns on org.xhtmlrenderer.* logging.   Source: https://developer.jboss.org/thread/183873?_sscc=t
+				 *   Currently, this only logs to the Console.  I could not find it in the tomcat logs
+				 */
+				System.setProperty("xr.util-logging.loggingEnabled", "true");
+				logger.info("org.xhtmlrenderer logging enabled");
+			} else {
+				System.setProperty("xr.util-logging.loggingEnabled", "false");
+				logger.info("org.xhtmlrenderer logging disabled");
+			}
+		}
+		this.xrLogEnabled = enabled;
+	}
+
+	public boolean isXrLogEnabled() {
+		return xrLogEnabled;
 	}
 }

@@ -29,6 +29,7 @@ import edu.ncrn.cornell.ced2ar.api.data.Connector.RequestType;
 import edu.ncrn.cornell.ced2ar.eapi.rest.queries.EditCodebookData;
 import edu.ncrn.cornell.ced2ar.web.classes.Loader;
 import edu.ncrn.cornell.ced2ar.web.classes.Parser;
+import edu.ncrn.cornell.ced2ar.eapi.PDFGenerator;
 
 /**
  * Class to handle codebook uploads
@@ -500,4 +501,67 @@ public class Upload {
 		}
 		return "redirect:/edit/codebooks#t6";
 	}	
+
+	/**
+	 * generatePDFs page
+	 * @param model Model
+	 * @return String the generatePDFs page location
+	 */
+	@RequestMapping(value = "/edit/generatepdfs", method = RequestMethod.GET)
+	public String generatePDFsPage(Model model) {
+
+		model.addAttribute("subTitl","generatePDFs Page");
+		return "/WEB-INF/editViews/generatePDFs.jsp";
+	}
+
+	/**
+	 * Generates PDF files for all codebooks in the BaseX database.
+	 * This does the same functionality that the scheduled cron job does to generate all PDF files, except it runs immediately.
+	 *
+	 * FYI: The method for scheduled cron job is: edu.ncrn.cornell.ced2ar.eapi.PDFGenerator.taskGeneratePDF()
+	 *
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/edit/generatepdfs", method = RequestMethod.POST)
+	public String generatePDFsAll(Model model){
+
+		long startTime = System.currentTimeMillis();
+
+		String message = "generatePDFsAll started";
+		logger.info(message);
+		session.setAttribute("info_splash", message);
+		session.removeAttribute("error");
+
+		PDFGenerator pdfGen = new PDFGenerator();
+
+		/**
+		 * The PDFGenerator.getBaseURL() is throwing a 500 when trying to get it's own context.
+		 * Pass in the values needed to run PDFGenerator
+		 */
+		String port = Integer.toString(Config.getInstance().getPort());
+		String webAppName = context.getContextPath();
+		String baseURL = "http://localhost:"+port+webAppName+"/";
+		logger.info("baseUrl: " + baseURL);
+
+		pdfGen.setBaseURL(baseURL);
+		pdfGen.setpdfEnabled(true);
+		pdfGen.setContext(context);
+
+		/*
+		 * If you need to enable flying saucer logging, uncomment the following line to set to true.
+		 */
+	//	pdfGen.setXrLogEnabled(true);
+
+		pdfGen.generatePDF();
+		pdfGen.setXrLogEnabled(false);
+
+		long endTime = System.currentTimeMillis();
+		logger.info("generatePDFsAll took " + ((endTime - startTime) / 1000) + " Seconds");
+		message = "Complete. generatePDFsAll took " + ((endTime - startTime) / 1000) + " Seconds";
+		session.setAttribute("info_splash", message);
+
+		return "/WEB-INF/editViews/generatePDFs.jsp";
+	}
+	
 }

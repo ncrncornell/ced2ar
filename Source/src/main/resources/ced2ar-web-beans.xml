@@ -54,8 +54,8 @@
 		<property name="authorizationStorage" value="${authorizationStorage}" />
 
 		<!-- Crowdsourcing -->
-		<property name="remoteURL" value="${remote.ced2ar.url}" />
-		<property name="crowdSourcingRole" value="${crowdsourcing.role}" />
+		<property name="remoteURL" value="${remoteURL}" />
+		<property name="crowdSourcingRole" value="${crowdSourcingRole}" />
 		<property name="openAccess" value="${openAccess}" />
 
 		<!-- Access Mode: configure private servers -->

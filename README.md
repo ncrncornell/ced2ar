@@ -1,8 +1,8 @@
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.597000.svg)](https://doi.org/10.5281/zenodo.597000)
 
-Looking for more information? Please take a look at our [Wiki](/ncrncornell/ced2ar/wiki).
-* _Users_ can find the [User Guide](/ncrncornell/ced2ar/wiki/User's-Guide) with how to videos and [FAQs](/ncrncornell/ced2ar/wiki/FAQs).
-* _Administrators_ and _Developers_ can find additional links on our [Wiki](/ncrncornell/ced2ar/wiki).
+Looking for more information? Please take a look at our [Wiki](https://github.com/ncrncornell/ced2ar/wiki).
+* _Users_ can find the [User Guide](https://github.com/ncrncornell/ced2ar/wiki/User's-Guide) with how to videos and [FAQs](https://github.com/ncrncornell/ced2ar/wiki/FAQs).
+* _Administrators_ and _Developers_ can find additional links on our [Wiki](https://github.com/ncrncornell/ced2ar/wiki).
 
 CED2AR uses Maven for build automation. Any IDE with Maven support can 
 compile builds. The development team recommends Eclipse or IntelliJ 

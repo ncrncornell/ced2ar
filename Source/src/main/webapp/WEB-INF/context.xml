@@ -16,7 +16,7 @@
 
 	<mvc:annotation-driven />	
 	<context:property-placeholder location="classpath*:*.properties" />
-	<context:component-scan base-package="edu.ncrn.cornell.ced2ar.security" />
+	<context:component-scan base-package="edu.cornell.ncrn.ced2ar.security" />
 
 	<bean id="multipartResolver"
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
@@ -26,9 +26,9 @@
 	<import resource="classpath:ced2ar-web-beans.xml" />
 	
 	<bean class="org.springframework.web.filter.DelegatingFilterProxy" />
-	<bean id="addressFilter" class="edu.ncrn.cornell.ced2ar.eapi.AddressFilter" />
-	<bean id="initConfigFilter" class="edu.ncrn.cornell.ced2ar.init.InitConfigFilter" />
-	<bean id="baseXCheck" class="edu.ncrn.cornell.ced2ar.api.data.BaseXChecker" />
+	<bean id="addressFilter" class="edu.cornell.ncrn.ced2ar.eapi.AddressFilter" />
+	<bean id="initConfigFilter" class="edu.cornell.ncrn.ced2ar.init.InitConfigFilter" />
+	<bean id="baseXCheck" class="edu.cornell.ncrn.ced2ar.api.data.BaseXChecker" />
 	
 	<!-- Webflow  Initializing CED2AR-->	
 	
@@ -44,6 +44,6 @@
 		<webflow:flow-location id="mergeFlow" path="/WEB-INF/merge-flow.xml" />
 		<webflow:flow-location id="changePasswordFlow" path="/WEB-INF/change-password-flow.xml" />
 	</webflow:flow-registry>
-	<bean id="configMultiAction" class="edu.ncrn.cornell.ced2ar.init.ConfigMultiAction"/>
-	<bean id="mergeMultiAction" class="edu.ncrn.cornell.ced2ar.merge.MergeMultiAction"/>
+	<bean id="configMultiAction" class="edu.cornell.ncrn.ced2ar.init.ConfigMultiAction"/>
+	<bean id="mergeMultiAction" class="edu.cornell.ncrn.ced2ar.merge.MergeMultiAction"/>
 </beans>

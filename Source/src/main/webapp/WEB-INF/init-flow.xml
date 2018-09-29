@@ -3,7 +3,7 @@
 		xsi:schemaLocation="http://www.springframework.org/schema/webflow
 				http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
 
-	<var name="configProperties" class="edu.ncrn.cornell.ced2ar.init.ConfigProperties"/>
+	<var name="configProperties" class="edu.cornell.ncrn.ced2ar.init.ConfigProperties"/>
 	
 	<!--  Start View.  Ask user if there exists a saved config file-->
 	<view-state id="initFlowStart" view="/WEB-INF/init/haveSavedConfig.jsp" model="configProperties">

@@ -3,7 +3,7 @@
 		xsi:schemaLocation="http://www.springframework.org/schema/webflow
 		http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
 	
-	<var name="mergeProperties" class="edu.ncrn.cornell.ced2ar.merge.MergeProperties"/>
+	<var name="mergeProperties" class="edu.cornell.ncrn.ced2ar.merge.MergeProperties"/>
 	
 	<action-state id="fetchCodebooks">
 		<evaluate expression="mergeMultiAction.loadCodebooks(mergeProperties,flowRequestContext)"/>

@@ -18,16 +18,16 @@
 	</bean>
   
   	<!-- MySQL DB DAO Beans -->
-	<bean id="variableDAO" class="edu.ncrn.cornell.ced2ar.sql.dao.impl.VariableJDBC">
+	<bean id="variableDAO" class="edu.cornell.ncrn.ced2ar.sql.dao.impl.VariableJDBC">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
-	<bean id="variableValueDAO" class="edu.ncrn.cornell.ced2ar.sql.dao.impl.VariableValueJDBC">
+	<bean id="variableValueDAO" class="edu.cornell.ncrn.ced2ar.sql.dao.impl.VariableValueJDBC">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
-	<bean id="variableSumStatDAO" class="edu.ncrn.cornell.ced2ar.sql.dao.impl.VariableSumStatJDBC">
+	<bean id="variableSumStatDAO" class="edu.cornell.ncrn.ced2ar.sql.dao.impl.VariableSumStatJDBC">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
-	<bean id="variableNoteDAO" class="edu.ncrn.cornell.ced2ar.sql.dao.impl.VariableNoteJDBC">
+	<bean id="variableNoteDAO" class="edu.cornell.ncrn.ced2ar.sql.dao.impl.VariableNoteJDBC">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 </beans>

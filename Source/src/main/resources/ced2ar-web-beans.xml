@@ -9,12 +9,12 @@
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd">
 
 	<bean id="propertiesValidator"
-		class="edu.ncrn.cornell.ced2ar.web.validators.PropertiesValidator" />
+		class="edu.cornell.ncrn.ced2ar.web.validators.PropertiesValidator" />
 	<bean id="configurationProperties"
-		class="edu.ncrn.cornell.ced2ar.api.data.ConfigurationProperties" />
+		class="edu.cornell.ncrn.ced2ar.api.data.ConfigurationProperties" />
 
 	<!-- Main web app -->
-	<bean id="config" class="edu.ncrn.cornell.ced2ar.api.data.Config">
+	<bean id="config" class="edu.cornell.ncrn.ced2ar.api.data.Config">
 		<property name="configInitialized" value="${configInitialized}" />
 		<property name="baseXDB" value="${baseXDB}" />
 		<property name="baseXReaderHash" value="${baseXReaderHash}" />
@@ -100,29 +100,29 @@
 	<task:annotation-driven scheduler="scheduler" />
 
 	<!-- Git version control -->
-	<bean id="versionControl" class="edu.ncrn.cornell.ced2ar.eapi.VersionControl">
+	<bean id="versionControl" class="edu.cornell.ncrn.ced2ar.eapi.VersionControl">
 		<property name="gitEnabled" value="${gitEnabled}" />
 	</bean>
 
 	<!-- PDF Generation -->
-	<bean id="pdfGenerator" class="edu.ncrn.cornell.ced2ar.eapi.PDFGenerator"
+	<bean id="pdfGenerator" class="edu.cornell.ncrn.ced2ar.eapi.PDFGenerator"
 		lazy-init="false">
 		<property name="pdfEnabled" value="${pdfEnabled}" />
 	</bean>
 
 	<bean id="userService"
-		class="edu.ncrn.cornell.ced2ar.security.idmgmt.service.impl.UserServiceImpl"
+		class="edu.cornell.ncrn.ced2ar.security.idmgmt.service.impl.UserServiceImpl"
 		lazy-init="false" />
 	<bean id="roleService"
-		class="edu.ncrn.cornell.ced2ar.security.idmgmt.service.impl.RoleServiceImpl"
+		class="edu.cornell.ncrn.ced2ar.security.idmgmt.service.impl.RoleServiceImpl"
 		lazy-init="false" />
 	<bean id="permissionService"
-		class="edu.ncrn.cornell.ced2ar.security.idmgmt.service.impl.PermissionServiceImpl"
+		class="edu.cornell.ncrn.ced2ar.security.idmgmt.service.impl.PermissionServiceImpl"
 		lazy-init="false" />
 	<bean id="rolePermissionService"
-		class="edu.ncrn.cornell.ced2ar.security.idmgmt.service.impl.RolePermissionServiceImpl"
+		class="edu.cornell.ncrn.ced2ar.security.idmgmt.service.impl.RolePermissionServiceImpl"
 		lazy-init="false" />
 	<bean id="userRoleService"
-		class="edu.ncrn.cornell.ced2ar.security.idmgmt.service.impl.UserRoleServiceImpl"
+		class="edu.cornell.ncrn.ced2ar.security.idmgmt.service.impl.UserRoleServiceImpl"
 		lazy-init="false" />
 </beans>
